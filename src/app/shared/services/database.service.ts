@@ -11,12 +11,12 @@ export class DatabaseService extends Dexie {
     public tags!: Table<Tag, number>;
 
     constructor() {
-        super('ZenJournalDb'){
-            this.version(1).stores({
-                note: '++id, title, notebookId, isArchived, createdAt, updatedAt',
-                notebooks: '++id, name, createdAt',
-                tags: '++id, name   '
-            });
-        }
+        super('ZenJournalDb');
+        this.version(1).stores({
+            notes: '++id, title, notebookId, isArchived, createdAt, updatedAt',
+            notebooks: '++id, name, createdAt',
+            tags: '++id, name   '
+        });
     }
+
 }
