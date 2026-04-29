@@ -1,0 +1,40 @@
+<div class="flex flex-col h-full">
+
+    <!-- Header -->
+    <div class="p-4 border-b border-gray-200">
+        <h2 class="text-sm font-medium text-gray-600">
+            {{ notesService.totalNotes() }} note(s)
+        </h2>
+    </div>
+
+    <!-- Loading -->
+    @if(notesService.isLoading()){
+    <div class="flex items-center justify-center flex-1">
+        <p class="text-sm text-gray-400">Se incarca...</p>
+    </div>
+    }
+
+    <!-- Lista goală -->
+    @else if(notesService.activeNotes().length === 0 ){
+    <div class="flex items-center justify-center flex-1">
+        <p class="text-sm text-gray-400">Nicio notă încă</p>
+    </div>
+    }
+
+    <!-- Lista de note -->
+    @else {
+    <div class="flex-1 overflow-y-auto">
+        @for (note of notesService.activeNotes(); track note.id) {
+        <div class="p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+            (click)="selectNote(note)">
+            <p class="text-sm font-medium text-gray-900 truncate">
+                {{ note.title || 'Nota fara titlu' }}
+            </p>
+            <p class="text-xs text-gray-400 mt-1">
+                {{ note.updatedAt | date: 'dd MM YYYY' }}
+            </p>
+        </div>
+        }
+    </div>
+    }
+</div>
