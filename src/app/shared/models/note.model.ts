@@ -4,8 +4,8 @@ export interface Note {
     content: string;
     notebookId: number;
     tags: string[];
-    createAt: Date;
-    updateAt: Date;
+    createdAt: Date;
+    updatedAt: Date;
     isArchived: boolean;
 }
 
