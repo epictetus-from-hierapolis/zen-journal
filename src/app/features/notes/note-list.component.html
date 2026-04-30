@@ -25,11 +25,14 @@
     @else {
     <div class="flex-1 overflow-y-auto">
         @for (note of notesService.activeNotes(); track note.id) {
-        <div class="p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+        <div class="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
             (click)="selectNote(note)">
             <p class="text-sm font-medium text-gray-900 truncate">
                 {{ note.title || 'Nota fara titlu' }}
             </p>
+            @if (notesService.selectedNote()?.id === note.id && notesService.saveStatus() === 'saving') {
+            <span class="w-2 h-2 rounded-full bg-gray-400 animate-pulse flex-shrink-0"></span>
+            }
             <p class="text-xs text-gray-400 mt-1">
                 {{ note.updatedAt | date: 'dd MMM yyyy' }}
             </p>

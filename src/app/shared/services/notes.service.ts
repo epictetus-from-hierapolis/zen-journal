@@ -11,6 +11,7 @@ export class NotesService {
     public readonly notes = signal<Note[]>([]);
     public readonly selectedNote = signal<Note | null>(null);
     public readonly isLoading = signal<boolean>(false);
+    public readonly saveStatus = signal<'idle' | 'saving' | 'saved'>('idle');
 
     public readonly totalNotes = computed(() => this.notes().length);
     public readonly archivedNotes = computed(() => this.notes().filter(note => note.isArchived));
@@ -29,8 +30,11 @@ export class NotesService {
     }
 
     public async updateNote(id: number, changes: Partial<Note>): Promise<void> {
+        this.saveStatus.set('saving');
         await this.db.notes.update(id, changes);
         await this.loadNotes();
+        this.saveStatus.set('saved');
+        setTimeout(() => this.saveStatus.set('idle'), 2000);
     }
 
     public async deleteNote(id: number): Promise<void> {
