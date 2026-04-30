@@ -32,7 +32,7 @@ export class NotesService {
     public async updateNote(id: number, changes: Partial<Note>): Promise<void> {
         this.saveStatus.set('saving');
         await this.db.notes.update(id, changes);
-        await this.loadNotes();
+        this.notes.update(notes => notes.map(note => note.id === id ? { ...note, ...changes } : note));
         this.saveStatus.set('saved');
         setTimeout(() => this.saveStatus.set('idle'), 2000);
     }
