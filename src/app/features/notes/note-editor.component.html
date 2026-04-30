@@ -1,0 +1,20 @@
+<div class="flex flex-col h-full p-6">
+
+    @if(notesService.selectedNote()) {
+    <div class="flex flex-col h-full">
+        <input type="text" placeholder="Titlu"
+            class="text-xl font-medium bg-transparent border-none outline-none mb-4 text-gray-900"
+            [value]="notesService.selectedNote()!.title" />
+
+        <textarea placeholder="Scrie ceva..."
+            class="flex-1 bg-transparent border-none outline-none resize-none text-gray-700 leading-relaxed"
+            [value]="notesService.selectedNote()!.content"></textarea>
+    </div>
+    } @else {
+    <div class="flex flex-col items-center juestify-center h-full gap-4">
+        <p class="text-sm text-gray-400">Selecteaza o nota sau creeaza una noua</p>
+        <button class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors"
+            (click)="addTestNote()">+ Nota noua</button>
+    </div>
+    }
+</div>
