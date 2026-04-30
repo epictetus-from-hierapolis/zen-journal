@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NoteListComponent } from './features/notes/note-list.component';
 import { NoteEditorComponent } from './features/notes/note-editor.component';
+import { NotesService } from './shared/services/notes.service';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +12,17 @@ import { NoteEditorComponent } from './features/notes/note-editor.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class App {
+  private readonly notesService = inject(NotesService);
 
+  public async addNote(): Promise<void> {
+    await this.notesService.addNote({
+      title: '',
+      content: '',
+      notebookId: 1,
+      tags: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      isArchived: false
+    });
+  }
 }
