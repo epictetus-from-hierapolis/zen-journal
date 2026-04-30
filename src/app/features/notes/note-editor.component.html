@@ -11,7 +11,7 @@
             [value]="notesService.selectedNote()!.content" (input)="onTextareaChange($event)"></textarea>
     </div>
     } @else {
-    <div class="flex flex-col items-center juestify-center h-full gap-4">
+    <div class="flex flex-col items-center justify-center h-full gap-4">
         <p class="text-sm text-gray-400">Selecteaza o nota sau creeaza una noua</p>
         <button class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors"
             (click)="addTestNote()">+ Nota noua</button>
