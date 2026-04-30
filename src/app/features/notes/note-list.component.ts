@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, importProvidersFrom, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { NotesService } from "../../shared/services/notes.service";
 import { Note } from '../../shared/models/note.model';
