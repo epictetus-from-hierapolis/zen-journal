@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectionStrategy, effect, untracked, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -15,22 +15,23 @@ import { Note } from '../../shared/models/note.model';
 })
 export class NoteEditorComponent {
     private readonly destroyRef = inject(DestroyRef);
-    private readonly autoSave$ = new Subject<Partial<Note>>();
-
     protected readonly notesService = inject(NotesService);
+
+    private readonly autoSave$ = new Subject<{ id: number; changes: Partial<Note> }>();
 
     constructor() {
         this.autoSave$.pipe(
             debounceTime(800),
-            distinctUntilChanged(),
+            distinctUntilChanged((prev, curr) =>
+                prev.id === curr.id &&
+                Object.keys(curr.changes).every(key =>
+                    prev.changes[key as keyof Note] === curr.changes[key as keyof Note]
+                )
+            ),
             takeUntilDestroyed(this.destroyRef)
-        )
-            .subscribe(async (changes) => {
-                const note = this.notesService.selectedNote();
-                if (note?.id && typeof changes === 'object') {
-                    await this.notesService.updateNote(note.id, { ...changes, updatedAt: new Date() });
-                }
-            })
+        ).subscribe(async ({ id, changes }) => {
+            await this.notesService.updateNote(id, { ...changes, updatedAt: new Date() });
+        })
     }
 
     public async addTestNote(): Promise<void> {
@@ -45,17 +46,23 @@ export class NoteEditorComponent {
         })
     }
 
-
-
-    // moved inside controller to stop editor complanining about $event.target.value in case of textarea
-    // Solved this way the [ERROR] TS2339: Property 'value' does not exist on type 'EventTarget'
-    public onTextareaChange(event: Event): void {
-        const textarea = event.target! as HTMLInputElement;
-        this.autoSave$.next({ content: textarea.value });
-    }
-    // the same mechanism applied for input for consistancy
     public onInputChange(event: Event): void {
-        const input = event.target! as HTMLInputElement;
-        this.autoSave$.next({ title: input.value });
+        const title = (event.target! as HTMLInputElement).value;
+        const id = this.notesService.selectedNote()?.id;
+
+        if (id) {
+            this.notesService.updateNotesSignal(id, { title });
+            this.autoSave$.next({ id, changes: { title } });
+        }
+    }
+
+    public onTextareaChange(event: Event): void {
+        const content = (event.target! as HTMLInputElement).value;
+        const id = this.notesService.selectedNote()?.id;
+
+        if (id) {
+            this.notesService.updateNotesSignal(id, { content });
+            this.autoSave$.next({ id, changes: { content } });
+        }
     }
 }

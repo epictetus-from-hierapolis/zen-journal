@@ -47,4 +47,11 @@ export class NotesService {
     public selectNote(note: Note | null): void {
         this.selectedNote.set(note);
     }
+
+    public updateNotesSignal(id: number, changes: Partial<Note>) {
+        if (!id) return;
+        this.notes.update(notes =>
+            notes.map(note => note.id === id ? { ...note, ...changes } : note));
+        this.selectedNote.update(note => note?.id === id ? { ...note, ...changes } : note);
+    }
 }
