@@ -5,6 +5,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Note } from '../../shared/models/note.model';
 import { NOTES_SERVICE_TOKEN } from '../../shared/services/notes.token';
+import { APP_CONFIG } from '../../shared/config/app.config.token';
 
 @Component({
     selector: 'app-note-editor',
@@ -16,12 +17,13 @@ import { NOTES_SERVICE_TOKEN } from '../../shared/services/notes.token';
 export class NoteEditorComponent {
     private readonly destroyRef = inject(DestroyRef);
     protected readonly notesService = inject(NOTES_SERVICE_TOKEN);
+    private readonly appConfig = inject(APP_CONFIG);
 
     private readonly autoSave$ = new Subject<{ id: number; changes: Partial<Note> }>();
 
     constructor() {
         this.autoSave$.pipe(
-            debounceTime(800),
+            debounceTime(this.appConfig.autosaveDelay),
             distinctUntilChanged((prev, curr) =>
                 prev.id === curr.id &&
                 Object.keys(curr.changes).every(key =>
