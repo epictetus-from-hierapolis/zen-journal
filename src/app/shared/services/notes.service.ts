@@ -1,11 +1,12 @@
 import { Injectable, signal, computed, inject } from "@angular/core";
 import { DatabaseService } from "./database.service";
 import { Note } from '../models/note.model';
+import { INotesService } from "./notes.service.interface";
 
 @Injectable({
     providedIn: 'root'
 })
-export class NotesService {
+export class NotesService implements INotesService {
     private readonly db = inject(DatabaseService);
 
     public readonly notes = signal<Note[]>([]);
@@ -48,7 +49,7 @@ export class NotesService {
         this.selectedNote.set(note);
     }
 
-    public updateNotesSignal(id: number, changes: Partial<Note>) {
+    public updateNotesSignal(id: number, changes: Partial<Note>): void {
         if (!id) return;
         this.notes.update(notes =>
             notes.map(note => note.id === id ? { ...note, ...changes } : note));
