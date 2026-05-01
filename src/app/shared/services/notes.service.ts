@@ -25,8 +25,10 @@ export class NotesService {
     }
 
     public async addNote(note: Omit<Note, 'id'>): Promise<void> {
-        await this.db.notes.add(note);
-        await this.loadNotes();
+        const id = await this.db.notes.add(note);
+        const newNote = { ...note, id };
+        this.notes.update(notes => [...notes, newNote]);
+        this.selectNote(newNote);
     }
 
     public async updateNote(id: number, changes: Partial<Note>): Promise<void> {
