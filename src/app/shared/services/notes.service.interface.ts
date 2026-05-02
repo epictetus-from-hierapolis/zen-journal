@@ -1,8 +1,9 @@
 import { Signal } from "@angular/core";
 import { Note } from "../models/note.model";
 import { BehaviorSubject } from "rxjs";
+import { IBaseStorageService } from "./base-storage.service.interface";
 
-export interface INotesService {
+export interface INotesService extends IBaseStorageService<Note> {
     notes: Signal<Note[]>;
     selectedNote: Signal<Note | null>;
     isLoading: Signal<boolean>;
@@ -16,6 +17,6 @@ export interface INotesService {
     deleteNote(id: number): Promise<void>;
     selectNote(note: Note | null): void;
     updateNotesSignal(id: number, changes: Partial<Note>): void;
-    filteredNotes:Signal<Note[]>;
+    filteredNotes: Signal<Note[]>;
     searchQuery$: BehaviorSubject<string>;
 }
