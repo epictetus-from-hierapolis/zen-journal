@@ -5,6 +5,7 @@ import { INotesService } from "./notes.service.interface";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { BaseStorageService } from "./base-storage.service";
+import { HandleError } from "../decorators/handle-error.decorator";
 
 @Injectable({
     providedIn: 'root'
@@ -39,6 +40,7 @@ export class NotesService extends BaseStorageService<Note> implements INotesServ
         super(db.notes);
     }
 
+    @HandleError
     public async loadNotes(): Promise<void> {
         this.isLoading.set(true);
         const notes = await this.getAll();
@@ -46,6 +48,7 @@ export class NotesService extends BaseStorageService<Note> implements INotesServ
         this.isLoading.set(false);
     }
 
+    @HandleError
     public async addNote(note: Omit<Note, 'id'>): Promise<void> {
         const id = await this.add(note);
         const newNote = { ...note, id };
@@ -53,6 +56,7 @@ export class NotesService extends BaseStorageService<Note> implements INotesServ
         this.selectNote(newNote);
     }
 
+    @HandleError
     public async updateNote(id: number, changes: Partial<Note>): Promise<void> {
         this.saveStatus.set('saving');
         await this.update(id, changes);
@@ -61,6 +65,7 @@ export class NotesService extends BaseStorageService<Note> implements INotesServ
         setTimeout(() => this.saveStatus.set('idle'), 2000);
     }
 
+    @HandleError
     public async deleteNote(id: number): Promise<void> {
         await this.delete(id);
         await this.loadNotes();
