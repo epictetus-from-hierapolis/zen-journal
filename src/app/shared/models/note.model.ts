@@ -1,3 +1,5 @@
+export type NoteState = 'active' | 'archived' | 'deleted';
+
 export interface Note {
     id?: number;
     title: string;
@@ -6,7 +8,9 @@ export interface Note {
     tags: string[];
     createdAt: Date;
     updatedAt: Date;
-    isArchived: boolean;
+    archivedAt?: Date;
+    deletedAt?: Date;
+    status: NoteState;
 }
 
 export interface Notebook {

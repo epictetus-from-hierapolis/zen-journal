@@ -31,8 +31,8 @@ export class NotesService extends BaseStorageService<Note> implements INotesServ
     });
 
     public readonly totalNotes = computed(() => this.notes().length);
-    public readonly archivedNotes = computed(() => this.notes().filter(note => note.isArchived));
-    public readonly activeNotes = computed(() => this.notes().filter(note => !note.isArchived));
+    public readonly archivedNotes = computed(() => this.notes().filter(note => note.status === 'archived'));
+    public readonly activeNotes = computed(() => this.notes().filter(note => note.status === 'active'));
 
     constructor() {
         const db = inject(DatabaseService);
