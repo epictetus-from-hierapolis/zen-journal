@@ -1,5 +1,6 @@
 import { Signal } from "@angular/core";
 import { Note } from "../models/note.model";
+import { BehaviorSubject } from "rxjs";
 
 export interface INotesService {
     notes: Signal<Note[]>;
@@ -15,4 +16,6 @@ export interface INotesService {
     deleteNote(id: number): Promise<void>;
     selectNote(note: Note | null): void;
     updateNotesSignal(id: number, changes: Partial<Note>): void;
+    filteredNotes:Signal<Note[]>;
+    searchQuery$: BehaviorSubject<string>;
 }

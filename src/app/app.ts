@@ -2,10 +2,11 @@ import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NoteListComponent } from './features/notes/note-list.component';
 import { NoteEditorComponent } from './features/notes/note-editor.component';
 import { NOTES_SERVICE_TOKEN } from './shared/services/notes.token';
+import { NoteSearchComponent } from './features/notes/note-search.component';
 
 @Component({
   selector: 'app-root',
-  imports: [NoteListComponent, NoteEditorComponent],
+  imports: [NoteListComponent, NoteEditorComponent, NoteSearchComponent],
   standalone: true,
   templateUrl: './app.html',
   styleUrl: './app.css',

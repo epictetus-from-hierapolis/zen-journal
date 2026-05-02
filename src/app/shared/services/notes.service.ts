@@ -2,6 +2,8 @@ import { Injectable, signal, computed, inject } from "@angular/core";
 import { DatabaseService } from "./database.service";
 import { Note } from '../models/note.model';
 import { INotesService } from "./notes.service.interface";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +15,21 @@ export class NotesService implements INotesService {
     public readonly selectedNote = signal<Note | null>(null);
     public readonly isLoading = signal<boolean>(false);
     public readonly saveStatus = signal<'idle' | 'saving' | 'saved'>('idle');
+
+    public readonly searchQuery$ = new BehaviorSubject<string>('');
+    private readonly debouncedSearch = toSignal(
+        this.searchQuery$.pipe(
+            debounceTime(300),
+            distinctUntilChanged()
+        ),
+        { initialValue: '' }
+    );
+    public readonly filteredNotes = computed(() => {
+        const query = this.debouncedSearch()?.toLowerCase() ?? '';
+        if (!query) return this.activeNotes();
+        return this.activeNotes().filter(note => note.title.includes(query) ||
+            note.content.includes(query));
+    });
 
     public readonly totalNotes = computed(() => this.notes().length);
     public readonly archivedNotes = computed(() => this.notes().filter(note => note.isArchived));
