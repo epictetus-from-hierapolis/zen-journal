@@ -15,14 +15,14 @@ export class LoginComponent {
     private readonly routerService = inject(Router);
     private readonly fb = inject(NonNullableFormBuilder)
 
-    public readonly errorMessage = signal<string>('');
+    protected readonly errorMessage = signal<string>('');
 
-    public loginForm = this.fb.group({
+    protected loginForm = this.fb.group({
         username: ['', Validators.required],
         password: ['', Validators.required]
     });
 
-    public async onSubmit(): Promise<void> {
+    protected async onSubmit(): Promise<void> {
         const { username, password } = this.loginForm.getRawValue();
         const success = await this.authService.login(username, password);
 

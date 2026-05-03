@@ -25,24 +25,24 @@ export class NoteSearchComponent {
         });
     }
 
-    public onOpen(): void {
+    protected onOpen(): void {
         this.isOpen.set(true);
 
     }
 
-    public onClose(): void {
+    protected onClose(): void {
         this.isOpen.set(false);
         this.searchInput.set('');
         this.notesService.searchQuery$.next('');
     }
 
-    public onSearch(event: Event): void {
+    protected onSearch(event: Event): void {
         const input = event.target as HTMLInputElement;
         this.searchInput.set(input.value);
         this.notesService.searchQuery$.next(input.value);
     }
 
-    public onSnippetClick(note: Note): void {
+    protected onSnippetClick(note: Note): void {
         this.notesService.selectNote(note);
         this.onClose();
     }

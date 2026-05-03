@@ -15,7 +15,7 @@ import { NOTES_SERVICE_TOKEN } from "../../shared/services/notes.token";
 export class NotesComponent {
     private readonly notesService = inject(NOTES_SERVICE_TOKEN);
 
-    public async addNote(): Promise<void> {
+    protected async addNote(): Promise<void> {
         await this.notesService.addNote({
             title: '',
             content: '',

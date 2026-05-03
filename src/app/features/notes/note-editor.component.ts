@@ -36,7 +36,7 @@ export class NoteEditorComponent {
         })
     }
 
-    public async addTestNote(): Promise<void> {
+    protected async addTestNote(): Promise<void> {
         await this.notesService.addNote({
             title: 'Prima nota',
             content: 'Continut test',
@@ -48,7 +48,7 @@ export class NoteEditorComponent {
         })
     }
 
-    public onInputChange(event: Event): void {
+    protected onInputChange(event: Event): void {
         const title = (event.target! as HTMLInputElement).value;
         const id = this.notesService.selectedNote()?.id;
 
@@ -58,7 +58,7 @@ export class NoteEditorComponent {
         }
     }
 
-    public onTextareaChange(event: Event): void {
+    protected onTextareaChange(event: Event): void {
         const content = (event.target! as HTMLInputElement).value;
         const id = this.notesService.selectedNote()?.id;
 

@@ -17,7 +17,7 @@ export class NoteListComponent implements OnInit {
         await this.notesService.loadNotes();
     }
 
-    public selectNote(note: Note): void {
+    protected selectNote(note: Note): void {
         this.notesService.selectNote(note);
     }
 }
