@@ -23,8 +23,7 @@
 
     <!-- Lista de note -->
     @else {
-    <cdk-virtual-scroll-viewport itemSize="53" class="flex-1 overflow-x-hidden h-full"
-        style="overflow-x: hidden !important;">
+    <cdk-virtual-scroll-viewport itemSize="53" class="flex-1 overflow-x-hidden h-full">
         <div *cdkVirtualFor="let note of notesService.activeNotes(); trackBy: trackNote"
             class="p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
             (click)=" selectNote(note)">
@@ -37,7 +36,7 @@
                 <span class="w-2 h-2 rounded-full bg-gray-400 animate-pulse flex-shrink-0"></span>
                 }
                 <p class="text-xs text-gray-400 mt-1">
-                    {{ note.updatedAt | date: 'dd MMM yyyy' }}
+                    {{ note.updatedAt | relativeTime }}
                 </p>
             </div>
         </div>

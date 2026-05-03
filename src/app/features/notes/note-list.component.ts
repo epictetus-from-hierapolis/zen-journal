@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
-import { DatePipe } from "@angular/common";
 import { Note } from '../../shared/models/note.model';
 import { NOTES_SERVICE_TOKEN } from "../../shared/services/notes.token";
 import { ScrollingModule } from "@angular/cdk/scrolling";
+import { RelativeTimePipe } from "../../shared/ui/relative-time.pipe";
 
 @Component({
     selector: 'app-note-list',
     standalone: true,
-    imports: [DatePipe, ScrollingModule],
+    imports: [RelativeTimePipe, ScrollingModule],
     templateUrl: './note-list.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
