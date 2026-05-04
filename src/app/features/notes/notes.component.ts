@@ -3,6 +3,7 @@ import { NoteListComponent } from "./note-list.component";
 import { NoteEditorComponent } from "./note-editor.component";
 import { NoteSearchComponent } from "./note-search.component";
 import { NOTES_SERVICE_TOKEN } from "../../shared/services/notes.token";
+import { ThemeService } from "../../shared/services/theme.service";
 
 
 @Component({
@@ -14,6 +15,7 @@ import { NOTES_SERVICE_TOKEN } from "../../shared/services/notes.token";
 })
 export class NotesComponent {
     private readonly notesService = inject(NOTES_SERVICE_TOKEN);
+    public readonly themeService = inject(ThemeService);
 
     protected async addNote(): Promise<void> {
         await this.notesService.addNote({

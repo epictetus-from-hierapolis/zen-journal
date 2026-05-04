@@ -4,19 +4,19 @@
     <div class="flex flex-col h-full">
         <div class="flex items-center justify-between">
             <input type="text" placeholder="Titlu"
-                class="text-xl font-medium bg-transparent border-none outline-none mb-4 text-gray-900"
+                class="text-xl font-medium bg-transparent border-none outline-none mb-4 text-gray-900 dark:text-gray-100 dark:placeholder-gray-600"
                 [value]="notesService.selectedNote()?.title ?? ''" (input)="onInputChange($event)" />
-            <p class="text-xs text-gray-400">{{notesService.selectedNote()?.content | wordCount}} words</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">{{notesService.selectedNote()?.content | wordCount}} words</p>
         </div>
 
         <textarea placeholder="Scrie ceva..."
-            class="flex-1 bg-transparent border-none outline-none resize-none text-gray-700 leading-relaxed"
+            class="flex-1 bg-transparent border-none outline-none resize-none text-gray-700 leading-relaxed dark:text-gray-300 dark:placeholder-gray-600"
             [value]="notesService.selectedNote()?.content ?? ''" (input)="onTextareaChange($event)"></textarea>
     </div>
     } @else {
     <div class="flex flex-col items-center justify-center h-full gap-4">
-        <p class="text-sm text-gray-400">Selecteaza o nota sau creeaza una noua</p>
-        <button class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors"
+        <p class="text-sm text-gray-400 dark:text-gray-500">Selecteaza o nota sau creeaza una noua</p>
+        <button class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
             (click)="addTestNote()">+ Nota noua</button>
     </div>
     }
