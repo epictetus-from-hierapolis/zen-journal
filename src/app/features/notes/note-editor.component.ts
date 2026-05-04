@@ -6,11 +6,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Note } from '../../shared/models/note.model';
 import { NOTES_SERVICE_TOKEN } from '../../shared/services/notes.token';
 import { APP_CONFIG } from '../../shared/config/app.config.token';
+import { WordCountPipe } from '../../shared/ui/word-count.pipe';
 
 @Component({
     selector: 'app-note-editor',
     standalone: true,
-    imports: [FormsModule],
+    imports: [FormsModule, WordCountPipe],
     templateUrl: './note-editor.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
