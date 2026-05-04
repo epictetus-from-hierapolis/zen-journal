@@ -9,7 +9,6 @@
             <p class="text-xs text-gray-400">{{notesService.selectedNote()?.content | wordCount}} words</p>
         </div>
 
-
         <textarea placeholder="Scrie ceva..."
             class="flex-1 bg-transparent border-none outline-none resize-none text-gray-700 leading-relaxed"
             [value]="notesService.selectedNote()?.content ?? ''" (input)="onTextareaChange($event)"></textarea>
