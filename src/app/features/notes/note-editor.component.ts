@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, ChangeDetectionStrategy, effect, untracked, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { from, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Note } from '../../shared/models/note.model';
 import { NOTES_SERVICE_TOKEN } from '../../shared/services/notes.token';
@@ -31,10 +31,9 @@ export class NoteEditorComponent {
                     prev.changes[key as keyof Note] === curr.changes[key as keyof Note]
                 )
             ),
+            switchMap(({ id, changes }) => from(this.notesService.updateNote(id, { ...changes, updatedAt: new Date() }))),
             takeUntilDestroyed(this.destroyRef)
-        ).subscribe(async ({ id, changes }) => {
-            await this.notesService.updateNote(id, { ...changes, updatedAt: new Date() });
-        })
+        ).subscribe();
     }
 
     protected async addTestNote(): Promise<void> {
