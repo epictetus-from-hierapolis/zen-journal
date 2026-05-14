@@ -3,7 +3,7 @@ import { NoteListComponent } from "./note-list.component";
 import { NoteEditorComponent } from "./note-editor.component";
 import { NoteSearchComponent } from "./note-search.component";
 import { NOTES_SERVICE_TOKEN } from "../../shared/services/notes.token";
-import { ThemeService } from "../../shared/services/theme.service";
+import { ThemeService } from "../../shared/services/app-settings.service";
 
 
 @Component({
