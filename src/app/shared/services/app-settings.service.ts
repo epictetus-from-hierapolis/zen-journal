@@ -4,7 +4,7 @@ import { AppSettings, Theme } from "../models/app-settings.model";
 @Injectable({
     providedIn: 'root'
 })
-export class ThemeService {
+export class AppSettingsService {
     private document = inject(DOCUMENT);
     private settings: AppSettings = JSON.parse(localStorage.getItem('settings') ?? 'null') ?? { theme: 'light' };
     public theme = signal<Theme>(this.settings.theme);
