@@ -8,6 +8,11 @@ export const routes: Routes = [
         canActivate: [canAuthenticate],
     },
     {
+        path: 'settings',
+        loadComponent: () => import('./features/settings/settings.component').then(module => module.SettingsComponent),
+        canActivate: [canAuthenticate],
+    },
+    {
         path: 'login',
         loadComponent: () => import('./features/auth/login.component').then(module => module.LoginComponent)
     }
