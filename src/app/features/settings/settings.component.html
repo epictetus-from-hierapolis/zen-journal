@@ -1,0 +1,18 @@
+<div>
+    <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()" class="">
+        <h1 class="">Settings</h1>
+        <div class="">
+            <label class="">Autosave debounce(300ms-3000ms)</label>
+            <input formControlName="debounce" type="number" placeholder="" class="" />
+        </div>
+        <div class="">
+            <label class="">Theme option</label>
+            <div class="">
+                <select formControlName="theme">
+                    <option value="">Light</option>
+                    <option value="">Dark</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
