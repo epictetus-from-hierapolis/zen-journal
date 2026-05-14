@@ -9,48 +9,156 @@ describe('NotesService', () => {
     const mockDb = {
         notes: {
             toArray: jest.fn<() => Promise<Note[]>>().mockResolvedValue([]),
-            add: jest.fn().mockResolvedValue(1),
-            update: jest.fn<() => Promise<void>>().mockResolvedValue(void 0),
-            delete: jest.fn<() => Promise<void>>().mockResolvedValue(void 0),
+            add: jest.fn<(note: Omit<Note, 'id'>) => Promise<number>>().mockResolvedValue(1),
+            update: jest.fn<(id: number, changes: Partial<Note>) => Promise<void>>().mockResolvedValue(void 0),
+            delete: jest.fn<(id: number) => Promise<void>>().mockResolvedValue(void 0),
         }
     }
+    const mockDate = new Date('2026-01-01T00:00:00.000Z');
+    const mockNote: Note = {
+        id: 1,
+        title: '',
+        content: '',
+        notebookId: 1,
+        tags: [],
+        createdAt: mockDate,
+        updatedAt: mockDate,
+        status: 'active'
+    }
+    const mockNotes: Note[] = [mockNote];
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
                 NotesService,
                 {
-                    provide: DatabaseService,
-                    useValue: mockDb
+                    provide: DatabaseService, // when "service" asks 
+                    useValue: mockDb // offer this
                 }
             ]
         });
 
-        service = TestBed.inject(NotesService);
+        service = TestBed.inject(NotesService); // create new instance of NotesService
+        jest.clearAllMocks();
     });
 
-    it('should return an empty array', async () => {
-        const result = await service.getAll();
-        expect(result).toEqual([]);
+    describe('loadNotes()', () => {
+        it('should load notes into signal', async () => {
+            mockDb.notes.toArray.mockResolvedValueOnce(mockNotes);
+            await service.loadNotes()
+            expect(service.notes()).toEqual(mockNotes);
+        });
+
+        it('should reflect loading state during loadNotes', async () => {
+            let resolve: (value: Note[]) => void;
+            const deferred = new Promise<Note[]>((res) => { resolve = res; });
+            mockDb.notes.toArray.mockReturnValueOnce(deferred);
+            const promise = service.loadNotes();
+            expect(service.isLoading()).toBe(true);
+            resolve!(mockNotes);
+            await promise;
+            expect(service.isLoading()).toBe(false);
+        });
     });
 
-    it('should return notes', async () => {
-        const mockDate = new Date('2026-01-01T00:00:00.000Z');
-        const mockNotes: Note[] = [{
-            id: 1,
-            title: '',
-            content: '',
-            notebookId: 1,
-            tags: [],
-            createdAt: mockDate,
-            updatedAt: mockDate,
-            status: 'active'
-        }];
+    describe('addNote()', () => {
+        it('should call db.add with correct note', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            await service.addNote(noteWithoutId);
+            expect(mockDb.notes.add).toHaveBeenCalledWith(noteWithoutId);
+        });
 
-        mockDb.notes.toArray.mockResolvedValueOnce(mockNotes);
+        it('should update notes signal after add', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            await service.addNote(noteWithoutId);
+            expect(service.notes()).toContainEqual(mockNote);
+        });
 
-        const result = await service.getAll();
-        expect(result).toEqual(mockNotes);
+        it('should select the newly added note', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            await service.addNote(noteWithoutId);
+            expect(service.selectedNote()).toEqual(mockNote);
+        });
     });
 
+    describe('updateNote()', () => {
+        it('should reflect saveStatus changes during updateNote', async () => {
+            let resolve: () => void;
+            const { id, ...noteWithoutId } = mockNote;
+            const deffered = new Promise<void>((res) => { resolve = res; });
+            mockDb.notes.update.mockReturnValueOnce(deffered);
+            const promise = service.updateNote(id!, noteWithoutId);
+            expect(service.saveStatus()).toBe('saving');
+            resolve!();
+            await promise;
+            expect(service.saveStatus()).toBe('saved');
+        });
+
+        it('should call db.update with correct id and partial note', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            await service.updateNote(id!, noteWithoutId);
+            expect(mockDb.notes.update).toHaveBeenCalledWith(id!, noteWithoutId);
+        });
+
+        it('should update notes signal after update', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            service.notes.set(mockNotes);
+            await service.updateNote(id!, noteWithoutId);
+            expect(service.notes()).toContainEqual(mockNote);
+        });
+
+        it('should set saveStatus to idle after 2 seconds', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            jest.useFakeTimers();
+            await service.updateNote(id!, noteWithoutId);
+            jest.advanceTimersByTime(2000);
+            expect(service.saveStatus()).toBe('idle');
+            jest.useRealTimers();
+        });
+    });
+
+    describe('deleteNote()', () => {
+        it('should call db.delete with correct id', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            await service.deleteNote(id!);
+            expect(mockDb.notes.delete).toHaveBeenCalledWith(id!);
+        });
+
+        it('should update notes signal after deletion', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            mockDb.notes.toArray.mockResolvedValueOnce([]);
+            await service.deleteNote(id!);
+            expect(service.notes()).toEqual([]);
+        });
+
+        it('should reload notes from database after deletion', async () => {
+            const { id, ...noteWithoutId } = mockNote;
+            await service.deleteNote(id!);
+            expect(mockDb.notes.toArray).toHaveBeenCalled();
+        });
+    });
+
+    describe('selectNote()', () => {
+        it('should update selectedNote signal with the provided note', () => {
+            service.selectNote(mockNote);
+            expect(service.selectedNote()).toEqual(mockNote);
+        });
+
+        it('should set selectedNote signal to null', () => {
+            service.selectNote(null);
+            expect(service.selectedNote()).toBeNull();
+        });
+    });
+
+    describe('updateNotesSignal()', () => {
+        it('should update specific note in both notes list and selection', () => {
+            service.notes.set([mockNote]);
+            service.selectNote(mockNote);
+
+            service.updateNotesSignal(mockNote.id!, { title: 'Titlu nou' });
+
+            expect(service.notes().find((n) => n.id === mockNote.id)?.title).toBe('Titlu nou');
+            expect(service.selectedNote()?.title).toBe('Titlu nou');
+        });
+    });
 }); 
