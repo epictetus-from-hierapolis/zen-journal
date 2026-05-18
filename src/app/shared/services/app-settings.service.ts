@@ -1,24 +1,39 @@
 import { DOCUMENT, inject, Injectable, signal } from "@angular/core";
-import { AppSettings, Theme } from "../models/app-settings.model";
+import { AppSettings, ThemeAppearence } from "../models/app-settings.model";
+import { APP_CONFIG } from "../config/app.config.token";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppSettingsService {
     private document = inject(DOCUMENT);
-    private settings: AppSettings = JSON.parse(localStorage.getItem('settings') ?? 'null') ?? { theme: 'light' };
-    public theme = signal<Theme>(this.settings.theme);
+    private readonly appConfig = inject(APP_CONFIG);
+    public themeAppearence = signal<ThemeAppearence>(this.appConfig.themeAppearence);
+    public autosaveDelay = signal<number>(this.appConfig.autosaveDelay);
 
     constructor() {
-        if (this.settings.theme === 'dark') {
-            this.document.documentElement.classList.add(this.settings.theme);
+        if (this.appConfig.themeAppearence === 'dark') {
+            this.document.documentElement.classList.add(this.appConfig.themeAppearence);
         }
     }
 
-    public toggleTheme() {
-        const isDark: boolean = this.document.documentElement.classList.toggle('dark');
-        const theme = isDark ? 'dark' : 'light';
-        localStorage.setItem('settings', JSON.stringify({ theme }));
-        this.theme.set(theme);
+    public setThemeAppearence(themeAppearence: ThemeAppearence): void {
+        if (themeAppearence === this.themeAppearence()) return;
+        this.document.documentElement.classList.remove(this.themeAppearence());
+        this.document.documentElement.classList.add(themeAppearence);
+        this.themeAppearence.set(themeAppearence);
+        this.saveSettings();
+    }
+
+    public updateAutosaveDelay(autosaveDelay: number): void {
+        this.autosaveDelay.set(autosaveDelay);
+        this.saveSettings();
+    }
+
+    private saveSettings(): void {
+        localStorage.setItem('settings', JSON.stringify({
+            themeAppearence: this.themeAppearence(),
+            autosaveDelay: this.autosaveDelay()
+        }));
     }
 }

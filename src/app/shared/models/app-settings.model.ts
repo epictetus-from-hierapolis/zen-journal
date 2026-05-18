@@ -1,4 +1,5 @@
-export type Theme = 'light' | 'dark';
+export type ThemeAppearence = 'light' | 'dark';
 export interface AppSettings {
-    theme: Theme;
+    themeAppearence: ThemeAppearence;
+    autosaveDelay: number;
 }

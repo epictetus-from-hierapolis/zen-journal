@@ -4,12 +4,13 @@ import { NoteEditorComponent } from "./note-editor.component";
 import { NoteSearchComponent } from "./note-search.component";
 import { NOTES_SERVICE_TOKEN } from "../../shared/services/notes.token";
 import { AppSettingsService } from "../../shared/services/app-settings.service";
+import { RouterLink } from "@angular/router";
 
 
 @Component({
     selector: 'app-notes',
     standalone: true,
-    imports: [NoteListComponent, NoteEditorComponent, NoteSearchComponent],
+    imports: [NoteListComponent, NoteEditorComponent, NoteSearchComponent, RouterLink],
     templateUrl: './notes.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
