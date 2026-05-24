@@ -24,7 +24,7 @@ export class SettingsComponent {
         autosaveDelay: [
             this.appConfig.autosaveDelay,
             [Validators.required, Validators.min(300), Validators.max(3000)]],
-        themeAppearence: [this.appConfig.themeAppearence, [Validators.required, themeValidator()]]
+        themeAppearence: [this.appSettingsService.themeAppearence(), [Validators.required, themeValidator()]]
     });
 
     protected get autosaveDelayControl() {
