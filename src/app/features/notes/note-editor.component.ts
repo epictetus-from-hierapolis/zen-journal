@@ -38,8 +38,8 @@ export class NoteEditorComponent {
 
     protected async addTestNote(): Promise<void> {
         await this.notesService.addNote({
-            title: 'Prima nota',
-            content: 'Continut test',
+            title: '',
+            content: '',
             notebookId: 1,
             tags: [],
             createdAt: new Date(),
@@ -51,9 +51,8 @@ export class NoteEditorComponent {
     protected onInputChange(event: Event): void {
         const title = (event.target! as HTMLInputElement).value;
         const id = this.notesService.selectedNote()?.id;
-
         if (id) {
-            this.notesService.updateNotesSignal(id, { title });
+            this.notesService.applyOptimisticUpdate(id, { title });
             this.autoSave$.next({ id, changes: { title } });
         }
     }
@@ -63,7 +62,7 @@ export class NoteEditorComponent {
         const id = this.notesService.selectedNote()?.id;
 
         if (id) {
-            this.notesService.updateNotesSignal(id, { content });
+            this.notesService.applyOptimisticUpdate(id, { content });
             this.autoSave$.next({ id, changes: { content } });
         }
     }

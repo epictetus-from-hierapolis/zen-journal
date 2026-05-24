@@ -6,13 +6,14 @@ import { NotesService } from './shared/services/notes.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { errorInterceptor } from './shared/interceptors/error.interceptor';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
+import { dexieBackendInterceptor } from './shared/interceptors/dexie-backend.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor])
+      withInterceptors([authInterceptor, errorInterceptor, dexieBackendInterceptor])
     ),
     provideRouter(routes),
     {

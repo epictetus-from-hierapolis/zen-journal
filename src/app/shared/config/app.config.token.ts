@@ -6,6 +6,7 @@ export interface AppConfig {
     maxNotesPerNotebook: number;
     appName: string;
     themeAppearence: 'light' | 'dark';
+    apiUrl: string;
 }
 
 const settings: AppSettings = JSON.parse(localStorage.getItem('settings') ?? 'null') ?? { themeAppearence: 'light', autosaveDelay: 800 };
@@ -15,6 +16,7 @@ export const APP_CONFIG = new InjectionToken<AppConfig>('AppConfig', {
         autosaveDelay: settings.autosaveDelay,
         maxNotesPerNotebook: 100,// TODO: implement in app setings
         appName: 'Zen Journal',
-        themeAppearence: settings.themeAppearence
+        themeAppearence: settings.themeAppearence,
+        apiUrl: '/api'
     })
 });

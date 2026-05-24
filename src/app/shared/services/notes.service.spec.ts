@@ -1,19 +1,13 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { NotesService } from './notes.service';
 import { TestBed } from '@angular/core/testing';
-import { DatabaseService } from './database.service';
 import { Note } from '../models/note.model';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('NotesService', () => {
     let service: NotesService;
-    const mockDb = {
-        notes: {
-            toArray: jest.fn<() => Promise<Note[]>>().mockResolvedValue([]),
-            add: jest.fn<(note: Omit<Note, 'id'>) => Promise<number>>().mockResolvedValue(1),
-            update: jest.fn<(id: number, changes: Partial<Note>) => Promise<void>>().mockResolvedValue(void 0),
-            delete: jest.fn<(id: number) => Promise<void>>().mockResolvedValue(void 0),
-        }
-    }
+    let httpMock: HttpTestingController;
     const mockDate = new Date('2026-01-01T00:00:00.000Z');
     const mockNote: Note = {
         id: 1,
@@ -31,21 +25,26 @@ describe('NotesService', () => {
         TestBed.configureTestingModule({
             providers: [
                 NotesService,
-                {
-                    provide: DatabaseService, // when "service" asks 
-                    useValue: mockDb // offer this
-                }
+                provideHttpClient(),
+                provideHttpClientTesting()
             ]
         });
 
         service = TestBed.inject(NotesService); // create new instance of NotesService
+        httpMock = TestBed.inject(HttpTestingController);
         jest.clearAllMocks();
+    });
+
+    afterEach(() => {
+        httpMock.verify();
     });
 
     describe('loadNotes()', () => {
         it('should load notes into signal', async () => {
-            mockDb.notes.toArray.mockResolvedValueOnce(mockNotes);
-            await service.loadNotes()
+            const promise = service.loadNotes();
+            const req = httpMock.expectOne('/api/notes');
+            req.flush(mockNotes);
+            await promise;
             expect(service.notes()).toEqual(mockNotes);
         });
 
@@ -150,12 +149,12 @@ describe('NotesService', () => {
         });
     });
 
-    describe('updateNotesSignal()', () => {
+    describe('applyOptimisticUpdate()', () => {
         it('should update specific note in both notes list and selection', () => {
             service.notes.set([mockNote]);
             service.selectNote(mockNote);
 
-            service.updateNotesSignal(mockNote.id!, { title: 'Titlu nou' });
+            service.applyOptimisticUpdate(mockNote.id!, { title: 'Titlu nou' });
 
             expect(service.notes().find((n) => n.id === mockNote.id)?.title).toBe('Titlu nou');
             expect(service.selectedNote()?.title).toBe('Titlu nou');

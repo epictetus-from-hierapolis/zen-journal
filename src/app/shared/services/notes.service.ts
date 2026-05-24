@@ -3,14 +3,18 @@ import { DatabaseService } from "./database.service";
 import { Note } from '../models/note.model';
 import { INotesService } from "./notes.service.interface";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { BaseStorageService } from "./base-storage.service";
+import { BehaviorSubject, debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
 import { HandleError } from "../decorators/handle-error.decorator";
+import { HttpClient } from "@angular/common/http";
+import { APP_CONFIG } from "../config/app.config.token";
 
 @Injectable({
     providedIn: 'root'
 })
-export class NotesService extends BaseStorageService<Note> implements INotesService {
+export class NotesService implements INotesService {
+    private readonly httpClient = inject(HttpClient);
+    private readonly appConfig = inject(APP_CONFIG);
+    private readonly endpoint = `${this.appConfig.apiUrl}/notes`;
     public readonly notes = signal<Note[]>([]);
     public readonly selectedNote = signal<Note | null>(null);
     public readonly isLoading = signal<boolean>(false);
@@ -35,22 +39,17 @@ export class NotesService extends BaseStorageService<Note> implements INotesServ
     public readonly archivedNotes = computed(() => this.notes().filter(note => note.status === 'archived'));
     public readonly activeNotes = computed(() => this.notes().filter(note => note.status === 'active'));
 
-    constructor() {
-        const db = inject(DatabaseService);
-        super(db.notes);
-    }
-
     @HandleError
     public async loadNotes(): Promise<void> {
         this.isLoading.set(true);
-        const notes = await this.getAll();
+        const notes = await firstValueFrom(this.httpClient.get<Note[]>(this.endpoint));
         this.notes.set(notes);
         this.isLoading.set(false);
     }
 
     @HandleError
     public async addNote(note: Omit<Note, 'id'>): Promise<void> {
-        const id = await this.add(note);
+        const { id } = await firstValueFrom(this.httpClient.post<{ id: number }>(this.endpoint, note));
         const newNote = { ...note, id };
         this.notes.update(notes => [...notes, newNote]);
         this.selectNote(newNote);
@@ -59,15 +58,15 @@ export class NotesService extends BaseStorageService<Note> implements INotesServ
     @HandleError
     public async updateNote(id: number, changes: Partial<Note>): Promise<void> {
         this.saveStatus.set('saving');
-        await this.update(id, changes);
+        await firstValueFrom(this.httpClient.put(`${this.endpoint}/${id}`, changes));
         this.notes.update(notes => notes.map(note => note.id === id ? { ...note, ...changes } : note));
         this.saveStatus.set('saved');
-        setTimeout(() => this.saveStatus.set('idle'), 2000);
+        setTimeout(() => this.saveStatus.set('idle'), 2000); // setTimeout există pentru că saveStatus trece prin trei stări
     }
 
     @HandleError
     public async deleteNote(id: number): Promise<void> {
-        await this.delete(id);
+        await firstValueFrom(this.httpClient.delete(`${this.endpoint}/${id}`));
         await this.loadNotes();
     }
 
@@ -75,7 +74,7 @@ export class NotesService extends BaseStorageService<Note> implements INotesServ
         this.selectedNote.set(note);
     }
 
-    public updateNotesSignal(id: number, changes: Partial<Note>): void {
+    public applyOptimisticUpdate(id: number, changes: Partial<Note>): void {
         if (!id) return;
         this.notes.update(notes =>
             notes.map(note => note.id === id ? { ...note, ...changes } : note));
