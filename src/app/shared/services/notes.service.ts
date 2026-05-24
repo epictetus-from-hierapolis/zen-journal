@@ -65,6 +65,13 @@ export class NotesService implements INotesService {
     }
 
     @HandleError
+    public async softDeleteNote(id: number): Promise<void> {
+        await firstValueFrom(this.httpClient.put(`${this.endpoint}/${id}`, { status: 'deleted' }));
+        this.notes.update(notes => notes.map(note => note.id === id ? { ...note, status: 'deleted' } : note));
+        this.selectedNote.set(null);
+    }
+
+    @HandleError
     public async deleteNote(id: number): Promise<void> {
         await firstValueFrom(this.httpClient.delete(`${this.endpoint}/${id}`));
         await this.loadNotes();

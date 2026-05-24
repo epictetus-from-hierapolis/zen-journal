@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, ChangeDetectionStrategy, effect, untracked, signal } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectionStrategy, signal, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { from, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -16,11 +16,18 @@ import { WordCountPipe } from '../../shared/ui/word-count.pipe';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteEditorComponent {
+
     private readonly destroyRef = inject(DestroyRef);
     protected readonly notesService = inject(NOTES_SERVICE_TOKEN);
     private readonly appConfig = inject(APP_CONFIG);
 
     private readonly autoSave$ = new Subject<{ id: number; changes: Partial<Note> }>();
+    protected isMenuOpen = signal<boolean>(false);
+
+    @HostListener('document: click')
+    protected closeMenu(): void {
+        this.isMenuOpen.set(false);
+    }
 
     constructor() {
         this.autoSave$.pipe(
@@ -65,5 +72,15 @@ export class NoteEditorComponent {
             this.notesService.applyOptimisticUpdate(id, { content });
             this.autoSave$.next({ id, changes: { content } });
         }
+    }
+
+    protected softDeleteNote() {
+        const id = this.notesService.selectedNote()?.id;
+        if (!id) return;
+        this.notesService.softDeleteNote(id);
+    }
+
+    protected toggleMenu() {
+        this.isMenuOpen.set(!this.isMenuOpen());
     }
 }
