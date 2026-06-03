@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild, afterNextRender, effect } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild, afterNextRender, effect, Input } from "@angular/core";
 import { NOTES_SERVICE_TOKEN } from "../../shared/services/notes.token";
 import { SnippetPipe } from "../../shared/ui/snipet.pipe";
 import { Note } from "../../shared/models/note.model";
@@ -11,6 +11,7 @@ import { Note } from "../../shared/models/note.model";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteSearchComponent {
+    @Input() public mode: 'full' | 'icon' = 'full';
     protected readonly notesService = inject(NOTES_SERVICE_TOKEN);
 
     protected isOpen = signal<boolean>(false);

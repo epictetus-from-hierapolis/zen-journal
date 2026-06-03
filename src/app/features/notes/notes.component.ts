@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from "@angular/core";
 import { NoteListComponent } from "./note-list.component";
 import { NoteEditorComponent } from "./note-editor.component";
 import { NoteSearchComponent } from "./note-search.component";
@@ -15,8 +15,14 @@ import { RouterLink } from "@angular/router";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotesComponent {
-    private readonly notesService = inject(NOTES_SERVICE_TOKEN);
+    protected readonly notesService = inject(NOTES_SERVICE_TOKEN);
     public readonly appSettingsService = inject(AppSettingsService);
+
+    protected isSidebarOpen: WritableSignal<boolean> = signal(false);
+
+    protected toggleSidebar() {
+        this.isSidebarOpen.update(value => !value);
+    }
 
     protected async addNote(): Promise<void> {
         await this.notesService.addNote({
