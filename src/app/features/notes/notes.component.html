@@ -3,8 +3,8 @@
   <!-- Sidebar -->
   <aside class="w-64 bg-white border-r 
     border-gray-200 flex flex-col dark:bg-gray-900 dark:border-gray-800
-    fixed inset-y-0 left-0 z-30 transition-[left] duration-300 md:static md:translate-x-0"
-    [class.-left-64]="!isSidebarOpen()" [class.left-0]="isSidebarOpen()">
+    fixed inset-y-0 left-0 z-30 transition-[left] duration-300 md:static" [class.-left-64]="!isSidebarOpen()"
+    [class.left-0]="isSidebarOpen()">
     <div class="p-4 border-b border-gray-200 dark:border-gray-800">
       <app-note-search></app-note-search>
     </div>
@@ -23,7 +23,7 @@
 
       <button
         class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white text-sm rounded-lg hover:bg-gray-600 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
-        (click)="addNote()"> + Notă nouă
+        (click)="addNote(); toggleSidebar()"> + Notă nouă
       </button>
     </div>
 
