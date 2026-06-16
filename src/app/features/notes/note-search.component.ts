@@ -37,6 +37,12 @@ export class NoteSearchComponent {
         this.notesService.searchQuery$.next('');
     }
 
+    protected onClear() {
+        this.searchInput.set('');
+        this.notesService.searchQuery$.next('');
+        this.searchInputEl()?.nativeElement.focus();
+    }
+
     protected onSearch(event: Event): void {
         const input = event.target as HTMLInputElement;
         this.searchInput.set(input.value);

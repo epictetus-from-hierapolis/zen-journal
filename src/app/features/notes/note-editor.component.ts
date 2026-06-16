@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, ChangeDetectionStrategy, signal, HostListener } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectionStrategy, signal, HostListener, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { from, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -7,11 +7,14 @@ import { Note } from '../../shared/models/note.model';
 import { NOTES_SERVICE_TOKEN } from '../../shared/services/notes.token';
 import { APP_CONFIG } from '../../shared/config/app.config.token';
 import { WordCountPipe } from '../../shared/ui/word-count.pipe';
+import { Editor } from '@tiptap/core';
+import StarterKit from '@tiptap/starter-kit';
+import { TiptapEditorDirective } from 'ngx-tiptap';
 
 @Component({
     selector: 'app-note-editor',
     standalone: true,
-    imports: [FormsModule, WordCountPipe],
+    imports: [FormsModule, WordCountPipe, TiptapEditorDirective],
     templateUrl: './note-editor.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -23,6 +26,19 @@ export class NoteEditorComponent {
 
     private readonly autoSave$ = new Subject<{ id: number; changes: Partial<Note> }>();
     protected isMenuOpen = signal<boolean>(false);
+    private loadedNoteId: undefined | number = undefined;
+    protected readonly editor = new Editor({
+        extensions: [StarterKit],
+        onUpdate: ({ editor }) => {
+            const content = editor.getHTML(); // textul formatat HTML introdus de utilizator
+
+            if (this.loadedNoteId) {
+                this.notesService.applyOptimisticUpdate(this.loadedNoteId, { content });
+                this.autoSave$.next({ id: this.loadedNoteId, changes: { content } });
+            }
+        }
+    });
+
 
     @HostListener('document: click')
     protected closeMenu(): void {
@@ -41,6 +57,18 @@ export class NoteEditorComponent {
             switchMap(({ id, changes }) => from(this.notesService.updateNote(id, { ...changes, updatedAt: new Date() }))),
             takeUntilDestroyed(this.destroyRef)
         ).subscribe();
+
+        effect(() => {
+            const note = this.notesService.selectedNote();
+            if (this.loadedNoteId !== note?.id) {
+                this.editor.commands.setContent(note?.content ?? '');
+                this.loadedNoteId = note?.id;
+            }
+        });
+
+        this.destroyRef.onDestroy(() => {
+            this.editor.destroy();
+        });
     }
 
     protected async addTestNote(): Promise<void> {
@@ -61,16 +89,6 @@ export class NoteEditorComponent {
         if (id) {
             this.notesService.applyOptimisticUpdate(id, { title });
             this.autoSave$.next({ id, changes: { title } });
-        }
-    }
-
-    protected onTextareaChange(event: Event): void {
-        const content = (event.target! as HTMLInputElement).value;
-        const id = this.notesService.selectedNote()?.id;
-
-        if (id) {
-            this.notesService.applyOptimisticUpdate(id, { content });
-            this.autoSave$.next({ id, changes: { content } });
         }
     }
 

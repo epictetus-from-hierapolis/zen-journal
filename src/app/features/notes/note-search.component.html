@@ -1,27 +1,28 @@
-<div>
-    @if(mode === 'full'){
-    <button
-        class="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-500"
-        (click)="onOpen()">
-        <span><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                class="size-4 flex-shrink-0">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-        </span>
-        <span>Search</span>
-    </button>
-    } @else {
-    <button
-        class="p-2 -ml-2 text-gray-500 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 cursor-pointer"
-        (click)="onOpen()">
-        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 flex-shrink-0">
+@if(mode === 'full'){
+<!-- Search button long -->
+<button
+    class="cursor-pointer flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-500"
+    (click)="onOpen()">
+    <span>
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 flex-shrink-0">
             <path stroke-linecap="round" stroke-linejoin="round"
                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
         </svg>
-    </button>
-    }
-</div>
+    </span>
+    <span>Search</span>
+</button>
+} @else {
+
+<!-- Search button short -->
+<button class="p-2 -mr-2 text-gray-500 rounded-lg 
+    hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 
+    cursor-pointer" (click)="onOpen()">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 flex-shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+    </svg>
+</button>
+}
 
 @if (isOpen()) {
 <div class="flex fixed inset-0 z-50 bg-black/50 
@@ -30,26 +31,30 @@
         md:rounded-xl md:shadow-2x1 md:w-1/2 md:max-w-2xl md:h-[600px] 
         flex flex-col dark:bg-gray-900 dark:shadow-none" (click)="$event.stopPropagation()">
 
-        <div class="flex items-center gap-2 border-b border-gray-200 dark:border-gray-800 w-full mb-2">
+        <div class="flex items-center gap-2 border-b border-gray-200 
+        dark:border-gray-800 w-full pb-4">
 
             <!-- Back button -->
             <button (click)="onClose()"
-                class="md:hidden p-2 text-gray-500 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 cursor-pointer">
-                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                class="md:hidden p-2 -ml-2 text-gray-500 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 cursor-pointer">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                 </svg>
             </button>
 
             <input #searchInputEl type="text" placeholder="Search" [value]="searchInput()" (input)="onSearch($event)"
-                class="flex-1 px-4 py-2 outline-none text-sm dark:bg-transparent dark:text-gray-100 dark:placeholder-gray-600" />
+                class="flex-1 outline-none text-sm dark:bg-transparent dark:text-gray-100 dark:placeholder-gray-600" />
 
-            <!-- close button -->
-            <button (click)="onClose()"
-                class="md:hidden p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <!-- Clear button -->
+            @if (searchInput().length) {
+            <button (click)="onClear()"
+                class="md:hidden p-2 -mr-2 rounded-lg dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
             </button>
+            }
+
         </div>
 
         @if(searchInput().length){

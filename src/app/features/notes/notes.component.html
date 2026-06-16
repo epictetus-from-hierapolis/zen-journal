@@ -5,26 +5,17 @@
     border-gray-200 flex flex-col dark:bg-gray-900 dark:border-gray-800
     fixed inset-y-0 left-0 z-30 transition-[left] duration-300 md:static" [class.-left-64]="!isSidebarOpen()"
     [class.left-0]="isSidebarOpen()">
-    <div class="p-4 border-b border-gray-200 dark:border-gray-800">
-      <app-note-search></app-note-search>
-    </div>
+    <div class="flex p-4 border-b border-gray-200 dark:border-gray-800 gap-2 items-center">
 
-    <div class="p-3 border-b border-gray-200 
-      dark:border-gray-800 flex justify-between 
-      items-center gap-2">
-
-      <!-- close button -->
+      <!-- back button -->
       <button (click)="toggleSidebar()"
-        class="md:hidden p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        class="md:hidden flex-none p-2 -ml-2 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
         </svg>
       </button>
 
-      <button
-        class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white text-sm rounded-lg hover:bg-gray-600 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
-        (click)="addNote(); toggleSidebar()"> + Notă nouă
-      </button>
+      <app-note-search class="flex-1"></app-note-search>
     </div>
 
     <nav class="flex-1 p-2">
@@ -32,9 +23,11 @@
     </nav>
 
     <div class="p-3 border-b border-gray-200 dark:border-gray-800">
+
+      <!-- Settings button -->
       <button
-        class="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white text-sm cursor-pointer
-      rounded-lg hover:bg-gray-600 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
+        class="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-600 text-sm cursor-pointer
+      rounded-lg hover:bg-gray-300 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
         routerLink="/settings">
         Settings
       </button>
@@ -58,17 +51,15 @@
         dark:border-gray-800 md:hidden bg-gray-50 dark:bg-gray-900/50">
 
         <!-- Burger button-->
-
         <button (click)="toggleSidebar()"
           class="p-2 -ml-2 text-gray-500 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 cursor-pointer">
           <svg fill=" none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
         </button>
+
         <div class="text-sm font-semibold tracking-wide uppercase text-gray-500 dark:text-gray-400">Zen Journal</div>
-        <div class="w-10">
-          <app-note-search [mode]="'icon'"></app-note-search>
-        </div>
+        <app-note-search [mode]="'icon'"></app-note-search>
       </div>
       <app-note-list class=" h-full flex flex-col" />
       <button (click)="addNote()"

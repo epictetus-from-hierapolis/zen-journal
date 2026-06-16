@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full p-6">
+<div class="flex flex-col h-full p-4 pb-16 md:pb-4">
 
     @if(notesService.selectedNote()) {
     <div class="flex flex-col h-full">
@@ -6,9 +6,9 @@
         <!-- header -->
         <div class="flex items-center justify-between gap-4 mb-4">
             <!-- back and title -->
-            <div class="flex items-center gap-3 flex-1">
-                <button
-                    class="md:hidden p-2 -ml-2 text-gray-500 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 cursor-pointer"
+            <div class="flex items-center gap-2 flex-1">
+                <button class="md:hidden p-2 -ml-2 text-gray-500 rounded-lg
+                     hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 cursor-pointer"
                     (click)="notesService.selectNote(null)">
                     <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -24,17 +24,18 @@
                 <div class="text-xs text-gray-400 dark:text-gray-500">{{ notesService.selectedNote()?.content |
                     wordCount}} words
                 </div>
-                <button (click)="$event.stopPropagation(); toggleMenu()" class="cursor-pointer">
-                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                <button (click)="$event.stopPropagation(); toggleMenu()" class="text-gray-500 rounded-lg
+                     hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 cursor-pointer p-2 -mr-2">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
                     </svg>
                 </button>
                 @if (isMenuOpen()) {
                 <div
-                    class="absolute top-8 right-0 z-10 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1">
+                    class="-mr-2 absolute top-10 right-0 z-10 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl py-1 overflow-hidden">
                     <button
-                        class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        class="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
                         (click)="softDeleteNote()">
                         Delete
                     </button>
@@ -42,10 +43,53 @@
                 }
             </div>
         </div>
+        <div class="flex items-center gap-1.5 w-full bg-gray-50 border-gray-200 
+        dark:border-gray-800 left-0 bottom-0 md:static md:border-none fixed 
+        md:bg-transparent p-2 md:p-0 border-t border-b md:w-auto z-20 dark:bg-gray-950 dark:md:bg-transparent">
+            <!-- Buton BOLD -->
+            <button (click)="editor.chain().focus().toggleBold().run()" [class.bg-gray-200]="editor.isActive('bold')"
+                [class.dark:bg-gray-700]="editor.isActive('bold')"
+                class="font-semibold text-sm p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
+                <strong>B</strong>
+            </button>
+            <!-- Buton ITALIC -->
+            <button (click)="editor.chain().focus().toggleItalic().run()"
+                [class.bg-gray-200]="editor.isActive('italic')" [class.dark:bg-gray-700]="editor.isActive('italic')"
+                class="font-semibold text-sm p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
+                <em>I</em>
+            </button>
+            <!-- Separator -->
+            <div class="h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
+            <!-- Buton HEADING 1 (H1) -->
+            <button (click)="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+                [class.bg-gray-200]="editor.isActive('heading', {level: 1})"
+                [class.dark:bg-gray-700]="editor.isActive('heading', {level: 1})" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors 
+                cursor-pointer text-gray-700 dark:text-gray-300 font-semibold text-sm">
+                <strong>H1</strong>
+            </button>
+            <!-- Buton HEADING 2 (H2) -->
+            <button (click)="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+                [class.bg-gray-200]="editor.isActive('heading', {level: 2})"
+                [class.dark:bg-gray-700]="editor.isActive('heading', {level: 2})" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors 
+                cursor-pointer text-gray-700 dark:text-gray-300 font-semibold text-sm">
+                <strong>H2</strong>
+            </button>
+            <!-- Separator -->
+            <div class="h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
+            <!-- Buton BULLET LIST -->
+            <button (click)="editor.chain().focus().toggleBulletList().run()"
+                [class.bg-gray-200]="editor.isActive('bulletList')"
+                [class.dark:bg-gray-700]="editor.isActive('bulletList')"
+                class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0z" />
+                </svg>
+            </button>
+        </div>
+        <tiptap-editor [editor]="editor" class="flex-1 bg-transparent border-none text-gray-700 leading-relaxed 
+            dark:text-gray-300 dark:placeholder-gray-600"></tiptap-editor>
 
-        <textarea placeholder="Scrie ceva..."
-            class="flex-1 bg-transparent border-none outline-none resize-none text-gray-700 leading-relaxed dark:text-gray-300 dark:placeholder-gray-600"
-            [value]="notesService.selectedNote()?.content ?? ''" (input)="onTextareaChange($event)"></textarea>
     </div>
     } @else {
     <div class="flex flex-col items-center justify-center h-full gap-4">
