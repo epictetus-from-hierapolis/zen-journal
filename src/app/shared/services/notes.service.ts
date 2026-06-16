@@ -49,19 +49,36 @@ export class NotesService implements INotesService {
 
     @HandleError
     public async addNote(note: Omit<Note, 'id'>): Promise<void> {
-        const { id } = await firstValueFrom(this.httpClient.post<{ id: number }>(this.endpoint, note));
-        const newNote = { ...note, id };
-        this.notes.update(notes => [...notes, newNote]);
-        this.selectNote(newNote);
+        const tempId: number = -Date.now();
+        const tempNote: Note = { ...note, id: tempId };
+
+        this.notes.update(notes => [...notes, tempNote]);
+        this.selectNote(tempNote);
+
+        try {
+            const { id } = (await firstValueFrom(this.httpClient.post<{ id: number }>(this.endpoint, note)));
+            const newNote: Note = { ...note, id };
+
+            this.notes.update(notes => notes.map(note => note.id === tempId ? { ...note, id } : note));
+            this.selectNote(newNote);
+        } catch (error) {
+            this.selectNote(null);
+            this.notes.update(notes => notes.filter(note => note.id !== tempId));
+            throw error;
+        }
     }
 
     @HandleError
     public async updateNote(id: number, changes: Partial<Note>): Promise<void> {
         this.saveStatus.set('saving');
-        await firstValueFrom(this.httpClient.put(`${this.endpoint}/${id}`, changes));
-        this.notes.update(notes => notes.map(note => note.id === id ? { ...note, ...changes } : note));
-        this.saveStatus.set('saved');
-        setTimeout(() => this.saveStatus.set('idle'), 2000); // setTimeout există pentru că saveStatus trece prin trei stări
+        try {
+            await firstValueFrom(this.httpClient.put(`${this.endpoint}/${id}`, changes));
+            this.notes.update(notes => notes.map(note => note.id === id ? { ...note, ...changes } : note));
+            this.saveStatus.set('saved');
+            setTimeout(() => this.saveStatus.set('idle'), 2000); // setTimeout există pentru că saveStatus trece prin trei stări
+        } catch (error) {
+            throw error;
+        }
     }
 
     @HandleError

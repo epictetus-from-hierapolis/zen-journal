@@ -32,7 +32,7 @@ export class NoteEditorComponent {
         onUpdate: ({ editor }) => {
             const content = editor.getHTML(); // textul formatat HTML introdus de utilizator
 
-            if (this.loadedNoteId) {
+            if (this.loadedNoteId && this.loadedNoteId === this.notesService.selectedNote()?.id) {
                 this.notesService.applyOptimisticUpdate(this.loadedNoteId, { content });
                 this.autoSave$.next({ id: this.loadedNoteId, changes: { content } });
             }
