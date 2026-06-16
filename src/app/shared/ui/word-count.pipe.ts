@@ -7,6 +7,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 export class WordCountPipe implements PipeTransform {
     public transform(content: string | undefined | null): number {
         if (!content) return 0;
-        return content.split(/\s+/).filter(item => item !== '').length;
+        const cleanText = content.replace(/<[^>]*>/g, ' ');
+        return cleanText.split(/\s+/).filter(item => item !== '').length;
     }
 }
