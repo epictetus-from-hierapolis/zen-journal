@@ -92,10 +92,10 @@ export class NoteEditorComponent {
         }
     }
 
-    protected softDeleteNote() {
+    protected deleteNote() {
         const id = this.notesService.selectedNote()?.id;
         if (!id) return;
-        this.notesService.softDeleteNote(id);
+        this.notesService.deleteNote(id);
     }
 
     protected toggleMenu() {

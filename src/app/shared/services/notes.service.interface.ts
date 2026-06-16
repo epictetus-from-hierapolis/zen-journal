@@ -14,7 +14,6 @@ export interface INotesService {
     addNote(note: Omit<Note, 'id'>): Promise<void>;
     updateNote(id: number, changes: Partial<Note>): Promise<void>;
     deleteNote(id: number): Promise<void>;
-    softDeleteNote(id: number): Promise<void>;
     selectNote(note: Note | null): void;
     applyOptimisticUpdate(id: number, changes: Partial<Note>): void;
     filteredNotes: Signal<Note[]>;
