@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, signal, WritableSignal } from "@angular/core";
 import { NoteListComponent } from "./note-list.component";
 import { NoteEditorComponent } from "./note-editor.component";
 import { NoteSearchComponent } from "./note-search.component";
@@ -19,6 +19,12 @@ export class NotesComponent {
     public readonly appSettingsService = inject(AppSettingsService);
 
     protected isSidebarOpen: WritableSignal<boolean> = signal(false);
+
+    constructor() {
+        effect(() => {
+            if (this.notesService.selectedNote()) this.isSidebarOpen.set(false);
+        });
+    }
 
     protected toggleSidebar() {
         this.isSidebarOpen.update(value => !value);
