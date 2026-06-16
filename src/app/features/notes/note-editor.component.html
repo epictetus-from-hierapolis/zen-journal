@@ -21,7 +21,7 @@
             </div>
 
             <div class="flex items-center gap-2 relative">
-                <div class="text-xs text-gray-400 dark:text-gray-500">{{ notesService.selectedNote()?.content |
+                <div class="text-xs text-gray-600 dark:text-gray-400">{{ notesService.selectedNote()?.content |
                     wordCount}} words
                 </div>
                 <button (click)="$event.stopPropagation(); toggleMenu()" class="text-gray-500 rounded-lg
@@ -45,7 +45,7 @@
         </div>
         <div class="flex items-center gap-1.5 w-full bg-gray-50 border-gray-200 
         dark:border-gray-800 left-0 bottom-0 md:static md:border-none fixed 
-        md:bg-transparent p-2 md:p-0 border-t border-b md:w-auto z-20 dark:bg-gray-950 dark:md:bg-transparent">
+        md:bg-transparent p-2 md:p-0 border-t border-b md:w-auto z-20 dark:bg-gray-900 md:dark:bg-transparent">
             <!-- Buton BOLD -->
             <button (click)="editor.chain().focus().toggleBold().run()" [class.bg-gray-200]="editor.isActive('bold')"
                 [class.dark:bg-gray-700]="editor.isActive('bold')"

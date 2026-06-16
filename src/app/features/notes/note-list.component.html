@@ -10,14 +10,14 @@
     <!-- Loading -->
     @if(notesService.isLoading()){
     <div class="flex items-center justify-center flex-1">
-        <p class="text-sm text-gray-400 dark:text-gray-500">Se incarca...</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Se incarca...</p>
     </div>
     }
 
     <!-- Lista goală -->
     @else if(notesService.activeNotes().length === 0 ){
     <div class="flex items-center justify-center flex-1">
-        <p class="text-sm text-gray-400 dark:text-gray-500">Nicio notă încă</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Nicio notă încă</p>
     </div>
     }
 
@@ -35,7 +35,7 @@
                 @if (notesService.selectedNote()?.id === note.id && notesService.saveStatus() === 'saving') {
                 <span class="w-2 h-2 rounded-full bg-gray-400 animate-pulse flex-shrink-0 dark:bg-gray-600"></span>
                 }
-                <p class="text-xs text-gray-400 mt-1 dark:text-gray-500">
+                <p class="text-xs text-gray-600 mt-1 dark:text-gray-400">
                     {{ note.updatedAt | relativeTime }}
                 </p>
             </div>

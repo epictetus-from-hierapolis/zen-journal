@@ -1,7 +1,7 @@
 @if(mode === 'full'){
 <!-- Search button long -->
 <button
-    class="cursor-pointer flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-500"
+    class="cursor-pointer flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-400"
     (click)="onOpen()">
     <span>
         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 flex-shrink-0">
@@ -14,7 +14,7 @@
 } @else {
 
 <!-- Search button short -->
-<button class="p-2 -mr-2 text-gray-500 rounded-lg 
+<button class="p-2 -mr-2 text-gray-600 rounded-lg 
     hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 
     cursor-pointer" (click)="onOpen()">
     <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 flex-shrink-0">
@@ -43,12 +43,12 @@
             </button>
 
             <input #searchInputEl type="text" placeholder="Search" [value]="searchInput()" (input)="onSearch($event)"
-                class="flex-1 outline-none text-sm dark:bg-transparent dark:text-gray-100 dark:placeholder-gray-600" />
+                class="flex-1 outline-none text-sm dark:bg-transparent dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400" />
 
             <!-- Clear button -->
             @if (searchInput().length) {
             <button (click)="onClear()"
-                class="md:hidden p-2 -mr-2 rounded-lg dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+                class="md:hidden p-2 -mr-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                 <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
@@ -66,7 +66,7 @@
                 <p class="line-clamp-2 dark:text-gray-400">{{ note.content | snippet: searchInput() }}</p>
             </div>
             } @empty {
-            <div class="dark:text-gray-500">There are no items.</div>
+            <div class="text-gray-600 dark:text-gray-400">There are no items.</div>
             }
         </div>
         }

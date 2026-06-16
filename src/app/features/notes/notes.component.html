@@ -19,15 +19,15 @@
     </div>
 
     <nav class="flex-1 p-2">
-      <p class="text-xs text-gray-400 uppercase tracking-wider px-2 mb-2 dark:text-gray-500">Notebooks</p>
+      <p class="text-xs text-gray-600 uppercase tracking-wider px-2 mb-2 dark:text-gray-400">Notebooks</p>
     </nav>
 
     <div class="p-3 border-b border-gray-200 dark:border-gray-800">
 
       <!-- Settings button -->
       <button
-        class="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-600 text-sm cursor-pointer
-      rounded-lg hover:bg-gray-300 transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
+        class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm cursor-pointer
+      rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
         routerLink="/settings">
         Settings
       </button>
@@ -35,7 +35,7 @@
   </aside>
 
   @if (isSidebarOpen()) {
-  <div (click)="toggleSidebar()" class="fixed inset-0 bg-black/30 dark: bg-black/50 md:hidden"></div>
+  <div (click)="toggleSidebar()" class="fixed inset-0 bg-black/30 dark:bg-black/50 md:hidden"></div>
   }
 
   <!-- Main area -->
