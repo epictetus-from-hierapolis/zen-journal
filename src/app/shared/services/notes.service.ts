@@ -31,8 +31,8 @@ export class NotesService implements INotesService {
     public readonly filteredNotes = computed(() => {
         const query = this.debouncedSearch()?.toLowerCase() ?? '';
         if (!query) return this.activeNotes();
-        return this.activeNotes().filter(note => note.title.includes(query) ||
-            note.content.includes(query));
+        return this.activeNotes().filter(note => note.title.toLowerCase().includes(query) ||
+            note.content.replace(/<[^>]*>/g, ' ').toLowerCase().includes(query));
     });
 
     public readonly totalNotes = computed(() => this.notes().length);

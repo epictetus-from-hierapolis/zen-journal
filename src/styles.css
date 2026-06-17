@@ -28,10 +28,19 @@ cdk-virtual-scroll-viewport {
     background: #4b5563;
 }
 
+html,
+body {
+    overflow: hidden;
+    overscroll-behavior: none;
+    margin: 0;
+    height: 100%;
+}
+
 .ProseMirror {
     resize: none;
     outline: none;
     min-height: 100%;
+    word-break: break-word;
 }
 
 .ProseMirror h1 {
