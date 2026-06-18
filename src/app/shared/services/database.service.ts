@@ -28,6 +28,18 @@ export class DatabaseService extends Dexie {
                 delete note.isArchived;
             });
         });
+        this.version(24).stores({
+            notes: '++id, title, notebookId, createdAt, updatedAt',
+            notebooks: '++id, name, createdAt',
+            tags: '++id, name   '
+        }).upgrade(tx => {
+            return tx.table('notes').toCollection().modify((note: any) => {
+                delete note.status;
+                delete note.archivedAt;
+                delete note.deletedAt
+                delete note.isArchived;
+            });
+        });
     }
 
 }

@@ -4,13 +4,15 @@ ZenJournal is a modern, offline-first journaling and note-taking application bui
 
 ## 🚀 Features
 
-- **Offline-First Architecture**: Built using [Dexie.js](https://dexie.org/) (IndexedDB wrapper), ensuring your notes are always available and securely stored locally on your device, even without an internet connection.
+- **Offline-First Architecture**: Built using [Dexie.js](https://dexie.org/) (IndexedDB wrapper), ensuring your notes are always available and securely stored locally on your device. 
+  * *Architectural Decision*: The UI components and `NotesService` communicate via Angular's standard `HttpClient` pointing to `/api`. This traffic is intercepted locally by a `dexieBackendInterceptor`. This design decouples the frontend logic from the database implementation, making it extremely easy to migrate to a real Node.js backend in the future by simply swapping out or removing the interceptor.
 - **Notebooks & Organization**: Group your notes into customizable Notebooks.
 - **Tagging System**: Add colors and tags to notes for easy categorization and retrieval.
 - **Note States**: Manage the lifecycle of your notes with Active, Archived, and Deleted states.
 - **Dark & Light Mode**: Built-in support for theme switching based on your preferences.
 - **Autosave**: Configurable autosave delay so you never lose your progress.
 - **Modern UI**: Styled utilizing [Tailwind CSS](https://tailwindcss.com/) for a clean and responsive user interface.
+
 
 ## 🛠️ Technology Stack
 

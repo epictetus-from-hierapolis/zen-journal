@@ -15,7 +15,7 @@
     }
 
     <!-- Lista goală -->
-    @else if(notesService.activeNotes().length === 0 ){
+    @else if(notesService.notes().length === 0 ){
     <div class="flex items-center justify-center flex-1">
         <p class="text-sm text-gray-600 dark:text-gray-400">Nicio notă încă</p>
     </div>
@@ -24,7 +24,7 @@
     <!-- Lista de note -->
     @else {
     <cdk-virtual-scroll-viewport itemSize="53" class="flex-1 overflow-x-hidden h-full">
-        <div *cdkVirtualFor="let note of notesService.activeNotes(); trackBy: trackNote"
+        <div *cdkVirtualFor="let note of notesService.notes(); trackBy: trackNote"
             class="p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors dark:border-gray-800 dark:hover:bg-gray-800/50"
             (click)=" selectNote(note)">
 

@@ -17,7 +17,6 @@ describe('NotesService', () => {
         tags: [],
         createdAt: mockDate,
         updatedAt: mockDate,
-        status: 'active'
     }
     const mockNotes: Note[] = [mockNote];
 

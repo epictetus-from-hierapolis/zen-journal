@@ -1,5 +1,4 @@
 import { Injectable, signal, computed, inject } from "@angular/core";
-import { DatabaseService } from "./database.service";
 import { Note } from '../models/note.model';
 import { INotesService } from "./notes.service.interface";
 import { toSignal } from "@angular/core/rxjs-interop";
@@ -18,7 +17,7 @@ export class NotesService implements INotesService {
     public readonly notes = signal<Note[]>([]);
     public readonly selectedNote = signal<Note | null>(null);
     public readonly isLoading = signal<boolean>(false);
-    public readonly saveStatus = signal<'idle' | 'saving' | 'saved'>('idle');
+    public readonly saveStatus = signal<'idle' | 'saving' | 'saved' | 'offline'>('idle');
 
     public readonly searchQuery$ = new BehaviorSubject<string>('');
     private readonly debouncedSearch = toSignal(
@@ -30,21 +29,23 @@ export class NotesService implements INotesService {
     );
     public readonly filteredNotes = computed(() => {
         const query = this.debouncedSearch()?.toLowerCase() ?? '';
-        if (!query) return this.activeNotes();
-        return this.activeNotes().filter(note => note.title.toLowerCase().includes(query) ||
+        if (!query) return this.notes();
+        return this.notes().filter(note => note.title.toLowerCase().includes(query) ||
             note.content.replace(/<[^>]*>/g, ' ').toLowerCase().includes(query));
     });
 
     public readonly totalNotes = computed(() => this.notes().length);
-    public readonly archivedNotes = computed(() => this.notes().filter(note => note.status === 'archived'));
-    public readonly activeNotes = computed(() => this.notes().filter(note => note.status === 'active'));
 
     @HandleError
     public async loadNotes(): Promise<void> {
         this.isLoading.set(true);
-        const notes = await firstValueFrom(this.httpClient.get<Note[]>(this.endpoint));
-        this.notes.set(notes);
-        this.isLoading.set(false);
+        try {
+            const notes = await firstValueFrom(this.httpClient.get<Note[]>(this.endpoint));
+            this.notes.set(notes);
+            this.isLoading.set(false);
+        } finally {
+            this.isLoading.set(false);
+        }
     }
 
     @HandleError
@@ -77,6 +78,7 @@ export class NotesService implements INotesService {
             this.saveStatus.set('saved');
             setTimeout(() => this.saveStatus.set('idle'), 2000); // setTimeout există pentru că saveStatus trece prin trei stări
         } catch (error) {
+            this.saveStatus.set('offline');
             throw error;
         }
     }

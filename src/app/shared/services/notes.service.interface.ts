@@ -6,10 +6,8 @@ export interface INotesService {
     notes: Signal<Note[]>;
     selectedNote: Signal<Note | null>;
     isLoading: Signal<boolean>;
-    saveStatus: Signal<'idle' | 'saving' | 'saved'>;
+    saveStatus: Signal<'idle' | 'saving' | 'saved' | 'offline'>;
     totalNotes: Signal<number>;
-    archivedNotes: Signal<Note[]>;
-    activeNotes: Signal<Note[]>;
     loadNotes(): Promise<void>;
     addNote(note: Omit<Note, 'id'>): Promise<void>;
     updateNote(id: number, changes: Partial<Note>): Promise<void>;

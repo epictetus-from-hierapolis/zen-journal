@@ -38,7 +38,6 @@ export class NotesComponent {
             tags: [],
             createdAt: new Date(),
             updatedAt: new Date(),
-            status: 'active'
         });
     }
 }
