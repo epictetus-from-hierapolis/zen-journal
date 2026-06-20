@@ -12,8 +12,10 @@ export interface INotesService {
     addNote(note: Omit<Note, 'id'>): Promise<void>;
     updateNote(id: number, changes: Partial<Note>): Promise<void>;
     deleteNote(id: number): Promise<void>;
+    removeNotesByNotebookId(notebookId: number): void;
     selectNote(note: Note | null): void;
     applyOptimisticUpdate(id: number, changes: Partial<Note>): void;
     filteredNotes: Signal<Note[]>;
+    visibleNotes: Signal<Note[]>;
     searchQuery$: BehaviorSubject<string>;
 }

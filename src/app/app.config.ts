@@ -2,11 +2,13 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessC
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { NOTES_SERVICE_TOKEN } from './shared/services/notes.token';
+import { NOTEBOOKS_SERVICE_TOKEN } from './shared/services/notebooks.token';
 import { NotesService } from './shared/services/notes.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { errorInterceptor } from './shared/interceptors/error.interceptor';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
 import { dexieBackendInterceptor } from './shared/interceptors/dexie-backend.interceptor';
+import { NotebooksService } from './shared/services/notebooks.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,6 +21,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: NOTES_SERVICE_TOKEN,
       useClass: NotesService
+    },
+    {
+      provide: NOTEBOOKS_SERVICE_TOKEN,
+      useClass: NotebooksService
     },
   ]
 };

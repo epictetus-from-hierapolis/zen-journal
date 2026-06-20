@@ -40,6 +40,10 @@ export class DatabaseService extends Dexie {
                 delete note.isArchived;
             });
         });
+
+        this.on('populate', () => {
+            this.notebooks.add({ name: 'My Notebooks', createdAt: new Date() });
+        });
     }
 
 }

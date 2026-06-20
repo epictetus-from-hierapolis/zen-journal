@@ -15,6 +15,7 @@ export class NotebooksService implements INotebooksService {
     private readonly endpoint = `${this.appConfig.apiUrl}/notebooks`;
     public notebooks = signal<Notebook[]>([]);
     public isLoading = signal<boolean>(false);
+    public selectedNotebook = signal<Notebook | null>(null);
 
     @HandleError
     public async loadNotebooks(): Promise<void> {
@@ -28,12 +29,13 @@ export class NotebooksService implements INotebooksService {
     }
 
     @HandleError
-    public async addNotebook(notebook: Omit<Notebook, "id">): Promise<void> {
+    public async addNotebook(name: string): Promise<void> {
+        const newNotebook: Omit<Notebook, 'id'> = { name, createdAt: new Date() };
         const tempId: number = -Date.now();
-        const tempNotebook: Notebook = { ...notebook, id: tempId };
+        const tempNotebook: Notebook = { ...newNotebook, id: tempId };
         this.notebooks.update(notebooks => [...notebooks, tempNotebook]);
         try {
-            const { id } = await firstValueFrom(this.httpClient.post<{ id: number }>(this.endpoint, notebook));
+            const { id } = await firstValueFrom(this.httpClient.post<{ id: number }>(this.endpoint, newNotebook));
             this.notebooks.update(notebooks => notebooks.map(notebook => notebook.id === tempId ? { ...notebook, id } : notebook))
         } catch (error) {
             this.notebooks.update(notebooks => notebooks.filter(notebook => notebook.id !== tempId));
@@ -50,9 +52,12 @@ export class NotebooksService implements INotebooksService {
         const copyCurrentNotebook = { ...currentNotebook };
 
         this.notebooks.update(notebooks => notebooks.map(notebook => notebook.id === id ? { ...notebook, ...changes } : notebook));
+
+        if (this.selectedNotebook()?.id === id) this.selectedNotebook.set({ ...currentNotebook, ...changes });
         try {
             await firstValueFrom(this.httpClient.put(`${this.endpoint}/${id}`, changes));
         } catch (error) {
+            if (this.selectedNotebook()?.id === id) this.selectedNotebook.set(copyCurrentNotebook);
             this.notebooks.update(notebooks => notebooks.map(notebook => notebook.id === id ? copyCurrentNotebook : notebook));
             throw error;
         }
@@ -64,13 +69,21 @@ export class NotebooksService implements INotebooksService {
         if (!currentNotebook) throw new Error(`Notebook  with ${id} doesn't exist`);
 
         const currentNotebooks = this.notebooks();
+        const previousNotebook = this.selectedNotebook();
         this.notebooks.update(notebooks => notebooks.filter(notebook => notebook.id !== id));
+        if (previousNotebook?.id === id) this.selectedNotebook.set(null);
 
         try {
             await firstValueFrom(this.httpClient.delete(`${this.endpoint}/${id}`));
+
         } catch (error) {
             this.notebooks.set(currentNotebooks);
+            this.selectedNotebook.set(previousNotebook);
             throw error;
         }
+    }
+
+    public selectNotebook(notebook: Notebook | null): void {
+        this.selectedNotebook.set(notebook);
     }
 }

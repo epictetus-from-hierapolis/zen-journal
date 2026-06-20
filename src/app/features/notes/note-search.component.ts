@@ -28,7 +28,6 @@ export class NoteSearchComponent {
 
     protected onOpen(): void {
         this.isOpen.set(true);
-
     }
 
     protected onClose(): void {

@@ -1,0 +1,22 @@
+<div class="flex flex-col text-sm pl-2">
+    @for (notebook of notebooksService.notebooks(); track notebook.id) {
+
+    <div (click)="notebooksService.selectNotebook(notebook)" class="group flex items-center justify-between cursor-pointer 
+        hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg 
+        px-3 py-2 transition-colors text-gray-700 dark:text-gray-300"
+        [class.bg-gray-100]="notebooksService.selectedNotebook()?.id === notebook.id"
+        [class.dark:bg-gray-800]="notebooksService.selectedNotebook()?.id === notebook.id"
+        [class.text-gray-900]="notebooksService.selectedNotebook()?.id === notebook.id"
+        [class.font-medium]="notebooksService.selectedNotebook()?.id === notebook.id">
+        <!-- Icon + Nootebook Name -->
+        <div class="flex items-center gap-2 min-w-0">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                class="w-4 h-4 text-gray-400 flex-shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-16.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-16.25v16.25" />
+            </svg>
+            <span class="truncate">{{ notebook.name }}</span>
+        </div>
+    </div>
+    }
+</div>

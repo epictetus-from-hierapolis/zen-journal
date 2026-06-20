@@ -15,14 +15,34 @@
         </svg>
       </button>
 
+      <!-- search -->
       <app-note-search class="flex-1"></app-note-search>
     </div>
 
     <nav class="flex-1 p-2">
-      <p class="text-xs text-gray-600 uppercase tracking-wider px-2 mb-2 dark:text-gray-400">Notebooks</p>
+
+      <div (click)="notebooksService.selectNotebook(null);toggleSidebar()"
+        [class.bg-gray-100]="notebooksService.selectedNotebook() === null"
+        [class.dark:bg-gray-800]="notebooksService.selectedNotebook() === null"
+        [class.text-gray-900]="notebooksService.selectedNotebook() === null"
+        [class.font-medium]="notebooksService.selectedNotebook() === null" class="cursor-pointer flex justify-between items-center px-2 py-2 
+        rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+        <span class="text-xs text-gray-600 uppercase tracking-wider 
+       dark:text-gray-300">Notes</span>
+      </div>
+
+      <!-- header notebooks container -->
+      <div class="flex justify-between items-center px-2 mb-2">
+        <span class="text-xs text-gray-600 uppercase tracking-wider 
+       dark:text-gray-400">Notebooks</span>
+        <app-notebook-create></app-notebook-create>
+      </div>
+
+      <app-notebooks></app-notebooks>
+
     </nav>
 
-    <div class="p-3 border-b border-gray-200 dark:border-gray-800">
+    <div class="p-3 border-b border-t border-gray-200 dark:border-gray-800">
 
       <!-- Settings button -->
       <button

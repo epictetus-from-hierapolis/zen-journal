@@ -110,7 +110,8 @@ export class NoteEditorComponent {
         this.notesService.deleteNote(id);
     }
 
-    protected toggleMenu() {
-        this.isMenuOpen.set(!this.isMenuOpen());
+    protected toggleMenu(event: Event) {
+        event.stopPropagation();
+        this.isMenuOpen.update(value => !value);
     }
 }

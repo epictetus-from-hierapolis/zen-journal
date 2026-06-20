@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject } from "@angular/core";
+import { Injectable, signal, computed, inject, numberAttribute } from "@angular/core";
 import { Note } from '../models/note.model';
 import { INotesService } from "./notes.service.interface";
 import { toSignal } from "@angular/core/rxjs-interop";
@@ -6,6 +6,7 @@ import { BehaviorSubject, debounceTime, distinctUntilChanged, firstValueFrom } f
 import { HandleError } from "../decorators/handle-error.decorator";
 import { HttpClient } from "@angular/common/http";
 import { APP_CONFIG } from "../config/app.config.token";
+import { NOTEBOOKS_SERVICE_TOKEN } from "./notebooks.token";
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,7 @@ import { APP_CONFIG } from "../config/app.config.token";
 export class NotesService implements INotesService {
     private readonly httpClient = inject(HttpClient);
     private readonly appConfig = inject(APP_CONFIG);
+    private readonly notebooksService = inject(NOTEBOOKS_SERVICE_TOKEN);
     private readonly endpoint = `${this.appConfig.apiUrl}/notes`;
     public readonly notes = signal<Note[]>([]);
     public readonly selectedNote = signal<Note | null>(null);
@@ -27,6 +29,16 @@ export class NotesService implements INotesService {
         ),
         { initialValue: '' }
     );
+
+    public readonly visibleNotes = computed(() => {
+        const selectedNotebook = this.notebooksService.selectedNotebook();
+        if (selectedNotebook) {
+            return this.notes().filter(note => note.notebookId === selectedNotebook.id);
+        } else {
+            return this.notes();
+        }
+    });
+
     public readonly filteredNotes = computed(() => {
         const query = this.debouncedSearch()?.toLowerCase() ?? '';
         if (!query) return this.notes();
@@ -34,7 +46,7 @@ export class NotesService implements INotesService {
             note.content.replace(/<[^>]*>/g, ' ').toLowerCase().includes(query));
     });
 
-    public readonly totalNotes = computed(() => this.notes().length);
+    public readonly totalNotes = computed(() => this.visibleNotes().length);
 
     @HandleError
     public async loadNotes(): Promise<void> {
@@ -96,6 +108,13 @@ export class NotesService implements INotesService {
             this.selectedNote.set(note);
             throw error;
         }
+    }
+
+    public removeNotesByNotebookId(notebookId: number): void {
+        if (this.selectedNote()?.notebookId === notebookId) {
+            this.selectedNote.set(null);
+        }
+        this.notes.update(notes => notes.filter(n => n.notebookId !== notebookId));
     }
 
     public selectNote(note: Note | null): void {
