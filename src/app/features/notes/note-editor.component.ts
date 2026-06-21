@@ -4,12 +4,12 @@ import { from, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Note } from '../../shared/models/note.model';
-import { NOTES_SERVICE_TOKEN } from '../../shared/services/notes.token';
 import { APP_CONFIG } from '../../shared/config/app.config.token';
 import { WordCountPipe } from '../../shared/ui/word-count.pipe';
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { TiptapEditorDirective } from 'ngx-tiptap';
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from '../../shared/services/workspace-facade.token';
 
 @Component({
     selector: 'app-note-editor',
@@ -21,13 +21,14 @@ import { TiptapEditorDirective } from 'ngx-tiptap';
 export class NoteEditorComponent {
 
     private readonly destroyRef = inject(DestroyRef);
-    protected readonly notesService = inject(NOTES_SERVICE_TOKEN);
+    protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
+
     private readonly appConfig = inject(APP_CONFIG);
 
     private readonly autoSave$ = new Subject<{ id: number; changes: Partial<Note> }>();
     protected isMenuOpen = signal<boolean>(false);
     protected saveStatus = computed(() => {
-        switch (this.notesService.saveStatus()) {
+        switch (this.workspaceFacadeService.saveStatus()) {
             case 'saving':
                 return 'Saving...';
             case 'saved':
@@ -44,8 +45,8 @@ export class NoteEditorComponent {
         onUpdate: ({ editor }) => {
             const content = editor.getHTML(); // textul formatat HTML introdus de utilizator
 
-            if (this.loadedNoteId && this.loadedNoteId === this.notesService.selectedNote()?.id) {
-                this.notesService.applyOptimisticUpdate(this.loadedNoteId, { content });
+            if (this.loadedNoteId && this.loadedNoteId === this.workspaceFacadeService.selectedNote()?.id) {
+                this.workspaceFacadeService.applyOptimisticUpdate(this.loadedNoteId, { content });
                 this.autoSave$.next({ id: this.loadedNoteId, changes: { content } });
             }
         }
@@ -66,12 +67,12 @@ export class NoteEditorComponent {
                     prev.changes[key as keyof Note] === curr.changes[key as keyof Note]
                 )
             ),
-            switchMap(({ id, changes }) => from(this.notesService.updateNote(id, { ...changes, updatedAt: new Date() }))),
+            switchMap(({ id, changes }) => from(this.workspaceFacadeService.updateNote(id, { ...changes, updatedAt: new Date() }))),
             takeUntilDestroyed(this.destroyRef)
         ).subscribe();
 
         effect(() => {
-            const note = this.notesService.selectedNote();
+            const note = this.workspaceFacadeService.selectedNote();
             if (this.loadedNoteId !== note?.id) {
                 this.editor.commands.setContent(note?.content ?? '');
                 this.loadedNoteId = note?.id;
@@ -83,31 +84,19 @@ export class NoteEditorComponent {
         });
     }
 
-    protected async addTestNote(): Promise<void> {
-        await this.notesService.addNote({
-            title: '',
-            content: '',
-            notebookId: 1,
-            tags: [],
-            createdAt: new Date(),
-            updatedAt: new Date(),
-
-        })
-    }
-
     protected onInputChange(event: Event): void {
         const title = (event.target! as HTMLInputElement).value;
-        const id = this.notesService.selectedNote()?.id;
+        const id = this.workspaceFacadeService.selectedNote()?.id;
         if (id) {
-            this.notesService.applyOptimisticUpdate(id, { title });
+            this.workspaceFacadeService.applyOptimisticUpdate(id, { title });
             this.autoSave$.next({ id, changes: { title } });
         }
     }
 
     protected deleteNote() {
-        const id = this.notesService.selectedNote()?.id;
+        const id = this.workspaceFacadeService.selectedNote()?.id;
         if (!id) return;
-        this.notesService.deleteNote(id);
+        this.workspaceFacadeService.deleteNote(id);
     }
 
     protected toggleMenu(event: Event) {

@@ -6,6 +6,7 @@ export function HandleError(target: any, propertyKey: string, descriptor: Proper
             return await originalMethod.apply(this, args);
         } catch (error) {
             console.error(`[${propertyKey}] failed:`, error);
+            throw error;
         }
     };
     return descriptor;

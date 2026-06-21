@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from "@angular/core";
-import { NOTEBOOKS_SERVICE_TOKEN } from "../../shared/services/notebooks.token";
 import { FormsModule } from "@angular/forms";
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
 
 @Component({
     selector: "app-notebook-create",
@@ -10,7 +10,7 @@ import { FormsModule } from "@angular/forms";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotebookCreateComponent {
-    private readonly notebooksService = inject(NOTEBOOKS_SERVICE_TOKEN);
+    private readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
 
     protected isOpen = signal<boolean>(false);
     protected notebookName = signal<string>('');
@@ -31,7 +31,7 @@ export class NotebookCreateComponent {
 
     public async onCreate(): Promise<void> {
         if (!this.notebookName()) return;
-        await this.notebooksService.addNotebook(this.notebookName());
+        await this.workspaceFacadeService.addNotebook(this.notebookName());
         this.isOpen.set(false);
         this.notebookName.set('');
     }

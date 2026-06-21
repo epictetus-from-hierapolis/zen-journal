@@ -59,7 +59,7 @@
 
         @if(searchInput().length){
         <div class="flex-1 overflow-y-auto pt-2">
-            @for(note of notesService.filteredNotes(); track note.id ) {
+            @for(note of workspaceFacadeService.filteredNotes(); track note.id ) {
             <div (click)="onSnippetClick(note)" class="flex flex-col hover:bg-gray-50 cursor-pointer rounded-lg p-2 
                 border-b border-gray-100 gap-1 transition-colors dark:border-gray-800 dark:hover:bg-gray-800/50">
                 <p class=" truncate dark:text-gray-200">{{ note.title }}</p>

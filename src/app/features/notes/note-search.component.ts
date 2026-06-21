@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild, afterNextRender, effect, Input } from "@angular/core";
-import { NOTES_SERVICE_TOKEN } from "../../shared/services/notes.token";
 import { SnippetPipe } from "../../shared/ui/snipet.pipe";
 import { Note } from "../../shared/models/note.model";
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
 
 @Component({
     selector: 'app-note-search',
@@ -12,7 +12,8 @@ import { Note } from "../../shared/models/note.model";
 })
 export class NoteSearchComponent {
     @Input() public mode: 'full' | 'icon' = 'full';
-    protected readonly notesService = inject(NOTES_SERVICE_TOKEN);
+    protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
+
 
     protected isOpen = signal<boolean>(false);
     protected searchInput = signal<string>('');
@@ -33,23 +34,23 @@ export class NoteSearchComponent {
     protected onClose(): void {
         this.isOpen.set(false);
         this.searchInput.set('');
-        this.notesService.searchQuery$.next('');
+        this.workspaceFacadeService.searchQuery$.next('');
     }
 
     protected onClear() {
         this.searchInput.set('');
-        this.notesService.searchQuery$.next('');
+        this.workspaceFacadeService.searchQuery$.next('');
         this.searchInputEl()?.nativeElement.focus();
     }
 
     protected onSearch(event: Event): void {
         const input = event.target as HTMLInputElement;
         this.searchInput.set(input.value);
-        this.notesService.searchQuery$.next(input.value);
+        this.workspaceFacadeService.searchQuery$.next(input.value);
     }
 
     protected onSnippetClick(note: Note): void {
-        this.notesService.selectNote(note);
+        this.workspaceFacadeService.selectNote(note);
         this.onClose();
     }
 }

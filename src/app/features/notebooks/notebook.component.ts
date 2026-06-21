@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
-import { NOTEBOOKS_SERVICE_TOKEN } from "../../shared/services/notebooks.token";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { Notebook } from "../../shared/models/note.model";
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
 
 @Component({
     selector: "app-notebooks",
@@ -9,14 +9,6 @@ import { Notebook } from "../../shared/models/note.model";
     templateUrl: "./notebook.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotebooksComponent implements OnInit {
-    protected readonly notebooksService = inject(NOTEBOOKS_SERVICE_TOKEN);
-
-    public async ngOnInit(): Promise<void> {
-        this.notebooksService.loadNotebooks();
-    }
-
-    protected selectNotebook(notebook: Notebook): void {
-        this.notebooksService.selectNotebook(notebook);
-    }
+export class NotebooksComponent {
+    protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
 }

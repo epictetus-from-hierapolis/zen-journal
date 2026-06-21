@@ -21,11 +21,11 @@
 
     <nav class="flex-1 p-2">
 
-      <div (click)="notebooksService.selectNotebook(null);toggleSidebar()"
-        [class.bg-gray-100]="notebooksService.selectedNotebook() === null"
-        [class.dark:bg-gray-800]="notebooksService.selectedNotebook() === null"
-        [class.text-gray-900]="notebooksService.selectedNotebook() === null"
-        [class.font-medium]="notebooksService.selectedNotebook() === null" class="cursor-pointer flex justify-between items-center px-2 py-2 
+      <div (click)="workspaceFacadeService.selectNotebook(null);toggleSidebar()"
+        [class.bg-gray-100]="workspaceFacadeService.selectedNotebook() === null"
+        [class.dark:bg-gray-800]="workspaceFacadeService.selectedNotebook() === null"
+        [class.text-gray-900]="workspaceFacadeService.selectedNotebook() === null"
+        [class.font-medium]="workspaceFacadeService.selectedNotebook() === null" class="cursor-pointer flex justify-between items-center px-2 py-2 
         rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
         <span class="text-xs text-gray-600 uppercase tracking-wider 
        dark:text-gray-300">Notes</span>
@@ -69,7 +69,7 @@
     <!-- Note list -->
     <div
       class="w-full flex flex-col md:w-80 md:flex border-r border-gray-200 bg-white h-full overflow-y-auto dark:bg-gray-900 dark:border-gray-800"
-      [class.hidden]="notesService.selectedNote()">
+      [class.hidden]="workspaceFacadeService.selectedNote()">
 
       <!-- Antet Mobil (Centrat) -->
 
@@ -97,7 +97,7 @@
     </div>
 
     <!-- Editor area -->
-    <div [class.hidden]="!notesService.selectedNote()" [class.flex]="notesService.selectedNote()"
+    <div [class.hidden]="!workspaceFacadeService.selectedNote()" [class.flex]="workspaceFacadeService.selectedNote()"
       class="w-full md:flex-1 md:flex flex-col h-full dark:bg-gray-950 bg-white">
       <app-note-editor class="h-full flex flex-col" />
     </div>
