@@ -1,32 +1,33 @@
 # ZenJournal
 
-ZenJournal is a modern, offline-first journaling and note-taking application built with Angular. It is designed to provide a distraction-free, fast, and secure way to manage your personal thoughts, notes, and ideas.
+ZenJournal is a modern, minimalist note-taking and journaling workspace built with Angular. It is designed to provide a distraction-free, fast, and secure way to manage your notebooks and notes, leveraging a local database and a reactive architecture.
 
 ## 🚀 Features
 
-- **Offline-First Architecture**: Built using [Dexie.js](https://dexie.org/) (IndexedDB wrapper), ensuring your notes are always available and securely stored locally on your device. 
-  * *Architectural Decision*: The UI components and `NotesService` communicate via Angular's standard `HttpClient` pointing to `/api`. This traffic is intercepted locally by a `dexieBackendInterceptor`. This design decouples the frontend logic from the database implementation, making it extremely easy to migrate to a real Node.js backend in the future by simply swapping out or removing the interceptor.
-- **Notebooks & Organization**: Group your notes into customizable Notebooks.
-- **Tagging System**: Add colors and tags to notes for easy categorization and retrieval.
-- **Note States**: Manage the lifecycle of your notes with Active, Archived, and Deleted states.
-- **Dark & Light Mode**: Built-in support for theme switching based on your preferences.
-- **Autosave**: Configurable autosave delay so you never lose your progress.
-- **Modern UI**: Styled utilizing [Tailwind CSS](https://tailwindcss.com/) for a clean and responsive user interface.
-
+- **Offline-First Architecture**: Powered by [Dexie.js](https://dexie.org/) (an IndexedDB wrapper), ensuring all your notes are stored securely on your local device and remain fully accessible offline.
+  * *Architectural Decoupling*: UI components communicate with a local `/api` simulation intercepted by `dexieBackendInterceptor`. This separates frontend logic from database details, allowing a smooth migration to a real Node.js backend in the future.
+- **State & Orchestration Facade**: Implements the **Workspace Facade Pattern** (`WorkspaceFacadeService`) to manage application state (signals) and orchestrate async actions, keeping data services completely stateless ("dumb") and resolving potential circular dependency issues.
+- **Rich-Text Editor**: Features a responsive writing area built on top of [TipTap Editor](https://tiptap.dev/), supporting standard keyboard formatting, bullet lists, and heading hierarchies (H1/H2).
+- **Notebook Management**: Create, select, rename, and delete custom notebooks. 
+- **Database-Level Cascade Delete**: Deleting a notebook automatically triggers a Dexie database transaction that purges the notebook and all associated notes, preserving data integrity.
+- **Optimistic UI & Rollbacks**: UI updates instantly (e.g., notebook/note creation and deletion) for a highly responsive user experience. If a background HTTP/database request fails, a robust rollback mechanism automatically restores the previous state.
+- **Autosave**: Automatic debounce-controlled saving as you type, keeping your data secure without manual saves.
+- **Clean Responsive UI**: Styled with [Tailwind CSS](https://tailwindcss.com/) for a sleek, modern, and adaptive interface supporting mobile and desktop layouts.
 
 ## 🛠️ Technology Stack
 
-- **Framework**: [Angular](https://angular.dev/) (v21)
+- **Frontend Framework**: [Angular](https://angular.dev/) (v21)
+- **State & Reactivity**: Angular Signals & RxJS
+- **Rich-Text Engine**: [TipTap Editor](https://tiptap.dev/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Local Database**: [Dexie.js](https://dexie.org/)
-- **Testing**: [Jest](https://jestjs.io/) & [Vitest](https://vitest.dev/)
-- **Reactivity**: [RxJS](https://rxjs.dev/)
+- **Local DB / IndexedDB Wrapper**: [Dexie.js](https://dexie.org/)
+- **Testing**: [Jest](https://jestjs.io/) & jsdom
 
 ## 📦 Getting Started
 
 ### Prerequisites
 
-Ensure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed on your machine.
+Ensure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
 
 ### Installation
 
@@ -36,7 +37,7 @@ Ensure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/)
    cd zen-journal
    ```
 
-2. Install the dependencies:
+2. Install dependencies:
    ```bash
    npm install
    ```
@@ -53,27 +54,21 @@ or
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Once the server starts, navigate to `http://localhost:4200/`. The page will reload automatically if you modify the source files.
 
 ## 🏗️ Building for Production
 
-To build the project for production, run:
+To compile and optimize the project for production, run:
 
 ```bash
 npm run build
 ```
-or
-```bash
-ng build
-```
 
-This will compile your project and store the optimized build artifacts in the `dist/` directory.
+The optimized build artifacts will be stored in the `dist/` directory.
 
 ## 🧪 Testing
 
-### Unit Tests
-
-To execute unit tests using Jest, run:
+To run the Jest unit tests, execute:
 
 ```bash
 npm run test
@@ -81,18 +76,20 @@ npm run test
 
 ## 📁 Project Structure
 
-The project follows a feature-based modular structure:
+The project follows a clean, feature-based modular structure:
 
-- `src/app/features/`: Contains the main feature modules of the application.
-  - `auth/`: Authentication and user management (if applicable).
-  - `notebooks/`: Notebook management views and logic.
-  - `notes/`: Note creation, editing, and listing features.
-  - `settings/`: Application settings and configuration options.
-- `src/app/shared/`: Shared resources used across different features.
-  - `models/`: TypeScript interfaces and types (e.g., `Note`, `Notebook`, `AppSettings`).
-  - `services/`: Core application services (e.g., `DatabaseService`, `NotesService`).
-  - `ui/`: Reusable, generic UI components.
-  - `guards/`, `interceptors/`, `validators/`: Angular utilities.
+- `src/app/features/`: Feature modules.
+  - `auth/`: Authentication views and logic.
+  - `notebooks/`: Notebook UI components (sidebar and creation modals).
+  - `notes/`: Note listing, searching, and TipTap editing components.
+- `src/app/shared/`: Shared services, models, and UI utilities.
+  - `models/`: TypeScript models (e.g., `Note`, `Notebook`, `Tag`).
+  - `services/`: Core application services:
+    - `DatabaseService`: Dexie database schema and migration configurations.
+    - `NotesService` / `NotebooksService`: Pure, stateless API communication services.
+    - `WorkspaceFacadeService`: Coordinates global state and operations.
+  - `interceptors/`: Network middleware (e.g., `dexieBackendInterceptor` for local DB routing).
+  - `ui/`: Shared pipes and UI helpers (e.g., `relativeTime`, `wordCount`).
 
 ## 📄 License
 
