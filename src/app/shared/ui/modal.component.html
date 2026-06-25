@@ -1,0 +1,18 @@
+<div class="flex fixed inset-0 bg-black/50 z-50 items-center justify-center dark:bg-black/70">
+    <div class="w-full h-full bg-white p-4 gap-4
+        md:rounded-xl md:shadow-2x1 md:w-1/2 md:max-w-2xl md:h-auto 
+        flex flex-col dark:bg-gray-900 dark:shadow-none">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{title()}}</h2>
+        <ng-content></ng-content>
+        <div class="flex gap-4 justify-end">
+            <button (click)="cancel.emit()" type="button"
+                class="px-4 py-2 bg-gray-100 text-gray-700 text-sm cursor-pointer rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:border dark:border-gray-700">
+                <span>Cancel</span>
+            </button>
+            <button [disabled]="confirmDisabled()" (click)="confirm.emit()" type="button"
+                class="px-4 py-2 bg-gray-900 shadow-sm dark:bg-white dark:text-gray-900 text-white text-sm rounded-lg cursor-pointer hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                <span>{{confirmLabel()}}</span>
+            </button>
+        </div>
+    </div>
+</div>

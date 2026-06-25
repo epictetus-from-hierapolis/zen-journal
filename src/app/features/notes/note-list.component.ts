@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit, WritableSignal, inject, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostListener, WritableSignal, inject, signal } from "@angular/core";
 import { Note } from '../../shared/models/note.model';
 import { ScrollingModule } from "@angular/cdk/scrolling";
 import { RelativeTimePipe } from "../../shared/ui/relative-time.pipe";
-import { FormsModule } from "@angular/forms";
 import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
+import { ModalComponent } from "../../shared/ui/modal.component";
 
 @Component({
     selector: 'app-note-list',
     standalone: true,
-    imports: [RelativeTimePipe, ScrollingModule, FormsModule],
+    imports: [RelativeTimePipe, ScrollingModule, ModalComponent],
     templateUrl: './note-list.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
