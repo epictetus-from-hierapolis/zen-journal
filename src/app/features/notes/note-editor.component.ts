@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, ChangeDetectionStrategy, signal, HostListener, effect, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { from, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { from, Subject, timer } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Note } from '../../shared/models/note.model';
 import { APP_CONFIG } from '../../shared/config/app.config.token';
@@ -10,6 +10,7 @@ import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { TiptapEditorDirective } from 'ngx-tiptap';
 import { WORKSPACE_FACADE_SERVICE_TOKEN } from '../../shared/services/workspace-facade.token';
+import Placeholder from '@tiptap/extension-placeholder';
 
 @Component({
     selector: 'app-note-editor',
@@ -19,16 +20,17 @@ import { WORKSPACE_FACADE_SERVICE_TOKEN } from '../../shared/services/workspace-
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteEditorComponent {
-
-    private readonly destroyRef = inject(DestroyRef);
     protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
+    private readonly destroyRef = inject(DestroyRef);
+
+    protected readonly localSaveStatus = signal<'idle' | 'saving' | 'saved' | 'offline'>('idle');
 
     private readonly appConfig = inject(APP_CONFIG);
 
     private readonly autoSave$ = new Subject<{ id: number; changes: Partial<Note> }>();
     protected isMenuOpen = signal<boolean>(false);
     protected saveStatus = computed(() => {
-        switch (this.workspaceFacadeService.saveStatus()) {
+        switch (this.localSaveStatus()) {
             case 'saving':
                 return 'Saving...';
             case 'saved':
@@ -41,7 +43,11 @@ export class NoteEditorComponent {
     });
     private loadedNoteId: undefined | number = undefined;
     protected readonly editor = new Editor({
-        extensions: [StarterKit],
+        extensions: [
+            StarterKit,
+            Placeholder.configure({
+                placeholder: 'Start writing here...',
+            })],
         onUpdate: ({ editor }) => {
             const content = editor.getHTML(); // textul formatat HTML introdus de utilizator
 
@@ -51,7 +57,6 @@ export class NoteEditorComponent {
             }
         }
     });
-
 
     @HostListener('document: click')
     protected closeMenu(): void {
@@ -77,6 +82,23 @@ export class NoteEditorComponent {
                 this.editor.commands.setContent(note?.content ?? '');
                 this.loadedNoteId = note?.id;
             }
+        });
+
+        effect(() => {
+            const status = this.workspaceFacadeService.saveStatus();
+
+            if (status === 'saving' || status === 'offline') {
+                this.localSaveStatus.set(status);
+            } else if (status === 'saved') {
+                this.localSaveStatus.set('saved');
+                timer(2000).pipe(
+                    take(1),
+                    takeUntilDestroyed(this.destroyRef)
+                ).subscribe(() => {
+                    this.localSaveStatus.set('idle');
+                });
+            }
+
         });
 
         this.destroyRef.onDestroy(() => {

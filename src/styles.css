@@ -3,6 +3,20 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+    --color-gray-50: var(--color-zinc-50);
+    --color-gray-100: var(--color-zinc-100);
+    --color-gray-200: var(--color-zinc-200);
+    --color-gray-300: var(--color-zinc-300);
+    --color-gray-400: var(--color-zinc-400);
+    --color-gray-500: var(--color-zinc-500);
+    --color-gray-600: var(--color-zinc-600);
+    --color-gray-700: var(--color-zinc-700);
+    --color-gray-800: var(--color-zinc-800);
+    --color-gray-900: var(--color-zinc-900);
+    --color-gray-950: var(--color-zinc-950);
+}
+
 .cdk-virtual-scroll-content-wrapper {
     width: 100%;
 }
@@ -58,4 +72,18 @@ body {
 .ProseMirror ul {
     list-style-type: disc;
     padding-left: 1.25rem;
+}
+
+/* Light Mode */
+.ProseMirror p.is-editor-empty:first-child::before {
+    color: var(--color-zinc-400);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+
+/* Dark Mode */
+.dark .ProseMirror p.is-editor-empty:first-child::before {
+    color: var(--color-zinc-600);
 }

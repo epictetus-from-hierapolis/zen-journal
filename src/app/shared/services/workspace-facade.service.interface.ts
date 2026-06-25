@@ -19,7 +19,7 @@ export interface IWorkspaceFacadeService {
     addNotebook(name: string): Promise<void>;
     updateNotebook(id: number, changes: Partial<Notebook>): Promise<void>;
     deleteNotebook(id: number): Promise<void>;
-    addNote(note: Omit<Note, 'id'>): Promise<void>;
+    addNote(): Promise<void>;
     updateNote(id: number, changes: Partial<Note>): Promise<void>;
     deleteNote(id: number): Promise<void>;
     applyOptimisticUpdate(id: number, changes: Partial<Note>): void;

@@ -2,7 +2,7 @@
     @for (notebook of workspaceFacadeService.notebooks(); track notebook.id) {
 
     <div (click)="workspaceFacadeService.selectNotebook(notebook)" class="group flex items-center justify-between cursor-pointer 
-        hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg 
+        hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg mb-1
         px-3 py-2 transition-colors text-gray-700 dark:text-gray-300"
         [class.bg-gray-100]="workspaceFacadeService.selectedNotebook()?.id === notebook.id"
         [class.dark:bg-gray-800]="workspaceFacadeService.selectedNotebook()?.id === notebook.id"

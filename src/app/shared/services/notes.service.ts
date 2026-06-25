@@ -6,9 +6,7 @@ import { HandleError } from "../decorators/handle-error.decorator";
 import { HttpClient } from "@angular/common/http";
 import { APP_CONFIG } from "../config/app.config.token";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class NotesService implements INotesService {
     private readonly httpClient = inject(HttpClient);
     private readonly appConfig = inject(APP_CONFIG);

@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
     name: "relativeTime",
-    standalone: true
+    standalone: true,
+    pure: false,
 })
 export class RelativeTimePipe implements PipeTransform {
     public transform(date: Date): string {

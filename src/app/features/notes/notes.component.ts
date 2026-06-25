@@ -3,10 +3,12 @@ import { NoteListComponent } from "./note-list.component";
 import { NoteEditorComponent } from "./note-editor.component";
 import { NoteSearchComponent } from "./note-search.component";
 import { AppSettingsService } from "../../shared/services/app-settings.service";
-import { RouterLink } from "@angular/router";
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { NotebookCreateComponent } from "../notebooks/notebook-create.component";
 import { NotebooksComponent } from "../notebooks/notebook.component";
 import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { filter, map } from "rxjs";
 
 
 @Component({
@@ -19,9 +21,22 @@ import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-
 export class NotesComponent implements OnInit {
     protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
     public readonly appSettingsService = inject(AppSettingsService);
+    private readonly routerService = inject(Router);
+
 
     protected isSidebarOpen: WritableSignal<boolean> = signal(false);
     protected isAddingNotebook: WritableSignal<boolean> = signal(false);
+    protected isNotebooksExpanded: WritableSignal<boolean> = signal(false);
+
+    protected readonly isNoteSelected = toSignal(
+        this.routerService.events.pipe(
+            filter(event => event instanceof NavigationEnd),
+            map(() => this.routerService.url.includes('/notes/') && this.routerService.url.split('/').length > 2)
+        ),
+        {
+            initialValue: this.routerService.url.includes('/notes/') && this.routerService.url.split('/').length > 2
+        }
+    );
 
 
     constructor() {
@@ -36,18 +51,5 @@ export class NotesComponent implements OnInit {
 
     protected toggleSidebar() {
         this.isSidebarOpen.update(value => !value);
-    }
-
-    protected async addNote(): Promise<void> {
-        if (!this.workspaceFacadeService.notebooks().length) return;
-
-        await this.workspaceFacadeService.addNote({
-            title: '',
-            content: '',
-            notebookId: (this.workspaceFacadeService.selectedNotebook()?.id || this.workspaceFacadeService.notebooks()[0].id)!,
-            tags: [],
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        });
     }
 }

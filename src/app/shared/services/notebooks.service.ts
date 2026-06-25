@@ -6,9 +6,7 @@ import { APP_CONFIG } from "../config/app.config.token";
 import { HandleError } from "../decorators/handle-error.decorator";
 import { firstValueFrom } from "rxjs";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class NotebooksService implements INotebooksService {
     private readonly httpClient = inject(HttpClient);
     private readonly appConfig = inject(APP_CONFIG);

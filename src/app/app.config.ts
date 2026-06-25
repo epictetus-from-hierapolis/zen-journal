@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { NOTES_SERVICE_TOKEN } from './shared/services/notes.token';
 import { NOTEBOOKS_SERVICE_TOKEN } from './shared/services/notebooks.token';
@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([authInterceptor, errorInterceptor, dexieBackendInterceptor])
     ),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     {
       provide: NOTES_SERVICE_TOKEN,
       useClass: NotesService

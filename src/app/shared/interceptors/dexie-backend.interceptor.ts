@@ -44,9 +44,11 @@ export const dexieBackendInterceptor: HttpInterceptorFn = (req, next): Observabl
             }
             case 'PUT': {
                 const id = Number(parts[parts.indexOf(tableName) + 1]);
-                if (!id) new HttpResponse({
-                    status: 400
-                });
+                if (!id) {
+                    return of(new HttpResponse({
+                        status: 400
+                    }))
+                };
                 return from(databaseService.table(tableName).update(id, (req.body as Partial<DbRecord>))).pipe(
                     map(() => new HttpResponse({
                         status: 200
