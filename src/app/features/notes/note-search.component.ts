@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild, afterNextRender, effect, Input } from "@angular/core";
-import { SnippetPipe } from "../../shared/ui/snipet.pipe";
+import { SnippetPipe } from "../../shared/ui/snippet.pipe";
 import { Note } from "../../shared/models/note.model";
 import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
 
