@@ -1,9 +1,9 @@
 import { inject, Injectable } from "@angular/core";
-import { Notebook } from "../models/note.model";
-import { INotebooksService } from "./notebooks.service.interface";
+import { Notebook } from "@shared/models";
+import { INotebooksService } from "@shared/interfaces";
 import { HttpClient } from "@angular/common/http";
-import { APP_CONFIG } from "../config/app.config.token";
-import { HandleError } from "../decorators/handle-error.decorator";
+import { APP_CONFIG } from "@shared/tokens";
+import { HandleError } from "@shared/decorators";
 import { firstValueFrom } from "rxjs";
 
 @Injectable()

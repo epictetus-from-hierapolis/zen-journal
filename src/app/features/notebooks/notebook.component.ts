@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
-import { Notebook } from "../../shared/models/note.model";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
+import { Notebook } from "@shared/models";
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
 
 @Component({
     selector: "app-notebooks",

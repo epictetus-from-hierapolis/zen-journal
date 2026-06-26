@@ -1,6 +1,6 @@
 import { DOCUMENT, inject, Injectable, signal } from "@angular/core";
-import { AppSettings, ThemeAppearence } from "../models/app-settings.model";
-import { APP_CONFIG } from "../config/app.config.token";
+import { AppSettings, ThemeAppearence } from "@shared/models";
+import { APP_CONFIG } from "@shared/tokens";
 
 @Injectable({
     providedIn: 'root'

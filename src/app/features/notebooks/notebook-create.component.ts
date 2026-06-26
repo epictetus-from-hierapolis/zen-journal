@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from "@angular/core";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
-import { ModalComponent } from "../../shared/ui/modal.component";
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
+import { ModalComponent } from "@shared/components";
 
 @Component({
     selector: "app-notebook-create",

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { APP_CONFIG } from "../../shared/config/app.config.token";
-import { themeValidator } from "../../shared/validators/theme.validator";
-import { AppSettingsService } from "../../shared/services/app-settings.service";
+import { APP_CONFIG } from "@shared/tokens";
+import { themeValidator } from "@shared/validators";
+import { AppSettingsService } from "@core/services";
 import { Router, RouterLink } from "@angular/router";
 
 @Component({

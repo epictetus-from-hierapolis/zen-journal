@@ -2,7 +2,7 @@ import { HttpEvent, HttpInterceptorFn, HttpRequest, HttpResponse } from "@angula
 import { inject } from "@angular/core";
 import { from, map, Observable, of } from "rxjs";
 import { DatabaseService } from "../services/database.service";
-import { Note, Notebook } from "../models/note.model";
+import { Note, Notebook } from "@shared/models";
 import { Table } from "dexie";
 
 type DbRecord = Notebook | Note;

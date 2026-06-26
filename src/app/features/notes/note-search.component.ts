@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild, afterNextRender, effect, Input } from "@angular/core";
-import { SnippetPipe } from "../../shared/ui/snippet.pipe";
-import { Note } from "../../shared/models/note.model";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
+import { SnippetPipe } from "@shared/pipes";
+import { Note } from "@shared/models";
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
 
 @Component({
     selector: 'app-note-search',

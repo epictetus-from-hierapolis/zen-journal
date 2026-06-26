@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, HostListener, WritableSignal, inject, signal } from "@angular/core";
-import { Note } from '../../shared/models/note.model';
+import { Note } from '@shared/models';
 import { ScrollingModule } from "@angular/cdk/scrolling";
-import { RelativeTimePipe } from "../../shared/ui/relative-time.pipe";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
-import { ModalComponent } from "../../shared/ui/modal.component";
+import { RelativeTimePipe } from "@shared/pipes";
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
+import { ModalComponent } from "@shared/components";
 
 @Component({
     selector: 'app-note-list',

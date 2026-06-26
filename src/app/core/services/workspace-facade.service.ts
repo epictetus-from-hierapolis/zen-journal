@@ -1,8 +1,7 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from "@angular/core";
-import { NOTES_SERVICE_TOKEN } from "./notes.token";
-import { NOTEBOOKS_SERVICE_TOKEN } from "./notebooks.token";
-import { Note, Notebook } from "../models/note.model";
-import { IWorkspaceFacadeService } from "./workspace-facade.service.interface";
+import { NOTES_SERVICE_TOKEN, NOTEBOOKS_SERVICE_TOKEN } from "@shared/tokens";
+import { Note, Notebook } from "@shared/models";
+import { IWorkspaceFacadeService } from "@shared/interfaces";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from "rxjs";
 

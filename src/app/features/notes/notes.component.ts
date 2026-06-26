@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal, WritableSignal } from "@angular/core";
-import { NoteListComponent } from "./note-list.component";
-import { NoteEditorComponent } from "./note-editor.component";
-import { NoteSearchComponent } from "./note-search.component";
-import { AppSettingsService } from "../../shared/services/app-settings.service";
+import { NoteListComponent, NoteEditorComponent, NoteSearchComponent } from '.';
+import { AppSettingsService } from "@core/services";
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
-import { NotebookCreateComponent } from "../notebooks/notebook-create.component";
-import { NotebooksComponent } from "../notebooks/notebook.component";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "../../shared/services/workspace-facade.token";
+import { NotebookCreateComponent, NotebooksComponent } from '../notebooks';
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { filter, map } from "rxjs";
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import Dexie, { Table } from 'dexie';
-import { Note, Notebook, Tag } from '../models/note.model';
+import { Note, Notebook, Tag } from '@shared/models';
 
 @Injectable({
     providedIn: 'root'

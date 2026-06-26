@@ -1,10 +1,10 @@
 import { Injectable, inject } from "@angular/core";
-import { Note } from '../models/note.model';
-import { INotesService } from "./notes.service.interface";
+import { Note } from '@shared/models';
+import { INotesService } from "@shared/interfaces";
 import { firstValueFrom } from 'rxjs';
-import { HandleError } from "../decorators/handle-error.decorator";
+import { HandleError } from "@shared/decorators";
 import { HttpClient } from "@angular/common/http";
-import { APP_CONFIG } from "../config/app.config.token";
+import { APP_CONFIG } from "@shared/tokens";
 
 @Injectable()
 export class NotesService implements INotesService {

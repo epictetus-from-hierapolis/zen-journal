@@ -3,13 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { from, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Note } from '../../shared/models/note.model';
-import { APP_CONFIG } from '../../shared/config/app.config.token';
-import { WordCountPipe } from '../../shared/ui/word-count.pipe';
+import { Note } from '@shared/models';
+import { APP_CONFIG } from '@shared/tokens';
+import { WordCountPipe } from '@shared/pipes';
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { TiptapEditorDirective } from 'ngx-tiptap';
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from '../../shared/services/workspace-facade.token';
+import { WORKSPACE_FACADE_SERVICE_TOKEN } from '@shared/tokens';
 import Placeholder from '@tiptap/extension-placeholder';
 
 @Component({

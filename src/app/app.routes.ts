@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { canAuthenticate } from './shared/guards/auth.guard';
+import { canAuthenticate } from '@core/guards';
 
 export const routes: Routes = [
     {

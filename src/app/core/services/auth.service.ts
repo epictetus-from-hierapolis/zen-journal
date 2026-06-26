@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { HandleError } from "../decorators/handle-error.decorator";
+import { HandleError } from "@shared/decorators";
 
 @Injectable({
     providedIn: 'root'
