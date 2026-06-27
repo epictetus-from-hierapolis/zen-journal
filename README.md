@@ -40,7 +40,7 @@ src/app/
 │   └── settings/                # App configuration
 │
 └── shared/                      # Reusable, stateless building blocks
-    ├── components/              # Dumb UI components (ModalComponent)
+    ├── components/              # Reusable dumb UI components (ModalComponent)
     ├── decorators/              # Cross-cutting concerns (@HandleError)
     ├── interfaces/              # Service contracts (INotesService, IWorkspaceFacadeService)
     ├── models/                  # Domain types (Note, Notebook, AppSettings)
@@ -62,6 +62,9 @@ All data operations go through Angular's `HttpClient` against a virtual `/api` e
 
 **Encapsulated Signal State**
 State is held in private `WritableSignal` properties exposed as read-only `Signal` via `.asReadonly()`. External code can read signals but can never mutate state directly — all mutations go through facade methods with built-in optimistic update and rollback logic.
+
+**Smart/Dumb Component Pattern**
+Feature components (`NoteListComponent`, `NoteEditorComponent`, `NoteSearchComponent`, `NotebooksComponent`, `NotebookCreateComponent`) are fully dumb — they receive data exclusively via `input()` signals and communicate upward via `output()` events. `NotesComponent` acts as the single smart orchestrator: it injects the facade, passes data down, and handles all output events. This enforces a strict unidirectional data flow and makes every dumb component independently testable without any service dependencies.
 
 **Zoneless Change Detection**
 Uses `provideZonelessChangeDetection()` with `ChangeDetectionStrategy.OnPush` throughout, eliminating Zone.js overhead and making change detection fully explicit and predictable.
