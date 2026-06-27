@@ -11,16 +11,6 @@ export const routes: Routes = [
         path: 'notes',
         loadComponent: () => import('./features/notes/notes.component').then(module => module.NotesComponent),
         canActivate: [canAuthenticate],
-        children: [
-            {
-                path: '',
-                loadComponent: () => import('./features/notes/note-placeholder.component').then(module => module.PlaceholderComponent)
-            },
-            {
-                path: ':noteId',
-                loadComponent: () => import('./features/notes/note-editor.component').then(module => module.NoteEditorComponent)
-            }
-        ]
     },
     {
         path: 'settings',

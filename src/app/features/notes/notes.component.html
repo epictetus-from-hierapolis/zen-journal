@@ -147,7 +147,6 @@
     <!-- Editor area -->
     <div [class.hidden]="!workspaceFacadeService.selectedNote()" [class.flex]="workspaceFacadeService.selectedNote()"
       class="w-full md:flex-1 md:flex flex-col h-full dark:bg-gray-900 bg-white p-2">
-      <!-- <router-outlet> -->
       <app-note-editor [selectedNote]="workspaceFacadeService.selectedNote()"
         [savedStatus]="workspaceFacadeService.saveStatus()"
         (noteChanged)="workspaceFacadeService.applyOptimisticUpdate($event.id, $event.changes)"
