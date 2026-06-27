@@ -71,13 +71,13 @@
           <span class="text-xs text-gray-600 uppercase tracking-wider dark:text-gray-300">Notebooks</span>
         </div>
 
-        <app-notebook-create></app-notebook-create>
+        <app-notebook-create (notebookAdded)="workspaceFacadeService.addNotebook($event)" />
       </div>
 
       @if (isNotebooksExpanded()) {
       <app-notebooks [notebooks]="workspaceFacadeService.notebooks()"
         [selectedNotebook]="workspaceFacadeService.selectedNotebook()"
-        (notebookSelected)="workspaceFacadeService.selectNotebook($event)"></app-notebooks>
+        (notebookSelected)="workspaceFacadeService.selectNotebook($event)" />>
       }
 
     </nav>

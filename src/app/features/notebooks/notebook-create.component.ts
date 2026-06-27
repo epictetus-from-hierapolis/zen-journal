@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from "@angular/core";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
+import { Component, ChangeDetectionStrategy, signal, output } from "@angular/core";
 import { ModalComponent } from "@shared/components";
 
 @Component({
@@ -10,7 +9,7 @@ import { ModalComponent } from "@shared/components";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotebookCreateComponent {
-    private readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
+    public readonly notebookAdded = output<string>();
 
     protected readonly isOpen = signal<boolean>(false);
     protected readonly notebookName = signal<string>('');
@@ -24,14 +23,14 @@ export class NotebookCreateComponent {
         this.notebookName.set('');
     }
 
-    protected onInputChange(event: Event): void {
+    protected onNameChange(event: Event): void {
         const input = event.target as HTMLInputElement;
         this.notebookName.set(input.value);
     }
 
     protected async onConfirm(): Promise<void> {
         if (!this.notebookName()) return;
-        await this.workspaceFacadeService.addNotebook(this.notebookName());
+        this.notebookAdded.emit(this.notebookName());
         this.isOpen.set(false);
         this.notebookName.set('');
     }

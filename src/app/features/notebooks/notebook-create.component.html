@@ -10,7 +10,7 @@
 <app-modal (cancel)="onCancel()" (confirm)="onConfirm()" title="Create new notebook" confirmLabel="Create"
     [confirmDisabled]="!notebookName().trim()">
     <div>
-        <input [value]="notebookName()" (input)="onInputChange($event)" name="notebookName" type="text"
+        <input [value]="notebookName()" (input)="onNameChange($event)" name="notebookName" type="text"
             placeholder="Insert notebook name" class="w-full px-3 py-2 text-sm dark:text-white dark:bg-gray-800 border 
                 border-gray-200 dark:border-gray-700 rounded-lg outline-none 
                 focus:border-gray-400 dark:focus:border-gray-500 transition-colors" />

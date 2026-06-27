@@ -1,4 +1,4 @@
-@if(displayMode === 'full'){
+@if(displayMode() === 'full'){
 <!-- Search button long -->
 <button class="cursor-pointer flex items-center gap-2 w-full 
     px-3 py-3 text-sm text-gray-600 bg-gray-100 rounded-lg 
@@ -57,7 +57,7 @@
 
         </div>
 
-        @if(searchInput().length){
+        @if(query().length){
         <div class="flex-1 overflow-y-auto pt-2">
             @for(note of notes(); track note.id ) {
             <div (click)="onSnippetSelect(note)" class="flex flex-col hover:bg-gray-50 cursor-pointer rounded-lg p-2 
