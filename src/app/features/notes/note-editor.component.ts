@@ -1,7 +1,7 @@
-import { Component, DestroyRef, inject, ChangeDetectionStrategy, signal, HostListener, effect, computed } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectionStrategy, signal, HostListener, effect, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { from, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
+import { Subject, timer } from 'rxjs';
+import { debounceTime, distinctUntilChanged, take, tap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Note } from '@shared/models';
 import { APP_CONFIG } from '@shared/tokens';
@@ -9,7 +9,6 @@ import { WordCountPipe } from '@shared/pipes';
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { TiptapEditorDirective } from 'ngx-tiptap';
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from '@shared/tokens';
 import Placeholder from '@tiptap/extension-placeholder';
 
 @Component({
@@ -20,15 +19,23 @@ import Placeholder from '@tiptap/extension-placeholder';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteEditorComponent {
-    protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
     private readonly destroyRef = inject(DestroyRef);
+
+    public readonly selectedNote = input<Note | null>(null);
+    public readonly savedStatus = input<string>('');
+    public readonly noteChanged = output<{ id: number, changes: Partial<Note> }>();
+    public readonly noteSaved = output<{ id: number, changes: Partial<Note> }>();
+    public readonly noteRemoved = output<number>();
+    public readonly noteAdded = output();
+    public readonly noteSelected = output<Note | null>();
+
 
     protected readonly localSaveStatus = signal<'idle' | 'saving' | 'saved' | 'offline'>('idle');
 
     private readonly appConfig = inject(APP_CONFIG);
 
     private readonly autoSave$ = new Subject<{ id: number; changes: Partial<Note> }>();
-    protected isMenuOpen = signal<boolean>(false);
+    protected readonly isMenuOpen = signal<boolean>(false);
     protected saveStatus = computed(() => {
         switch (this.localSaveStatus()) {
             case 'saving':
@@ -51,8 +58,8 @@ export class NoteEditorComponent {
         onUpdate: ({ editor }) => {
             const content = editor.getHTML(); // textul formatat HTML introdus de utilizator
 
-            if (this.loadedNoteId && this.loadedNoteId === this.workspaceFacadeService.selectedNote()?.id) {
-                this.workspaceFacadeService.applyOptimisticUpdate(this.loadedNoteId, { content });
+            if (this.loadedNoteId && this.loadedNoteId === this.selectedNote()?.id) {
+                this.noteChanged.emit({ id: this.loadedNoteId, changes: { content } });
                 this.autoSave$.next({ id: this.loadedNoteId, changes: { content } });
             }
         }
@@ -72,12 +79,12 @@ export class NoteEditorComponent {
                     prev.changes[key as keyof Note] === curr.changes[key as keyof Note]
                 )
             ),
-            switchMap(({ id, changes }) => from(this.workspaceFacadeService.updateNote(id, { ...changes, updatedAt: new Date() }))),
+            tap(({ id, changes }) => this.noteSaved.emit({ id, changes: { ...changes, updatedAt: new Date() } })),
             takeUntilDestroyed(this.destroyRef)
         ).subscribe();
 
         effect(() => {
-            const note = this.workspaceFacadeService.selectedNote();
+            const note = this.selectedNote();
             if (this.loadedNoteId !== note?.id) {
                 this.editor.commands.setContent(note?.content ?? '');
                 this.loadedNoteId = note?.id;
@@ -85,7 +92,7 @@ export class NoteEditorComponent {
         });
 
         effect(() => {
-            const status = this.workspaceFacadeService.saveStatus();
+            const status = this.savedStatus();
 
             if (status === 'saving' || status === 'offline') {
                 this.localSaveStatus.set(status);
@@ -106,19 +113,19 @@ export class NoteEditorComponent {
         });
     }
 
-    protected onInputChange(event: Event): void {
+    protected onTitleChange(event: Event): void {
         const title = (event.target! as HTMLInputElement).value;
-        const id = this.workspaceFacadeService.selectedNote()?.id;
+        const id = this.selectedNote()?.id;
         if (id) {
-            this.workspaceFacadeService.applyOptimisticUpdate(id, { title });
+            this.noteChanged.emit({ id, changes: { title } });
             this.autoSave$.next({ id, changes: { title } });
         }
     }
 
-    protected deleteNote() {
-        const id = this.workspaceFacadeService.selectedNote()?.id;
+    protected onNoteRemove() {
+        const id = this.selectedNote()?.id;
         if (!id) return;
-        this.workspaceFacadeService.deleteNote(id);
+        this.noteRemoved.emit(id);
     }
 
     protected toggleMenu(event: Event) {
