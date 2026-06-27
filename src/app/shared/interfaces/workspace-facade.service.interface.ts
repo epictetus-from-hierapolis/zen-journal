@@ -15,6 +15,7 @@ export interface IWorkspaceFacadeService {
     filteredNotes: Signal<Note[]>;
     searchQuery$: BehaviorSubject<string>;
     totalNotes: Signal<number>;
+    notebooksCount: Signal<number>;
     loadAll(): Promise<void>;
     addNotebook(name: string): Promise<void>;
     updateNotebook(id: number, changes: Partial<Notebook>): Promise<void>;

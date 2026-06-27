@@ -77,7 +77,7 @@
       @if (isNotebooksExpanded()) {
       <app-notebooks [notebooks]="workspaceFacadeService.notebooks()"
         [selectedNotebook]="workspaceFacadeService.selectedNotebook()"
-        (notebookSelected)="workspaceFacadeService.selectNotebook($event)" />>
+        (notebookSelected)="workspaceFacadeService.selectNotebook($event)" />
       }
 
     </nav>
@@ -129,7 +129,14 @@
           (queryChanged)="workspaceFacadeService.searchQuery$.next($event)"
           (noteSelected)="workspaceFacadeService.selectNote($event)" [displayMode]="'icon'"></app-note-search>
       </div>
-      <app-note-list class=" h-full flex flex-col" />
+      <app-note-list [notebooksCount]="workspaceFacadeService.notebooksCount()"
+        [notes]="workspaceFacadeService.visibleNotes()" [selectedNotebook]="workspaceFacadeService.selectedNotebook()"
+        [selectedNote]="workspaceFacadeService.selectedNote()"
+        (noteSelected)="workspaceFacadeService.selectNote($event)" [savedStatus]="workspaceFacadeService.saveStatus()"
+        (notebookRenamed)="workspaceFacadeService.updateNotebook($event.id, {name: $event.name})"
+        (notebookRemoved)="workspaceFacadeService.deleteNotebook($event)"
+        [notesCount]="workspaceFacadeService.totalNotes()" [isLoading]="workspaceFacadeService.isLoading()"
+        class=" h-full flex flex-col" />
       <button (click)="workspaceFacadeService.addNote()"
         class="fixed bottom-6 right-6 z-10 w-14 h-14 bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center justify-center md:hidden cursor-pointer">
         <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">

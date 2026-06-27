@@ -53,6 +53,8 @@ export class WorkspaceFacadeService implements IWorkspaceFacadeService {
     });
 
     public readonly totalNotes = computed(() => this.visibleNotes().length);
+    public readonly notebooksCount = computed(() => this.notebooks().length);
+
 
     public selectNotebook(notebook: Notebook | null): void {
         this._selectedNotebook.set(notebook);

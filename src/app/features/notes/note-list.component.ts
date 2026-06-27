@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, HostListener, WritableSignal, inject, signal } from "@angular/core";
-import { Note } from '@shared/models';
+import { ChangeDetectionStrategy, Component, HostListener, WritableSignal, input, output, signal } from "@angular/core";
+import { Note, Notebook } from '@shared/models';
 import { ScrollingModule } from "@angular/cdk/scrolling";
 import { RelativeTimePipe } from "@shared/pipes";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
 import { ModalComponent } from "@shared/components";
 
 @Component({
@@ -13,34 +12,44 @@ import { ModalComponent } from "@shared/components";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteListComponent {
-    protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
+    public readonly notes = input<Note[]>([]);
+    public readonly selectedNotebook = input<Notebook | null>(null);
+    public readonly selectedNote = input<Note | null>(null);
+    public readonly noteSelected = output<Note>();
+    public readonly savedStatus = input<string>('');
+    public readonly notebookRenamed = output<{ id: number, name: string }>();
+    public readonly notebookRemoved = output<number>();
+    public readonly notesCount = input<number>(0);
+    public readonly notebooksCount = input<number>(0);
+    public readonly isLoading = input<boolean>(false);
 
-    protected isRenameModalOpen: WritableSignal<boolean> = signal(false);
-    protected isRemoveModalOpen: WritableSignal<boolean> = signal(false);
-    protected isMenuOpen: WritableSignal<boolean> = signal(false);
-    protected notebookNameInput: WritableSignal<string> = signal('');
+    protected readonly isRenameModalOpen: WritableSignal<boolean> = signal(false);
+    protected readonly isRemoveModalOpen: WritableSignal<boolean> = signal(false);
+    protected readonly isMenuOpen: WritableSignal<boolean> = signal(false);
+    protected readonly notebookName: WritableSignal<string> = signal('');
 
     protected trackNote(index: number, note: Note) {
         return note.id!;
     }
 
-    protected onOpenRename(): void {
-        const selectedNotebook = this.workspaceFacadeService.selectedNotebook();
+    protected onRenameOpen(): void {
+        const selectedNotebook = this.selectedNotebook();
         if (!selectedNotebook) return;
         this.isRenameModalOpen.set(true);
         this.isMenuOpen.set(false);
-        this.notebookNameInput.set(selectedNotebook.name);
+        this.notebookName.set(selectedNotebook.name);
     }
 
-    protected onInputChange(event: Event): void {
+    protected onNotebookNameChange(event: Event): void {
         const input = event.target as HTMLInputElement;
-        this.notebookNameInput.set(input.value);
+        this.notebookName.set(input.value);
     }
 
-    protected async onSaveRename(): Promise<void> {
-        const selectedNotebook = this.workspaceFacadeService.selectedNotebook();
-        if (!selectedNotebook || !this.notebookNameInput().trim()) return;
-        await this.workspaceFacadeService.updateNotebook(selectedNotebook.id!, { name: this.notebookNameInput() });
+    protected onNotebookRename(): void {
+        const selectedNotebook = this.selectedNotebook();
+        const notebookName = this.notebookName();
+        if (!selectedNotebook || !notebookName.trim()) return;
+        this.notebookRenamed.emit({ id: selectedNotebook.id!, name: notebookName });
         this.isRenameModalOpen.set(false);
     }
 
@@ -50,29 +59,25 @@ export class NoteListComponent {
     }
 
     protected onCancel(): void {
-        const selectedNotebook = this.workspaceFacadeService.selectedNotebook();
-        if (!selectedNotebook || !this.notebookNameInput().trim()) return;
-        this.notebookNameInput.set(selectedNotebook.name);
+        const selectedNotebook = this.selectedNotebook();
+        if (!selectedNotebook || !this.notebookName().trim()) return;
+        this.notebookName.set(selectedNotebook.name);
         this.isRenameModalOpen.set(false);
     }
 
-    protected onOpenRemove(): void {
+    protected onRemoveOpen(): void {
         this.isMenuOpen.set(false);
         this.isRemoveModalOpen.set(true);
     }
 
-    protected onCancelRemove(): void {
+    protected onRemoveCancel(): void {
         this.isRemoveModalOpen.set(false);
     }
 
-    protected async onConfirmRemove(): Promise<void> {
-        const selectedNotebook = this.workspaceFacadeService.selectedNotebook();
+    protected onRemoveConfirm(): void {
+        const selectedNotebook = this.selectedNotebook();
         if (!selectedNotebook) return;
-        try {
-            await this.workspaceFacadeService.deleteNotebook(selectedNotebook?.id!);
-        } catch (error) {
-            throw error;
-        }
+        this.notebookRemoved.emit(selectedNotebook.id!);
         this.isRemoveModalOpen.set(false);
     }
 
