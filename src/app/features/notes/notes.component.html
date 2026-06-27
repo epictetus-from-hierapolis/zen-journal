@@ -73,7 +73,9 @@
       </div>
 
       @if (isNotebooksExpanded()) {
-      <app-notebooks></app-notebooks>
+      <app-notebooks [notebooks]="workspaceFacadeService.notebooks()"
+        [selectedNotebook]="workspaceFacadeService.selectedNotebook()"
+        (notebookSelected)="workspaceFacadeService.selectNotebook($event)"></app-notebooks>
       }
 
     </nav>

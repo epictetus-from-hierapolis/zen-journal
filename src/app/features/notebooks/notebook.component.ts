@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, output } from "@angular/core";
 import { Notebook } from "@shared/models";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
 
 @Component({
     selector: "app-notebooks",
@@ -10,5 +9,8 @@ import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotebooksComponent {
-    protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
+    public readonly notebooks = input<Notebook[]>([]);
+    public readonly selectedNotebook = input<Notebook | null>(null);
+
+    public readonly notebookSelected = output<Notebook>();
 }

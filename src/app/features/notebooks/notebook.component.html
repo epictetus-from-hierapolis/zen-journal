@@ -1,13 +1,13 @@
 <div class="flex flex-col text-sm pl-2">
-    @for (notebook of workspaceFacadeService.notebooks(); track notebook.id) {
+    @for (notebook of notebooks(); track notebook.id) {
 
-    <div (click)="workspaceFacadeService.selectNotebook(notebook)" class="group flex items-center justify-between cursor-pointer 
+    <div (click)="notebookSelected.emit(notebook)" class="group flex items-center justify-between cursor-pointer 
         hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg mb-1
         px-3 py-2 transition-colors text-gray-700 dark:text-gray-300"
-        [class.bg-gray-100]="workspaceFacadeService.selectedNotebook()?.id === notebook.id"
-        [class.dark:bg-gray-800]="workspaceFacadeService.selectedNotebook()?.id === notebook.id"
-        [class.text-gray-900]="workspaceFacadeService.selectedNotebook()?.id === notebook.id"
-        [class.font-medium]="workspaceFacadeService.selectedNotebook()?.id === notebook.id">
+        [class.bg-gray-100]="selectedNotebook()?.id === notebook.id"
+        [class.dark:bg-gray-800]="selectedNotebook()?.id === notebook.id"
+        [class.text-gray-900]="selectedNotebook()?.id === notebook.id"
+        [class.font-medium]="selectedNotebook()?.id === notebook.id">
         <!-- Icon + Nootebook Name -->
         <div class="flex items-center gap-2 min-w-0">
             <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
