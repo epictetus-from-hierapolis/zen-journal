@@ -22,7 +22,6 @@ export class NotesComponent implements OnInit {
 
 
     protected isSidebarOpen: WritableSignal<boolean> = signal(false);
-    protected isAddingNotebook: WritableSignal<boolean> = signal(false);
     protected isNotebooksExpanded: WritableSignal<boolean> = signal(false);
 
     protected readonly isNoteSelected = toSignal(
