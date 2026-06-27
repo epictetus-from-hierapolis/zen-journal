@@ -1,4 +1,4 @@
-@if(mode === 'full'){
+@if(displayMode === 'full'){
 <!-- Search button long -->
 <button class="cursor-pointer flex items-center gap-2 w-full 
     px-3 py-3 text-sm text-gray-600 bg-gray-100 rounded-lg 
@@ -42,11 +42,11 @@
                 </svg>
             </button>
 
-            <input #searchInputEl type="text" placeholder="Search" [value]="searchInput()" (input)="onSearch($event)"
+            <input #searchInputElement type="text" placeholder="Search" [value]="query()" (input)="onSearch($event)"
                 class="flex-1 outline-none text-sm dark:bg-transparent dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400" />
 
             <!-- Clear button -->
-            @if (searchInput().length) {
+            @if (query().length) {
             <button (click)="onClear()"
                 class="md:hidden p-2 -mr-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                 <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -59,11 +59,11 @@
 
         @if(searchInput().length){
         <div class="flex-1 overflow-y-auto pt-2">
-            @for(note of workspaceFacadeService.filteredNotes(); track note.id ) {
-            <div (click)="onSnippetClick(note)" class="flex flex-col hover:bg-gray-50 cursor-pointer rounded-lg p-2 
+            @for(note of notes(); track note.id ) {
+            <div (click)="onSnippetSelect(note)" class="flex flex-col hover:bg-gray-50 cursor-pointer rounded-lg p-2 
                 border-b border-gray-100 gap-1 transition-colors dark:border-gray-800 dark:hover:bg-gray-800/50">
                 <p class=" truncate dark:text-gray-200">{{ note.title }}</p>
-                <p class="line-clamp-2 dark:text-gray-400">{{ note.content | snippet: searchInput() }}</p>
+                <p class="line-clamp-2 dark:text-gray-400">{{ note.content | snippet: query() }}</p>
             </div>
             } @empty {
             <div class="text-gray-600 dark:text-gray-400">There are no items.</div>

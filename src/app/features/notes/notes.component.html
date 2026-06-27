@@ -17,7 +17,9 @@
       </button>
 
       <!-- search -->
-      <app-note-search class="flex-1"></app-note-search>
+      <app-note-search class="flex-1" [notes]="workspaceFacadeService.filteredNotes()"
+        (queryChanged)="workspaceFacadeService.searchQuery$.next($event)"
+        (noteSelected)="workspaceFacadeService.selectNote($event)"></app-note-search>
     </div>
 
     <nav class="flex-1 p-2 pt-0">
@@ -123,7 +125,9 @@
 
         <h1 class="text-sm font-semibold tracking-wide uppercase 
         text-gray-500 dark:text-gray-400">Zen Journal</h1>
-        <app-note-search [mode]="'icon'"></app-note-search>
+        <app-note-search [notes]="workspaceFacadeService.filteredNotes()"
+          (queryChanged)="workspaceFacadeService.searchQuery$.next($event)"
+          (noteSelected)="workspaceFacadeService.selectNote($event)" [displayMode]="'icon'"></app-note-search>
       </div>
       <app-note-list class=" h-full flex flex-col" />
       <button (click)="workspaceFacadeService.addNote()"

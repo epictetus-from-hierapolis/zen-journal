@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild, afterNextRender, effect, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild, effect, input, output } from "@angular/core";
 import { SnippetPipe } from "@shared/pipes";
 import { Note } from "@shared/models";
-import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
 
 @Component({
     selector: 'app-note-search',
@@ -11,18 +10,20 @@ import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteSearchComponent {
-    @Input() public mode: 'full' | 'icon' = 'full';
-    protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
+    public readonly displayMode = input<'full' | 'icon'>('full');
+    public readonly notes = input<Note[]>([]);
+    public readonly queryChanged = output<string>();
+    public readonly noteSelected = output<Note>();
 
 
-    protected isOpen = signal<boolean>(false);
-    protected searchInput = signal<string>('');
-    protected searchInputEl = viewChild<ElementRef<HTMLInputElement>>('searchInputEl');
+    protected readonly isOpen = signal<boolean>(false);
+    protected readonly query = signal<string>('');
+    protected searchInputElement = viewChild<ElementRef<HTMLInputElement>>('searchInputElement');
 
     constructor() {
         effect(() => {
             if (this.isOpen()) {
-                this.searchInputEl()?.nativeElement.focus();
+                this.searchInputElement()?.nativeElement.focus();
             }
         });
     }
@@ -33,24 +34,24 @@ export class NoteSearchComponent {
 
     protected onClose(): void {
         this.isOpen.set(false);
-        this.searchInput.set('');
-        this.workspaceFacadeService.searchQuery$.next('');
+        this.query.set('');
+        this.queryChanged.emit('');
     }
 
     protected onClear() {
-        this.searchInput.set('');
-        this.workspaceFacadeService.searchQuery$.next('');
-        this.searchInputEl()?.nativeElement.focus();
+        this.query.set('');
+        this.queryChanged.emit('');
+        this.searchInputElement()?.nativeElement.focus();
     }
 
     protected onSearch(event: Event): void {
         const input = event.target as HTMLInputElement;
-        this.searchInput.set(input.value);
-        this.workspaceFacadeService.searchQuery$.next(input.value);
+        this.query.set(input.value);
+        this.queryChanged.emit(input.value);
     }
 
-    protected onSnippetClick(note: Note): void {
-        this.workspaceFacadeService.selectNote(note);
+    protected onSnippetSelect(note: Note): void {
+        this.noteSelected.emit(note);
         this.onClose();
     }
 }
