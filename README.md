@@ -1,8 +1,8 @@
 # ZenJournal
 
-A minimalist, offline-first note-taking application built with Angular 21. Designed as a portfolio project to demonstrate modern Angular architecture patterns, reactive state management with Signals, and production-grade code organization.
+A minimalist, offline-first note-taking application built with Angular 22. Designed as a portfolio project to demonstrate modern Angular architecture patterns, reactive state management with Signals, and production-grade code organization.
 
-![Angular](https://img.shields.io/badge/Angular-21-DD0031?logo=angular)
+![Angular](https://img.shields.io/badge/Angular-22-DD0031?logo=angular)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-38BDF8?logo=tailwindcss)
 ![Jest](https://img.shields.io/badge/Tested_with-Jest-C21325?logo=jest)
@@ -75,10 +75,10 @@ Uses `provideZonelessChangeDetection()` with `ChangeDetectionStrategy.OnPush` th
 
 | Layer | Technology |
 |---|---|
-| Framework | Angular 21 (standalone, zoneless) |
+| Framework | Angular 22 (standalone, zoneless) |
 | Language | TypeScript 5.9 (strict mode) |
 | Reactivity | Angular Signals + RxJS 7 |
-| Rich Text | TipTap 3 |
+| Rich Text | TipTap 3.27 |
 | Styling | Tailwind CSS 4 |
 | Local Database | Dexie.js 4 (IndexedDB) |
 | Testing | Jest + jsdom |
