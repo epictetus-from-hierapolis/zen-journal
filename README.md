@@ -7,11 +7,14 @@ A minimalist, offline-first note-taking application built with Angular 22. Desig
 ![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-38BDF8?logo=tailwindcss)
 ![Jest](https://img.shields.io/badge/Tested_with-Jest-C21325?logo=jest)
 
+![ZenJournal Showcase](public/home.png)
+
 ---
 
 ## Features
 
 - **Offline-first** — all data stored locally via [Dexie.js](https://dexie.org/) (IndexedDB), zero backend dependency
+- **Zero-knowledge security** — local, transparent encryption using AES-256-GCM and PBKDF2 (Web Crypto API)
 - **Rich text editing** — [TipTap](https://tiptap.dev/) integration with formatting toolbar, headings and lists
 - **Notebook management** — create, rename, delete notebooks with cascade delete at database transaction level
 - **Optimistic UI** — instant state updates with automatic rollback on failure
@@ -68,6 +71,9 @@ Feature components (`NoteListComponent`, `NoteEditorComponent`, `NoteSearchCompo
 
 **Zoneless Change Detection**
 Uses `provideZonelessChangeDetection()` with `ChangeDetectionStrategy.OnPush` throughout, eliminating Zone.js overhead and making change detection fully explicit and predictable.
+
+**Decorator Pattern for Encryption**
+`EncryptedNotesService` wraps the base `NotesService` to intercept data operations transparently. It encrypts payloads before storage and decrypts them upon retrieval using the Web Crypto API (AES-GCM), all while strictly adhering to the `INotesService` contract. This keeps the database/interceptor layer completely unaware of cryptography, perfectly respecting the Single Responsibility Principle (SRP).
 
 ---
 
