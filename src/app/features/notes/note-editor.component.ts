@@ -10,6 +10,8 @@ import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { TiptapEditorDirective } from 'ngx-tiptap';
 import Placeholder from '@tiptap/extension-placeholder';
+import { TextStyle } from '@tiptap/extension-text-style';
+import { FontSize } from '@shared/editor/font-size.extension';
 
 @Component({
     selector: 'app-note-editor',
@@ -52,6 +54,8 @@ export class NoteEditorComponent {
     protected readonly editor = new Editor({
         extensions: [
             StarterKit,
+            TextStyle,
+            FontSize,
             Placeholder.configure({
                 placeholder: 'Start writing here...',
             })],
@@ -64,6 +68,19 @@ export class NoteEditorComponent {
             }
         }
     });
+    protected get currentFontSize(): string {
+        return this.editor.getAttributes('textStyle')['fontSize'] || '';
+    }
+
+    protected onFontSizeChange(event: Event): void {
+        const select = event.target as HTMLSelectElement;
+        const size = select.value;
+        if (size) {
+            this.editor.chain().focus().setFontSize(size).run();
+        } else {
+            this.editor.chain().focus().unsetFontSize().run();
+        }
+    }
 
     @HostListener('document: click')
     protected closeMenu(): void {

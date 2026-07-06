@@ -76,6 +76,21 @@
                 </button>
                 <!-- Separator -->
                 <div class="h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
+                <!-- Dropdown pentru Font Size -->
+                <select [value]="currentFontSize" (change)="onFontSizeChange($event)"
+                    class="px-2 py-1 h-9 text-sm rounded-lg border border-gray-200 dark:border-gray-800 bg-transparent text-gray-700 dark:text-gray-300 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 cursor-pointer">
+                    <option value="" class="bg-white dark:bg-gray-900 text-gray-400">Normal</option>
+                    <option value="12px" class="bg-white dark:bg-gray-900">Small (12px)</option>
+                    <option value="14px" class="bg-white dark:bg-gray-900">Medium (14px)</option>
+                    <option value="16px" class="bg-white dark:bg-gray-900">Default (16px)</option>
+                    <option value="18px" class="bg-white dark:bg-gray-900">Large (18px)</option>
+                    <option value="20px" class="bg-white dark:bg-gray-900">X-Large (20px)</option>
+                    <option value="24px" class="bg-white dark:bg-gray-900">Huge (24px)</option>
+                    <option value="30px" class="bg-white dark:bg-gray-900">30px</option>
+                    <option value="36px" class="bg-white dark:bg-gray-900">36px</option>
+                </select>
+                <!-- Separator -->
+                <div class="h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
                 <!-- Buton HEADING 1 (H1) -->
                 <button (click)="editor.chain().focus().toggleHeading({ level: 1 }).run()"
                     [class.bg-gray-200]="editor.isActive('heading', {level: 1})"
