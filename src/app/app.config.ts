@@ -10,12 +10,13 @@ import {
   NOTEBOOKS_SERVICE_TOKEN,
   WORKSPACE_FACADE_SERVICE_TOKEN,
 } from '@shared/tokens';
-import { NotesService, NotebooksService, WorkspaceFacadeService } from '@core/services';
+import { NotesService, NotebooksService, WorkspaceFacadeService, EncryptedNotesService } from '@core/services';
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { authInterceptor, errorInterceptor, dexieBackendInterceptor } from '@core/interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    NotesService,
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideHttpClient(
@@ -25,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     {
       provide: NOTES_SERVICE_TOKEN,
-      useClass: NotesService,
+      useClass: EncryptedNotesService,
     },
     {
       provide: NOTEBOOKS_SERVICE_TOKEN,

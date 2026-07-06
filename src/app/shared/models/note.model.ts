@@ -2,6 +2,8 @@ export interface Note {
     id?: number;
     title: string;
     content: string;
+    titleIv?: string;
+    contentIv?: string;
     notebookId: number;
     tags: string[];
     createdAt: Date;
