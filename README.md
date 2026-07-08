@@ -44,7 +44,9 @@ src/app/
   │
   └── shared/                      # Reusable, stateless building blocks
     ├── components/              # Reusable dumb UI components (ModalComponent)
+    ├── constants/               # App-wide constants (Storage keys)
     ├── decorators/              # Cross-cutting concerns (@HandleError)
+    ├── editor/                  # Rich text editor configuration and presets
     ├── interfaces/              # Service contracts (INotesService, IWorkspaceFacadeService)
     ├── models/                  # Domain types (Note, Notebook, AppSettings)
     ├── pipes/                   # Pure transforms (relativeTime, wordCount, snippet)
