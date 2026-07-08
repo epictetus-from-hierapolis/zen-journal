@@ -24,4 +24,5 @@ export interface IWorkspaceFacadeService {
     updateNote(id: number, changes: Partial<Note>): Promise<void>;
     deleteNote(id: number): Promise<void>;
     applyOptimisticUpdate(id: number, changes: Partial<Note>): void;
+    reset(): void;
 }

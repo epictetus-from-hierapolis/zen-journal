@@ -1,1 +1,5 @@
+@if (authService.isAuthenticated() && !encryptionService.isUnlocked() ) {
+<app-unlock></app-unlock>
+} @else {
 <router-outlet />
+}

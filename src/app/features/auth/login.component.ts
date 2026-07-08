@@ -29,7 +29,7 @@ export class LoginComponent {
         if (success) {
             this.routerService.navigate(['/']);
         } else {
-            this.errorMessage.set("Credentiale gresite!");
+            this.errorMessage.set("Credentiale gresite");
         }
     }
 }

@@ -199,6 +199,14 @@ export class WorkspaceFacadeService implements IWorkspaceFacadeService {
         this._selectedNote.update(note => note?.id === id ? { ...note, ...changes } : note);
     }
 
+    public reset(): void {
+        this._notebooks.set([]);
+        this._notes.set([]);
+        this._selectedNote.set(null);
+        this._selectedNotebook.set(null);
+        this.isInitialized = false;
+    }
+
     private removeNotesByNotebookId(notebookId: number): void {
         if (this.selectedNote()?.notebookId === notebookId) {
             this._selectedNote.set(null);

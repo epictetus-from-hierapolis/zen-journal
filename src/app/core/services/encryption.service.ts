@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from "@angular/core";
 import { CRYPTO, LOCAL_STORAGE } from "@shared/tokens";
+import { STORAGE_KEYS } from '@shared/constants/storage-keys';
 
 @Injectable({
     providedIn: 'root'
@@ -9,20 +10,41 @@ export class EncryptionService {
     private readonly crypto = inject(CRYPTO);
     private readonly _isUnlocked = signal<boolean>(false);
     private key: CryptoKey | null = null;
+    private readonly verificationPlaintext: string = 'vrabiuta-ciugule';
 
     public readonly isUnlocked = this._isUnlocked.asReadonly();
 
-    public async unlock(password: string): Promise<void> {
-        if (!password) return;
-        let saltBytes: Uint8Array;
-        const saltHex = this.localStorage.getItem('encryption-salt');
+    public async unlock(password: string): Promise<boolean> {
+        if (!password) return false;
 
-        if (!saltHex) {
-            saltBytes = this.createSalt();
-            this.localStorage.setItem('encryption-salt', this.arrayToHex(saltBytes));
-        } else {
-            saltBytes = this.hexToArray(saltHex);
+        const [salt, ciphertext, iv] = [
+            this.localStorage.getItem(STORAGE_KEYS.ENCRYPTION_SALT),
+            this.localStorage.getItem(STORAGE_KEYS.VERIFICATION_CIPHERTEXT),
+            this.localStorage.getItem(STORAGE_KEYS.VERIFICATION_IV)
+        ];
+
+        if (!salt || !ciphertext || !iv) {
+            return false;
         }
+
+        try {
+            this.key = await this.deriveKey(password, this.hexToArray(salt));
+            const verificationPlaintext = await this.decrypt(ciphertext, iv);
+            if (verificationPlaintext === this.verificationPlaintext) {
+                this._isUnlocked.set(true);
+                console.log('unlock success: key is set, isUnlocked =', this._isUnlocked());
+                return true;
+            }
+        } catch (error) {
+
+        }
+
+        this.lock();
+        return false;
+
+    }
+
+    private async deriveKey(password: string, salt: Uint8Array): Promise<CryptoKey> {
 
         const passwordBytes = new TextEncoder().encode(password); // convert to Uint8Array
         const keyMaterial = await this.crypto.subtle.importKey(
@@ -33,10 +55,10 @@ export class EncryptionService {
             ['deriveBits', 'deriveKey']    // Permisiunile: pentru derivarea altor chei
         );
 
-        this.key = await this.crypto.subtle.deriveKey(
+        return await this.crypto.subtle.deriveKey(
             {
                 name: 'PBKDF2',
-                salt: saltBytes.buffer as ArrayBuffer,              // Salt sub formă de octeți
+                salt: salt.buffer as ArrayBuffer,              // Salt sub formă de octeți
                 iterations: 100000,           // Numărul de iterații pentru securitate
                 hash: 'SHA-256'               // Funcția de dispersie
             },
@@ -48,12 +70,11 @@ export class EncryptionService {
             false,                            // Nu se permite exportarea cheii în afara browserului
             ['encrypt', 'decrypt']            // Utilizări permise
         );
-        return this._isUnlocked.set(true);
     }
 
     public async encrypt(plainText: string): Promise<{ ciphertext: string, iv: string }> {
         if (!this.key) {
-            throw new Error("Database is locked");
+            throw new Error('Encryption service is locked.');
         }
         const plainTextBytes = new TextEncoder().encode(plainText);
         const ivBytes = this.crypto.getRandomValues(new Uint8Array(12));// genereaza 12 octeti aleatori
@@ -61,6 +82,11 @@ export class EncryptionService {
         const ciphertextHex = this.arrayToHex(new Uint8Array(ciphertext));
         const ivHex = this.arrayToHex(ivBytes);
         return { ciphertext: ciphertextHex, iv: ivHex };
+    }
+
+    public lock(): void {
+        this.key = null;
+        this._isUnlocked.set(false);
     }
 
     public async decrypt(ciphertext: string, iv: string): Promise<string> {
@@ -78,12 +104,35 @@ export class EncryptionService {
 
         return new TextDecoder().decode(decrypted);
     }
+
+    public isPasswordSet(): boolean {
+        return !!this.localStorage.getItem(STORAGE_KEYS.ENCRYPTION_SALT);
+    }
+
+    public async setupPassword(password: string): Promise<void> { // ruleaza la primul contact
+        if (!password) throw new Error('Password is missing.')
+
+        const salt = this.createSalt();
+        const key = await this.deriveKey(password, salt);
+        this.key = key;
+        const canary = await this.encrypt(this.verificationPlaintext);
+
+        this.localStorage.setItem(STORAGE_KEYS.VERIFICATION_CIPHERTEXT, canary.ciphertext);
+        this.localStorage.setItem(STORAGE_KEYS.VERIFICATION_IV, canary.iv);
+        this.localStorage.setItem(STORAGE_KEYS.ENCRYPTION_SALT, this.arrayToHex(salt));
+
+        this._isUnlocked.set(true);
+    }
+
     private arrayToHex(bytes: Uint8Array): string {
         return Array.from(bytes).map(byte => byte.toString(16).padStart(2, '0')).join('');
     }
 
-    private hexToArray(hexString: string): Uint8Array {
-        const matches = hexString.match(/.{1,2}/g) || [];
+    private hexToArray(hex: string): Uint8Array {
+        if (!/^[0-9a-fA-F]+$/.test(hex) || hex.length % 2 !== 0) {
+            throw new Error('Invalid hex string');
+        }
+        const matches = hex.match(/.{1,2}/g) || [];
         return new Uint8Array(matches.map(byte => parseInt(byte, 16)));
     }
 

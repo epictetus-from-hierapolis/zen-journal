@@ -11,6 +11,7 @@ export class EncryptedNotesService implements INotesService {
 
     public async loadNotes(): Promise<Note[]> {
         const notes = await this.notesService.loadNotes();
+        console.log('loadNotes: isUnlocked =', this.encryptionService.isUnlocked(), 'raw notes =', notes);
         const decryptedNotes = await Promise.all(notes.map(async (note) => {
             if (note.contentIv && note.titleIv && this.encryptionService.isUnlocked()) {
                 return {
