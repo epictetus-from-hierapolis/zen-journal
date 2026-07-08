@@ -31,18 +31,18 @@ A minimalist, offline-first note-taking application built with Angular 22. Desig
 
 ```
 src/app/
-├── core/                        # Singleton infrastructure (bootstrapped once)
-│   ├── guards/                  # Route protection (auth guard)
-│   ├── interceptors/            # HTTP middleware (auth, error handling, Dexie backend)
-│   └── services/                # App-wide singletons: Auth, Database, Settings, Facade
-│
-├── features/                    # Feature modules (lazy-loaded)
-│   ├── auth/                    # Login flow
-│   ├── notebooks/               # Notebook sidebar and creation
-│   ├── notes/                   # Note list, editor, search
-│   └── settings/                # App configuration
-│
-└── shared/                      # Reusable, stateless building blocks
+  ├── core/                        # Singleton infrastructure (bootstrapped once)
+  │   ├── guards/                  # Route protection (auth guard)
+  │   ├── interceptors/            # HTTP middleware (auth, error handling, Dexie backend)
+  │   └── services/                # App-wide singletons: Auth, Database, Settings, Facade, Encryption
+  │
+  ├── features/                    # Feature modules (lazy-loaded)
+  │   ├── auth/                    # Login flow and database unlocking (UnlockComponent)
+  │   ├── notebooks/               # Notebook sidebar and creation
+  │   ├── notes/                   # Note list, editor, search
+  │   └── settings/                # App configuration
+  │
+  └── shared/                      # Reusable, stateless building blocks
     ├── components/              # Reusable dumb UI components (ModalComponent)
     ├── decorators/              # Cross-cutting concerns (@HandleError)
     ├── interfaces/              # Service contracts (INotesService, IWorkspaceFacadeService)
@@ -74,6 +74,12 @@ Uses `provideZonelessChangeDetection()` with `ChangeDetectionStrategy.OnPush` th
 
 **Decorator Pattern for Encryption**
 `EncryptedNotesService` wraps the base `NotesService` to intercept data operations transparently. It encrypts payloads before storage and decrypts them upon retrieval using the Web Crypto API (AES-GCM), all while strictly adhering to the `INotesService` contract. This keeps the database/interceptor layer completely unaware of cryptography, perfectly respecting the Single Responsibility Principle (SRP).
+
+**Gatekeeper Pattern for Route Interception**
+The root `App` component acts as the gatekeeper of the application, conditionally rendering either `<app-unlock>` or `<router-outlet />` based on the user's authentication and database unlock states. This centralized route interception guarantees that no feature components (such as notes or notebooks) are instantiated in the DOM before the local database is successfully decrypted, completely avoiding complex route guards or race conditions.
+
+**Session Privacy & Memory Security**
+Wiping local storage keys alone is insufficient for zero-knowledge privacy. On logout, the application explicitly triggers a "clean slate" sequence: navigating away to destroy active components, clearing the derived `CryptoKey` from memory via `lock()`, and purging all active notebooks/notes signals in `WorkspaceFacadeService` via `reset()`. This prevents any data recovery or visual leaks from RAM if another user accesses the browser session.
 
 ---
 
