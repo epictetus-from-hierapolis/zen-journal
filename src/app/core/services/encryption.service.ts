@@ -32,7 +32,6 @@ export class EncryptionService {
             const verificationPlaintext = await this.decrypt(ciphertext, iv);
             if (verificationPlaintext === this.verificationPlaintext) {
                 this._isUnlocked.set(true);
-                console.log('unlock success: key is set, isUnlocked =', this._isUnlocked());
                 return true;
             }
         } catch (error) {
