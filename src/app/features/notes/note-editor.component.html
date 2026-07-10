@@ -1,8 +1,8 @@
-<div class="h-full flex flex-col dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800">
+<div class="h-full flex flex-col min-w-0 dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800">
     <div class="flex flex-col h-full py-4 md:pb-4">
         @let currentSelectedNote = selectedNote();
         @if(currentSelectedNote) {
-        <div class="flex flex-col h-full">
+        <div class="flex flex-col h-full min-w-0">
 
             <!-- header -->
             <div class="order-1 md:order-2 flex items-center justify-between gap-4 mb-4 px-4">
@@ -60,25 +60,25 @@
             </div>
 
             <!-- Toolbar -->
-            <div class=" order-3 md:order-1 flex items-center gap-1.5 w-full   md:mb-4 md:mt-0
-                    mt-4 p-1">
+            <div
+                class="order-3 md:order-1 flex items-center gap-1.5 w-full mt-4 p-1 overflow-x-auto flex-nowrap whitespace-nowrap scrollbar-none">
                 <!-- Buton BOLD -->
                 <button (click)="editor.chain().focus().toggleBold().run()"
                     [class.bg-gray-200]="editor.isActive('bold')" [class.dark:bg-gray-700]="editor.isActive('bold')"
-                    class="font-semibold text-sm w-9 h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
+                    class="shrink-0 font-semibold text-sm w-9 h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
                     <strong>B</strong>
                 </button>
                 <!-- Buton ITALIC -->
                 <button (click)="editor.chain().focus().toggleItalic().run()"
                     [class.bg-gray-200]="editor.isActive('italic')" [class.dark:bg-gray-700]="editor.isActive('italic')"
-                    class="font-semibold text-sm w-9 h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
+                    class="shrink-0 font-semibold text-sm w-9 h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
                     <em>i</em>
                 </button>
                 <!-- Separator -->
-                <div class="h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
+                <div class="shrink-0 h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
                 <!-- Dropdown pentru Font Size -->
                 <select [value]="currentFontSize" (change)="onFontSizeChange($event)"
-                    class="px-2 py-1 h-9 text-sm rounded-lg border border-gray-200 dark:border-gray-800 bg-transparent text-gray-700 dark:text-gray-300 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 cursor-pointer">
+                    class="shrink-0 px-2 py-1 h-9 text-sm rounded-lg border border-gray-200 dark:border-gray-800 bg-transparent text-gray-700 dark:text-gray-300 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 cursor-pointer">
                     <option value="" class="bg-white dark:bg-gray-900 text-gray-400">Normal</option>
                     <option value="12px" class="bg-white dark:bg-gray-900">Small (12px)</option>
                     <option value="14px" class="bg-white dark:bg-gray-900">Medium (14px)</option>
@@ -90,28 +90,28 @@
                     <option value="36px" class="bg-white dark:bg-gray-900">36px</option>
                 </select>
                 <!-- Separator -->
-                <div class="h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
+                <div class="shrink-0 h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
                 <!-- Buton HEADING 1 (H1) -->
                 <button (click)="editor.chain().focus().toggleHeading({ level: 1 }).run()"
                     [class.bg-gray-200]="editor.isActive('heading', {level: 1})"
                     [class.dark:bg-gray-700]="editor.isActive('heading', {level: 1})" class="w-9 h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors 
-                cursor-pointer text-gray-700 dark:text-gray-300 font-semibold text-sm">
+                shrink-0 cursor-pointer text-gray-700 dark:text-gray-300 font-semibold text-sm">
                     <strong>H1</strong>
                 </button>
                 <!-- Buton HEADING 2 (H2) -->
                 <button (click)="editor.chain().focus().toggleHeading({ level: 2 }).run()"
                     [class.bg-gray-200]="editor.isActive('heading', {level: 2})"
                     [class.dark:bg-gray-700]="editor.isActive('heading', {level: 2})" class="w-9 h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors 
-                cursor-pointer text-gray-700 dark:text-gray-300 font-semibold text-sm">
+                cursor-pointer shrink-0 text-gray-700 dark:text-gray-300 font-semibold text-sm">
                     <strong>H2</strong>
                 </button>
                 <!-- Separator -->
-                <div class="h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
+                <div class="shrink-0 h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
                 <!-- Buton BULLET LIST -->
                 <button (click)="editor.chain().focus().toggleBulletList().run()"
                     [class.bg-gray-200]="editor.isActive('bulletList')"
                     [class.dark:bg-gray-700]="editor.isActive('bulletList')"
-                    class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
+                    class="shrink-0 w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
                     <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0z" />

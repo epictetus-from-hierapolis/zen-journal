@@ -87,3 +87,15 @@ body {
 .dark .ProseMirror p.is-editor-empty:first-child::before {
     color: var(--color-zinc-600);
 }
+
+/* Ascundere scrollbar vizual */
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-none {
+    -ms-overflow-style: none;
+    /* IE/Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
