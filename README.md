@@ -15,7 +15,7 @@ A minimalist, offline-first note-taking application built with Angular 22. Desig
 
 - **Offline-first** — all data stored locally via [Dexie.js](https://dexie.org/) (IndexedDB), zero backend dependency
 - **Zero-knowledge security** — local, transparent encryption using AES-256-GCM and PBKDF2 (Web Crypto API)
-- **Rich text editing** — [TipTap](https://tiptap.dev/) integration with formatting toolbar, headings and lists
+- **Rich text editing** — [TipTap](https://tiptap.dev/) integration with an advanced formatting toolbar supporting headings, bullet/numbered lists, custom interactive checklists (task lists), text alignment, block indentation, font family & size selectors, underline, strikethrough, text colors, and highlights (text backgrounds)
 - **Notebook management** — create, rename, delete notebooks with cascade delete at database transaction level
 - **Optimistic UI** — instant state updates with automatic rollback on failure
 - **Debounced autosave** — content saved as you type, configurable delay
