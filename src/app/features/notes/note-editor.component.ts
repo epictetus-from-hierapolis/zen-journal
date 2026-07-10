@@ -96,6 +96,13 @@ export class NoteEditorComponent {
         return this.editor.getAttributes('textStyle')['fontFamily'] || '';
     }
 
+    protected get currentTextAlign(): string {
+        if (this.editor.isActive({ textAlign: 'center' })) return 'center';
+        if (this.editor.isActive({ textAlign: 'right' })) return 'right';
+        if (this.editor.isActive({ textAlign: 'justify' })) return 'justify';
+        return 'left';
+    }
+
     protected onFontSizeChange(event: Event): void {
         const select = event.target as HTMLSelectElement;
         const size = select.value;
@@ -114,6 +121,12 @@ export class NoteEditorComponent {
         } else {
             this.editor.chain().focus().unsetFontFamily().run();
         }
+    }
+
+    protected onTextAlignChange(event: Event): void {
+        const select = event.target as HTMLSelectElement;
+        const align = select.value;
+        this.editor.chain().focus().setTextAlign(align).run();
     }
 
     protected toggleFontFamily(): void {
