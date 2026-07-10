@@ -127,7 +127,7 @@
                  <button (contextmenu)="$event.preventDefault(); editor.chain().focus().unsetColor().run()"
                      title="Text Color (Right-click to reset)"
                      class="relative shrink-0 w-9 h-9 flex flex-col items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
-                     <input type="color" [value]="editor.getAttributes('textStyle')['color'] || '#000000'" (input)="onTextColorChange(textColorInput.value)" #textColorInput
+                     <input type="color" [value]="rgbToHex(editor.getAttributes('textStyle')['color'], '#000000')" (input)="onTextColorChange(textColorInput.value)" #textColorInput
                          class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
                      <span class="text-base font-bold leading-none z-0">A</span>
                      <div class="w-4 h-0.5 mt-0.5 rounded-full z-0" [style.background-color]="editor.getAttributes('textStyle')['color'] || 'currentColor'"></div>
@@ -137,7 +137,7 @@
                  <button (contextmenu)="$event.preventDefault(); editor.chain().focus().unsetHighlight().run()"
                      title="Highlight Color (Right-click to reset)"
                      class="relative shrink-0 w-9 h-9 flex flex-col items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer text-gray-700 dark:text-gray-300">
-                     <input type="color" [value]="editor.getAttributes('highlight')['color'] || '#ffff00'" (input)="onBgColorChange(bgColorInput.value)" #bgColorInput
+                     <input type="color" [value]="rgbToHex(editor.getAttributes('highlight')['color'], '#ffff00')" (input)="onBgColorChange(bgColorInput.value)" #bgColorInput
                          class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
                      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" class="size-5 z-0">
                          <path stroke-linecap="round" stroke-linejoin="round" d="M18.75 3.75l1.5 1.5-10.5 10.5-2.25-.75-.75-2.25 10.5-10.5zM15 7.5l1.5 1.5" />

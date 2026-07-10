@@ -178,6 +178,20 @@ export class NoteEditorComponent {
         this.editor.chain().focus().setHighlight({ color }).run();
     }
 
+    protected rgbToHex(color: string | undefined | null, fallback: string): string {
+        if (!color) return fallback;
+        if (color.startsWith('#')) return color;
+        
+        const match = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+        if (match) {
+            const r = parseInt(match[1], 10);
+            const g = parseInt(match[2], 10);
+            const b = parseInt(match[3], 10);
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+        return fallback;
+    }
+
     @HostListener('document: click')
     protected closeMenu(): void {
         this.isMenuOpen.set(false);
