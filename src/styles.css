@@ -105,6 +105,32 @@ body {
     /* Firefox */
 }
 
+/* Scrollbar subtil pe desktop la hover */
+@media (hover: hover) {
+    .scrollbar-none:hover::-webkit-scrollbar {
+        display: block;
+        height: 4px;
+    }
+    .scrollbar-none:hover::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+    .scrollbar-none:hover::-webkit-scrollbar-thumb {
+        background: #d4d4d8; /* zinc-300 */
+        border-radius: 2px;
+    }
+    .dark .scrollbar-none:hover::-webkit-scrollbar-thumb {
+        background: #3f3f46; /* zinc-700 */
+    }
+    .scrollbar-none:hover {
+        scrollbar-width: thin;
+        scrollbar-color: #d4d4d8 transparent;
+        -ms-overflow-style: auto;
+    }
+    .dark .scrollbar-none:hover {
+        scrollbar-color: #3f3f46 transparent;
+    }
+}
+
 /* Stilizare pentru liste cu checkbox-uri (Task Lists) */
 ul[data-type="taskList"] {
     list-style: none;

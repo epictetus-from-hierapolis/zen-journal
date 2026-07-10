@@ -129,6 +129,14 @@ export class NoteEditorComponent {
         this.editor.chain().focus().setTextAlign(align).run();
     }
 
+    protected onWheelScroll(event: WheelEvent): void {
+        const container = event.currentTarget as HTMLElement;
+        if (container.scrollWidth > container.clientWidth) {
+            event.preventDefault();
+            container.scrollLeft += event.deltaY;
+        }
+    }
+
     protected toggleFontFamily(): void {
         this.isFontFamilyOpen.update(v => !v);
         this.isFontSizeOpen.set(false);

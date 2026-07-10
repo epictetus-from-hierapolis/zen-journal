@@ -60,7 +60,8 @@
             </div>
 
             <!-- Toolbar -->
-            <div class="order-3 md:order-1 flex items-center gap-1.5 w-full md:mb-4 md:mt-0 mt-4 p-1 overflow-x-auto flex-nowrap whitespace-nowrap scrollbar-none">
+            <div (wheel)="onWheelScroll($event)"
+                class="order-3 md:order-1 flex items-center gap-1.5 w-full md:mb-4 md:mt-0 mt-4 p-1 overflow-x-auto flex-nowrap whitespace-nowrap scrollbar-none">
                 <!-- Buton UNDO -->
                 <button (click)="editor.chain().focus().undo().run()"
                     [disabled]="!editor.can().undo()"
