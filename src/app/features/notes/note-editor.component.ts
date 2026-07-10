@@ -12,6 +12,13 @@ import { TiptapEditorDirective } from 'ngx-tiptap';
 import Placeholder from '@tiptap/extension-placeholder';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { FontSize } from '@shared/editor/font-size.extension';
+import TaskList from '@tiptap/extension-task-list';
+import TaskItem from '@tiptap/extension-task-item';
+import { Color } from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight';
+import TextAlign from '@tiptap/extension-text-align';
+import FontFamily from '@tiptap/extension-font-family';
+import { Indent } from '@shared/editor/indent.extension';
 
 @Component({
     selector: 'app-note-editor',
@@ -37,7 +44,9 @@ export class NoteEditorComponent {
     private readonly appConfig = inject(APP_CONFIG);
 
     private readonly autoSave$ = new Subject<{ id: number; changes: Partial<Note> }>();
-    protected readonly isMenuOpen = signal<boolean>(false);
+    protected isMenuOpen = signal(false);
+    protected isFontFamilyOpen = signal(false);
+    protected isFontSizeOpen = signal(false);
     protected saveStatus = computed(() => {
         switch (this.localSaveStatus()) {
             case 'saving':
@@ -55,7 +64,18 @@ export class NoteEditorComponent {
         extensions: [
             StarterKit,
             TextStyle,
+            Color,
+            Highlight.configure({ multicolor: true }),
+            TextAlign.configure({
+                types: ['heading', 'paragraph'],
+            }),
+            FontFamily,
+            Indent,
             FontSize,
+            TaskList,
+            TaskItem.configure({
+                nested: true,
+            }),
             Placeholder.configure({
                 placeholder: 'Start writing here...',
             })],
@@ -72,6 +92,10 @@ export class NoteEditorComponent {
         return this.editor.getAttributes('textStyle')['fontSize'] || '';
     }
 
+    protected get currentFontFamily(): string {
+        return this.editor.getAttributes('textStyle')['fontFamily'] || '';
+    }
+
     protected onFontSizeChange(event: Event): void {
         const select = event.target as HTMLSelectElement;
         const size = select.value;
@@ -82,9 +106,62 @@ export class NoteEditorComponent {
         }
     }
 
+    protected onFontFamilyChange(event: Event): void {
+        const select = event.target as HTMLSelectElement;
+        const family = select.value;
+        if (family) {
+            this.editor.chain().focus().setFontFamily(family).run();
+        } else {
+            this.editor.chain().focus().unsetFontFamily().run();
+        }
+    }
+
+    protected toggleFontFamily(): void {
+        this.isFontFamilyOpen.update(v => !v);
+        this.isFontSizeOpen.set(false);
+    }
+
+    protected toggleFontSize(): void {
+        this.isFontSizeOpen.update(v => !v);
+        this.isFontFamilyOpen.set(false);
+    }
+
+    protected selectFontFamily(family: string): void {
+        if (family) {
+            this.editor.chain().focus().setFontFamily(family).run();
+        } else {
+            this.editor.chain().focus().unsetFontFamily().run();
+        }
+        this.isFontFamilyOpen.set(false);
+    }
+
+    protected selectFontSize(size: string): void {
+        if (size) {
+            this.editor.chain().focus().setFontSize(size).run();
+        } else {
+            this.editor.chain().focus().unsetFontSize().run();
+        }
+        this.isFontSizeOpen.set(false);
+    }
+
+    protected scrollSelectIntoView(event: Event): void {
+        const element = event.target as HTMLElement;
+        element.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+
+    protected onTextColorChange(color: string): void {
+        this.editor.chain().focus().setColor(color).run();
+    }
+
+    protected onBgColorChange(color: string): void {
+        this.editor.chain().focus().setHighlight({ color }).run();
+    }
+
     @HostListener('document: click')
     protected closeMenu(): void {
         this.isMenuOpen.set(false);
+        this.isFontFamilyOpen.set(false);
+        this.isFontSizeOpen.set(false);
     }
 
     constructor() {

@@ -74,6 +74,11 @@ body {
     padding-left: 1.25rem;
 }
 
+.ProseMirror ol {
+    list-style-type: decimal;
+    padding-left: 1.25rem;
+}
+
 /* Light Mode */
 .ProseMirror p.is-editor-empty:first-child::before {
     color: var(--color-zinc-400);
@@ -98,4 +103,116 @@ body {
     /* IE/Edge */
     scrollbar-width: none;
     /* Firefox */
+}
+
+/* Stilizare pentru liste cu checkbox-uri (Task Lists) */
+ul[data-type="taskList"] {
+    list-style: none;
+    padding-left: 0.5rem !important;
+}
+
+ul[data-type="taskList"] li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Propagare font-size la nivelul list-item-ului pentru a scala checkbox-ul */
+ul[data-type="taskList"] li:has([style*="font-size: 12px"]) { font-size: 12px; }
+ul[data-type="taskList"] li:has([style*="font-size: 14px"]) { font-size: 14px; }
+ul[data-type="taskList"] li:has([style*="font-size: 18px"]) { font-size: 18px; }
+ul[data-type="taskList"] li:has([style*="font-size: 20px"]) { font-size: 20px; }
+ul[data-type="taskList"] li:has([style*="font-size: 24px"]) { font-size: 24px; }
+ul[data-type="taskList"] li:has([style*="font-size: 30px"]) { font-size: 30px; }
+ul[data-type="taskList"] li:has([style*="font-size: 36px"]) { font-size: 36px; }
+
+ul[data-type="taskList"] li>label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    height: 1.5em; /* potrivește înălțimea rândului de text */
+    flex-shrink: 0; /* împiedică deformarea pe ecrane înguste */
+    user-select: none;
+    margin-top: 0;
+}
+
+ul[data-type="taskList"] li>div {
+    flex: 1;
+}
+
+/* Custom Premium Checkbox */
+ul[data-type="taskList"] li input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    width: 1.1em;
+    height: 1.1em;
+    margin: 0;
+    position: relative;
+    outline: none;
+    border: 2px solid var(--color-zinc-300);
+    border-radius: 0.25em; /* colțuri rotunjite */
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+ul[data-type="taskList"] li input[type="checkbox"]:hover {
+    border-color: var(--color-zinc-400);
+    background-color: rgba(244, 244, 245, 0.5); /* zinc-100 hover background tint */
+}
+
+ul[data-type="taskList"] li input[type="checkbox"]:checked {
+    background-color: var(--color-zinc-900);
+    border-color: var(--color-zinc-900);
+}
+
+ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 33%;
+    top: 15%;
+    width: 32%;
+    height: 55%;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Dark Mode */
+.dark ul[data-type="taskList"] li input[type="checkbox"] {
+    border-color: var(--color-zinc-700);
+}
+
+.dark ul[data-type="taskList"] li input[type="checkbox"]:hover {
+    border-color: var(--color-zinc-500);
+    background-color: rgba(39, 39, 42, 0.5); /* zinc-800 hover background tint */
+}
+
+.dark ul[data-type="taskList"] li input[type="checkbox"]:checked {
+    background-color: var(--color-zinc-100);
+    border-color: var(--color-zinc-100);
+}
+
+.dark ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
+    border-color: #09090b; /* zinc-950 */
+}
+
+/* Stilizare pentru blockquote (citate) */
+.ProseMirror blockquote {
+    border-left: 3px solid var(--color-zinc-300);
+    padding-left: 1rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    color: var(--color-zinc-600);
+}
+
+.dark .ProseMirror blockquote {
+    border-left-color: var(--color-zinc-700);
+    color: var(--color-zinc-400);
 }

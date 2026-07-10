@@ -15,7 +15,7 @@ export const FontSize = Extension.create({
 
     addOptions() {
         return {
-            types: ['textStyle'],
+            types: ['textStyle', 'paragraph', 'heading'],
         };
     },
 
@@ -46,12 +46,16 @@ export const FontSize = Extension.create({
             setFontSize: (fontSize: string) => ({ chain }) => {
                 return chain()
                     .setMark('textStyle', { fontSize })
+                    .updateAttributes('paragraph', { fontSize })
+                    .updateAttributes('heading', { fontSize })
                     .run();
             },
             unsetFontSize: () => ({ chain }) => {
                 return chain()
                     .setMark('textStyle', { fontSize: null })
                     .removeEmptyTextStyle()
+                    .updateAttributes('paragraph', { fontSize: null })
+                    .updateAttributes('heading', { fontSize: null })
                     .run();
             },
         };
