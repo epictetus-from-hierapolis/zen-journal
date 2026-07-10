@@ -7,7 +7,7 @@ A minimalist, offline-first note-taking application built with Angular 22. Desig
 ![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-38BDF8?logo=tailwindcss)
 ![Jest](https://img.shields.io/badge/Tested_with-Jest-C21325?logo=jest)
 
-![ZenJournal Showcase](public/home.png)
+![ZenJournal Showcase](public/home.png) 
 
 ---
 
