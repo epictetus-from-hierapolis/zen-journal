@@ -193,8 +193,8 @@ ul[data-type="taskList"] li input[type="checkbox"]:hover {
 }
 
 ul[data-type="taskList"] li input[type="checkbox"]:checked {
-    background-color: var(--color-zinc-900);
-    border-color: var(--color-zinc-900);
+    background-color: #2563eb;
+    border-color: #2563eb;
 }
 
 ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
@@ -220,12 +220,12 @@ ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
 }
 
 .dark ul[data-type="taskList"] li input[type="checkbox"]:checked {
-    background-color: var(--color-zinc-100);
-    border-color: var(--color-zinc-100);
+    background-color: #2563eb;
+    border-color: #2563eb;
 }
 
 .dark ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
-    border-color: #09090b; /* zinc-950 */
+    border-color: #ffffff;
 }
 
 /* Stilizare pentru blockquote (citate) */
