@@ -14,7 +14,7 @@ A minimalist, offline-first note-taking application built with Angular 22. Desig
 ## Features
 
 - **Offline-first** — all data stored locally via [Dexie.js](https://dexie.org/) (IndexedDB), zero backend dependency
-- **Zero-knowledge security** — local, transparent encryption using AES-256-GCM and PBKDF2 (Web Crypto API)
+- **Zero-knowledge security & Multi-Device Ready** — local, transparent encryption using AES-256-GCM and PBKDF2 (Web Crypto API). Encryption metadata (salt, canary) and user settings are stored directly in the database, making the application fully ready for multi-device cloud synchronization.
 - **Rich text editing** — [TipTap](https://tiptap.dev/) integration with an advanced formatting toolbar supporting headings, bullet/numbered lists, custom interactive checklists (task lists), text alignment, block indentation, font family & size selectors, underline, strikethrough, text colors, and highlights (text backgrounds)
 - **Notebook management** — create, rename, delete notebooks with cascade delete at database transaction level
 - **Optimistic UI** — instant state updates with automatic rollback on failure
@@ -82,6 +82,12 @@ The root `App` component acts as the gatekeeper of the application, conditionall
 
 **Session Privacy & Memory Security**
 Wiping local storage keys alone is insufficient for zero-knowledge privacy. On logout, the application explicitly triggers a "clean slate" sequence: navigating away to destroy active components, clearing the derived `CryptoKey` from memory via `lock()`, and purging all active notebooks/notes signals in `WorkspaceFacadeService` via `reset()`. This prevents any data recovery or visual leaks from RAM if another user accesses the browser session.
+
+**IndexedDB Settings & Metadata Storage (Multi-Device Sync Preparation)**
+To prepare the application for cloud synchronization, all user preferences (theme, autosave delay) and encryption metadata (salt, verification canary) were migrated from `localStorage` into a dedicated `settings` table inside IndexedDB. Following the project's core architecture, these operations are routed via `HttpClient` (under `/api/settings`) and intercepted by the `dexieBackendInterceptor`, keeping the settings service completely decoupled from the underlying database wrapper.
+
+**Session-Only Active Auth State**
+To enhance local security, the active session state (`AUTH`) was migrated to `sessionStorage` via a custom `SESSION_STORAGE` InjectionToken. This ensures that the user session is strictly bound to the active browser tab, automatically logging out the user when the tab is closed, preventing unauthorized local access.
 
 ---
 
