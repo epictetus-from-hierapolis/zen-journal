@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { AppSettings } from '../models/app-settings.model';
+import { SESSION_STORAGE } from './browser.token';
 
 export interface AppConfig {
     autosaveDelay: number;
@@ -9,14 +10,13 @@ export interface AppConfig {
     apiUrl: string;
 }
 
-const settings: AppSettings = JSON.parse(localStorage.getItem('settings') ?? 'null') ?? { themeAppearence: 'light', autosaveDelay: 800 };
 export const APP_CONFIG = new InjectionToken<AppConfig>('AppConfig', {
     providedIn: 'root',
     factory: () => ({
-        autosaveDelay: settings.autosaveDelay,
+        autosaveDelay: 800,
         maxNotesPerNotebook: 100,// TODO: implement in app setings
         appName: 'Zen Journal',
-        themeAppearence: settings.themeAppearence,
+        themeAppearence: 'light',
         apiUrl: '/api'
     })
 });

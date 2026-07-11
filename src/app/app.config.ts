@@ -1,5 +1,7 @@
 import {
   ApplicationConfig,
+  inject,
+  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
@@ -10,7 +12,7 @@ import {
   NOTEBOOKS_SERVICE_TOKEN,
   WORKSPACE_FACADE_SERVICE_TOKEN,
 } from '@shared/tokens';
-import { NotesService, NotebooksService, WorkspaceFacadeService, EncryptedNotesService } from '@core/services';
+import { NotesService, NotebooksService, WorkspaceFacadeService, EncryptedNotesService, AppSettingsService } from '@core/services';
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { authInterceptor, errorInterceptor, dexieBackendInterceptor } from '@core/interceptors';
 
@@ -36,5 +38,6 @@ export const appConfig: ApplicationConfig = {
       provide: WORKSPACE_FACADE_SERVICE_TOKEN,
       useClass: WorkspaceFacadeService,
     },
+    provideAppInitializer(() => inject(AppSettingsService).init())
   ],
 };

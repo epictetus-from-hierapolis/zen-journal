@@ -1,13 +1,14 @@
 import { inject, Injectable, signal } from "@angular/core";
-import { CRYPTO, LOCAL_STORAGE } from "@shared/tokens";
+import { CRYPTO } from "@shared/tokens";
 import { STORAGE_KEYS } from '@shared/constants/storage-keys';
+import { AppSettingsService } from "./app-settings.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class EncryptionService {
-    private readonly localStorage = inject(LOCAL_STORAGE);
     private readonly crypto = inject(CRYPTO);
+    private readonly appSettingsService = inject(AppSettingsService);
     private readonly _isUnlocked = signal<boolean>(false);
     private key: CryptoKey | null = null;
     private readonly verificationPlaintext: string = 'vrabiuta-ciugule';
@@ -18,9 +19,9 @@ export class EncryptionService {
         if (!password) return false;
 
         const [salt, ciphertext, iv] = [
-            this.localStorage.getItem(STORAGE_KEYS.ENCRYPTION_SALT),
-            this.localStorage.getItem(STORAGE_KEYS.VERIFICATION_CIPHERTEXT),
-            this.localStorage.getItem(STORAGE_KEYS.VERIFICATION_IV)
+            this.appSettingsService.encriptionSalt(),
+            this.appSettingsService.verificationCiphertext(),
+            this.appSettingsService.verificationIv()
         ];
 
         if (!salt || !ciphertext || !iv) {
@@ -29,13 +30,11 @@ export class EncryptionService {
 
         try {
             this.key = await this.deriveKey(password, this.hexToArray(salt));
-            const verificationPlaintext = await this.decrypt(ciphertext, iv);
-            if (verificationPlaintext === this.verificationPlaintext) {
-                this._isUnlocked.set(true);
-                return true;
-            }
+            await this.decrypt(ciphertext, iv);
+            this._isUnlocked.set(true);
+            return true;
         } catch (error) {
-
+            // Parola gresita sau date corupte
         }
 
         this.lock();
@@ -105,10 +104,10 @@ export class EncryptionService {
     }
 
     public isPasswordSet(): boolean {
-        return !!this.localStorage.getItem(STORAGE_KEYS.ENCRYPTION_SALT);
+        return !!this.appSettingsService.encriptionSalt();
     }
 
-    public async setupPassword(password: string): Promise<void> { // ruleaza la primul contact
+    public async setupPassword(password: string): Promise<{ salt: string, ciphertext: string, iv: string }> { // ruleaza la primul contact
         if (!password) throw new Error('Password is missing.')
 
         const salt = this.createSalt();
@@ -116,11 +115,9 @@ export class EncryptionService {
         this.key = key;
         const canary = await this.encrypt(this.verificationPlaintext);
 
-        this.localStorage.setItem(STORAGE_KEYS.VERIFICATION_CIPHERTEXT, canary.ciphertext);
-        this.localStorage.setItem(STORAGE_KEYS.VERIFICATION_IV, canary.iv);
-        this.localStorage.setItem(STORAGE_KEYS.ENCRYPTION_SALT, this.arrayToHex(salt));
-
         this._isUnlocked.set(true);
+
+        return { salt: this.arrayToHex(salt), ciphertext: canary.ciphertext, iv: canary.iv }
     }
 
     private arrayToHex(bytes: Uint8Array): string {

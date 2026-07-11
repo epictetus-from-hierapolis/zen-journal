@@ -11,18 +11,17 @@ export class EncryptedNotesService implements INotesService {
 
     public async loadNotes(): Promise<Note[]> {
         const notes = await this.notesService.loadNotes();
-        const decryptedNotes = await Promise.all(notes.map(async (note) => {
-            if (note.contentIv && note.titleIv && this.encryptionService.isUnlocked()) {
-                return {
-                    ...note,
-                    content: await this.encryptionService.decrypt(note.content, note.contentIv),
-                    title: await this.encryptionService.decrypt(note.title, note.titleIv)
-                }
-            } else {
-                return note;
-            }
-        }));
-        return decryptedNotes;
+
+        if (!this.encryptionService.isUnlocked()) {
+            return notes;
+        }
+
+        return await Promise.all(notes.map(async (note) => ({
+            ...note,
+            content: note.contentIv ? await this.encryptionService.decrypt(note.content, note.contentIv) : note.content,
+            title: note.titleIv ? await this.encryptionService.decrypt(note.title, note.titleIv) : note.title
+        })));
+
     }
 
     public async addNote(note: Omit<Note, "id">): Promise<{ id: number; }> {

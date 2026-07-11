@@ -5,7 +5,6 @@ export interface Note {
     titleIv?: string;
     contentIv?: string;
     notebookId: number;
-    tags: string[];
     createdAt: Date;
     updatedAt: Date;
 }

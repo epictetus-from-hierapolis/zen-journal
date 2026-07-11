@@ -14,7 +14,6 @@ describe('NotesService', () => {
         title: '',
         content: '',
         notebookId: 1,
-        tags: [],
         createdAt: mockDate,
         updatedAt: mockDate,
     }

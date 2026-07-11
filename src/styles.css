@@ -111,21 +111,28 @@ body {
         display: block;
         height: 4px;
     }
+
     .scrollbar-none:hover::-webkit-scrollbar-track {
         background: transparent !important;
     }
+
     .scrollbar-none:hover::-webkit-scrollbar-thumb {
-        background: #d4d4d8; /* zinc-300 */
+        background: #d4d4d8;
+        /* zinc-300 */
         border-radius: 2px;
     }
+
     .dark .scrollbar-none:hover::-webkit-scrollbar-thumb {
-        background: #3f3f46; /* zinc-700 */
+        background: #3f3f46;
+        /* zinc-700 */
     }
+
     .scrollbar-none:hover {
         scrollbar-width: thin;
         scrollbar-color: #d4d4d8 transparent;
         -ms-overflow-style: auto;
     }
+
     .dark .scrollbar-none:hover {
         scrollbar-color: #3f3f46 transparent;
     }
@@ -145,21 +152,43 @@ ul[data-type="taskList"] li {
 }
 
 /* Propagare font-size la nivelul list-item-ului pentru a scala checkbox-ul */
-ul[data-type="taskList"] li:has([style*="font-size: 12px"]) { font-size: 12px; }
-ul[data-type="taskList"] li:has([style*="font-size: 14px"]) { font-size: 14px; }
-ul[data-type="taskList"] li:has([style*="font-size: 18px"]) { font-size: 18px; }
-ul[data-type="taskList"] li:has([style*="font-size: 20px"]) { font-size: 20px; }
-ul[data-type="taskList"] li:has([style*="font-size: 24px"]) { font-size: 24px; }
-ul[data-type="taskList"] li:has([style*="font-size: 30px"]) { font-size: 30px; }
-ul[data-type="taskList"] li:has([style*="font-size: 36px"]) { font-size: 36px; }
+ul[data-type="taskList"] li:has([style*="font-size: 12px"]) {
+    font-size: 12px;
+}
+
+ul[data-type="taskList"] li:has([style*="font-size: 14px"]) {
+    font-size: 14px;
+}
+
+ul[data-type="taskList"] li:has([style*="font-size: 18px"]) {
+    font-size: 18px;
+}
+
+ul[data-type="taskList"] li:has([style*="font-size: 20px"]) {
+    font-size: 20px;
+}
+
+ul[data-type="taskList"] li:has([style*="font-size: 24px"]) {
+    font-size: 24px;
+}
+
+ul[data-type="taskList"] li:has([style*="font-size: 30px"]) {
+    font-size: 30px;
+}
+
+ul[data-type="taskList"] li:has([style*="font-size: 36px"]) {
+    font-size: 36px;
+}
 
 ul[data-type="taskList"] li>label {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 1.5em;
-    height: 1.5em; /* potrivește înălțimea rândului de text */
-    flex-shrink: 0; /* împiedică deformarea pe ecrane înguste */
+    height: 1.5em;
+    /* potrivește înălțimea rândului de text */
+    flex-shrink: 0;
+    /* împiedică deformarea pe ecrane înguste */
     user-select: none;
     margin-top: 0;
 }
@@ -179,7 +208,8 @@ ul[data-type="taskList"] li input[type="checkbox"] {
     position: relative;
     outline: none;
     border: 2px solid var(--color-zinc-300);
-    border-radius: 0.25em; /* colțuri rotunjite */
+    border-radius: 0.25em;
+    /* colțuri rotunjite */
     background-color: transparent;
     transition: all 0.2s ease-in-out;
     display: inline-flex;
@@ -189,12 +219,13 @@ ul[data-type="taskList"] li input[type="checkbox"] {
 
 ul[data-type="taskList"] li input[type="checkbox"]:hover {
     border-color: var(--color-zinc-400);
-    background-color: rgba(244, 244, 245, 0.5); /* zinc-100 hover background tint */
+    background-color: rgba(244, 244, 245, 0.5);
+    /* zinc-100 hover background tint */
 }
 
 ul[data-type="taskList"] li input[type="checkbox"]:checked {
-    background-color: #2563eb;
-    border-color: #2563eb;
+    background-color: var(--color-zinc-900);
+    border-color: var(--color-zinc-900);
 }
 
 ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
@@ -216,16 +247,18 @@ ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
 
 .dark ul[data-type="taskList"] li input[type="checkbox"]:hover {
     border-color: var(--color-zinc-500);
-    background-color: rgba(39, 39, 42, 0.5); /* zinc-800 hover background tint */
+    background-color: rgba(39, 39, 42, 0.5);
+    /* zinc-800 hover background tint */
 }
 
 .dark ul[data-type="taskList"] li input[type="checkbox"]:checked {
-    background-color: #2563eb;
-    border-color: #2563eb;
+    background-color: var(--color-zinc-100);
+    border-color: var(--color-zinc-100);
 }
 
 .dark ul[data-type="taskList"] li input[type="checkbox"]:checked::after {
-    border-color: #ffffff;
+    border-color: #09090b;
+    /* zinc-950 */
 }
 
 /* Stilizare pentru blockquote (citate) */

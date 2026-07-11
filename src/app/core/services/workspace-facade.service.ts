@@ -89,7 +89,6 @@ export class WorkspaceFacadeService implements IWorkspaceFacadeService {
             title: '',
             content: '',
             notebookId: (this.selectedNotebook()?.id || this.notebooks()[0].id)!,
-            tags: [],
             createdAt: new Date(),
             updatedAt: new Date(),
         }

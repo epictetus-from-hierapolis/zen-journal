@@ -2,12 +2,21 @@ import { HttpEvent, HttpInterceptorFn, HttpRequest, HttpResponse } from "@angula
 import { inject } from "@angular/core";
 import { from, map, Observable, of } from "rxjs";
 import { DatabaseService } from "../services/database.service";
-import { Note, Notebook } from "@shared/models";
+import { Note, Notebook, SettingRecord } from "@shared/models";
 import { Table } from "dexie";
 
-type DbRecord = Notebook | Note;
+type DbRecord = Notebook | Note | SettingRecord;
+type DbKey = number | string;
 
-const VALID_TABLES = ['notes', 'notebooks', 'tags'];
+const VALID_TABLES = ['notes', 'notebooks', 'settings'];
+
+function parseResourceId(tableName: string, urlParts: string[]) {
+    const rawId = urlParts[urlParts.indexOf(tableName) + 1];
+
+    if (!rawId) return undefined;
+
+    return tableName === 'settings' ? rawId : Number(rawId);
+}
 
 export const dexieBackendInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEvent<unknown>> => {
     const databaseService = inject(DatabaseService);
@@ -16,8 +25,8 @@ export const dexieBackendInterceptor: HttpInterceptorFn = (req, next): Observabl
 
     if (!tableName) return next(req);
 
-    const table = databaseService.table(tableName) as Table<DbRecord, number>;
-    const id = Number(parts[parts.indexOf(tableName) + 1]);
+    const table = databaseService.table(tableName) as Table<DbRecord, DbKey>;
+    const id = parseResourceId(tableName, parts);
 
     if (tableName) {
 
@@ -43,23 +52,35 @@ export const dexieBackendInterceptor: HttpInterceptorFn = (req, next): Observabl
                 );
             }
             case 'PUT': {
-                const id = Number(parts[parts.indexOf(tableName) + 1]);
                 if (!id) {
                     return of(new HttpResponse({
                         status: 400
                     }))
                 };
-                return from(databaseService.table(tableName).update(id, (req.body as Partial<DbRecord>))).pipe(
-                    map(() => new HttpResponse({
-                        status: 200
-                    }))
-                );
+                if (tableName === 'settings') {
+                    return from(databaseService.table(tableName).upsert(id, (req.body as SettingRecord))).pipe(
+                        map(() => new HttpResponse({
+                            status: 200
+                        }))
+                    );
+                } else {
+                    return from(databaseService.table(tableName).update(id, (req.body as Partial<DbRecord>))).pipe(
+                        map(() => new HttpResponse({
+                            status: 200
+                        }))
+                    );
+                }
             }
             case 'DELETE': {
+                if (!id) {
+                    return of(new HttpResponse({
+                        status: 400
+                    }))
+                };
                 if (tableName === 'notebooks') {
                     return from(databaseService.transaction('rw', [databaseService.notebooks, databaseService.notes],
                         async () => {
-                            await databaseService.notebooks.delete(id);
+                            await databaseService.notebooks.delete(id as number);
                             await databaseService.notes.where('notebookId').equals(id).delete();
 
                         }

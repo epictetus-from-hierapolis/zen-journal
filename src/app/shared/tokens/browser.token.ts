@@ -10,7 +10,7 @@ export const CRYPTO = new InjectionToken<Crypto>('Crypto', {
     factory: () => inject(WINDOW).crypto
 });
 
-export const LOCAL_STORAGE = new InjectionToken<Storage>('LocalStorage', {
+export const SESSION_STORAGE = new InjectionToken<Storage>('SessionStorage', {
     providedIn: 'root',
-    factory: () => inject(WINDOW).localStorage
+    factory: () => inject(WINDOW).sessionStorage
 });

@@ -3,3 +3,7 @@ export interface AppSettings {
     themeAppearence: ThemeAppearence;
     autosaveDelay: number;
 }
+export interface SettingRecord {
+    key: string;
+    value: unknown;
+}
