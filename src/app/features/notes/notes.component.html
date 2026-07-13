@@ -6,53 +6,58 @@
     fixed inset-y-0 -left-64 z-30 transition-[left] duration-300 md:static" [class.-left-64]="!isSidebarOpen()"
     [class.left-0]="isSidebarOpen()">
 
-    <div class="flex px-2 pt-6 pb-2 gap-2 items-center">
+    <!-- back button -->
+    <button (click)="toggleSidebar()"
+      class="md:hidden self-start flex-none p-2 ml-4 mt-4 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+    </button>
 
-      <!-- back button -->
-      <button (click)="toggleSidebar()"
-        class="md:hidden flex-none p-2 -ml-2 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+    <div class="flex flex-col p-2 pb-4  md:pt-6 gap-2 items-center w-full border-b border-gray-100 
+    dark:border-b dark:border-gray-800">
+
+      <!-- search button -->
+      <button
+        class="flex w-full items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm cursor-pointer
+      rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
+        (click)="openSearch()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 flex-shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
         </svg>
+        <span>Search</span>
       </button>
 
-      <!-- search -->
-      <app-note-search class="flex-1" [notes]="workspaceFacadeService.filteredNotes()"
-        (queryChanged)="workspaceFacadeService.searchQuery$.next($event)"
-        (noteSelected)="workspaceFacadeService.selectNote($event)"></app-note-search>
+      <div class="flex w-full gap-2">
+        <!-- open new note modal button -->
+        <button
+          class="flex flex-1 items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm cursor-pointer
+      rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:border dark:border-gray-700"
+          (click)="workspaceFacadeService.addNote()">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span>Note</span>
+        </button>
+
+        <!-- open new notebook modal button -->
+        <button (click)="openNotebookCreate()"
+          class="flex flex-1 items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm cursor-pointer
+      rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:border dark:border-gray-700">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span>Notebook</span>
+        </button>
+      </div>
     </div>
 
     <nav class="flex-1 p-2 pt-0">
-      <!-- Button New Note -->
-
-
-      <div (click)="workspaceFacadeService.selectNotebook(null);toggleSidebar()"
-        [class.bg-gray-100]="workspaceFacadeService.selectedNotebook() === null"
-        [class.dark:bg-gray-800]="workspaceFacadeService.selectedNotebook() === null"
-        [class.text-gray-900]="workspaceFacadeService.selectedNotebook() === null"
-        [class.font-medium]="workspaceFacadeService.selectedNotebook() === null" class="flex justify-between cursor-pointer gap-2 items-center px-3 py-2 
-        rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 mt-6 mb-1">
-        <div class="flex gap-2 items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="w-4 h-4 text-gray-400 flex-shrink-0">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-          </svg>
-          <span class="text-xs text-gray-600 uppercase tracking-wider 
-       dark:text-gray-300">Notes</span>
-        </div>
-        <button (click)="workspaceFacadeService.addNote()"
-            title="Create note"
-            class="p-1 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 border dark:hover:text-white transition-colors duration-200 cursor-pointer flex items-center justify-center">
-          <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-        </button>
-      </div>
 
       <!-- Notebooks button -->
       <div (click)="isNotebooksExpanded.set(!isNotebooksExpanded())"
-        class="flex cursor-pointer justify-between items-center py-2 px-3 mb-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+        class="flex cursor-pointer justify-between items-center py-2 px-3 mb-2 mt-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
         [class.font-medium]="isNotebooksExpanded()">
         <div class="flex gap-2 items-center">
           @if (isNotebooksExpanded()) {
@@ -70,8 +75,6 @@
           }
           <span class="text-xs text-gray-600 uppercase tracking-wider dark:text-gray-300">Notebooks</span>
         </div>
-
-        <app-notebook-create (notebookAdded)="workspaceFacadeService.addNotebook($event)" />
       </div>
 
       @if (isNotebooksExpanded()) {
@@ -125,9 +128,14 @@
 
         <h1 class="text-sm font-semibold tracking-wide uppercase 
         text-gray-500 dark:text-gray-400">Zen Journal</h1>
-        <app-note-search [notes]="workspaceFacadeService.filteredNotes()"
-          (queryChanged)="workspaceFacadeService.searchQuery$.next($event)"
-          (noteSelected)="workspaceFacadeService.selectNote($event)" [displayMode]="'icon'"></app-note-search>
+        <button (click)="openSearch()" class="p-2 -mr-2 text-gray-600 rounded-lg 
+    hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 
+    cursor-pointer">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 flex-shrink-0">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </button>
       </div>
       <app-note-list [notebooksCount]="workspaceFacadeService.notebooksCount()"
         [notes]="workspaceFacadeService.visibleNotes()" [selectedNotebook]="workspaceFacadeService.selectedNotebook()"
@@ -157,3 +165,14 @@
     </div>
   </main>
 </div>
+
+@if(isSearchModalOpen()){
+<!-- search -->
+<app-note-search class="flex-1" [notes]="workspaceFacadeService.filteredNotes()"
+  (queryChanged)="workspaceFacadeService.searchQuery$.next($event)"
+  (noteSelected)="workspaceFacadeService.selectNote($event)" (close)="closeSearch()"></app-note-search>
+}
+
+@if(isCreateNotebookModalOpen()){
+<app-notebook-create (close)="closeNotebookCreate()" (notebookAdded)="workspaceFacadeService.addNotebook($event)" />
+}

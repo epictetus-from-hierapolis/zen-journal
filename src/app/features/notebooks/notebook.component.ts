@@ -12,5 +12,5 @@ export class NotebooksComponent {
     public readonly notebooks = input<Notebook[]>([]);
     public readonly selectedNotebook = input<Notebook | null>(null);
 
-    public readonly notebookSelected = output<Notebook>();
+    public readonly notebookSelected = output<Notebook | null>();
 }

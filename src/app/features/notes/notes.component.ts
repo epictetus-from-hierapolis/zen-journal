@@ -9,7 +9,8 @@ import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
 @Component({
     selector: 'app-notes',
     standalone: true,
-    imports: [NoteListComponent, NoteEditorComponent, NoteSearchComponent, RouterLink, NotebookCreateComponent, NotebooksComponent],
+    imports: [NoteListComponent, NoteEditorComponent, NoteSearchComponent,
+        RouterLink, NotebookCreateComponent, NotebooksComponent],
     templateUrl: './notes.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -19,7 +20,10 @@ export class NotesComponent implements OnInit {
 
 
     protected isSidebarOpen: WritableSignal<boolean> = signal(false);
-    protected isNotebooksExpanded: WritableSignal<boolean> = signal(false);
+    protected isNotebooksExpanded: WritableSignal<boolean> = signal(true);
+    protected isCreateNotebookModalOpen: WritableSignal<boolean> = signal(false);
+
+    protected readonly isSearchModalOpen = signal<boolean>(false);
 
     constructor() {
         effect(() => {
@@ -34,4 +38,22 @@ export class NotesComponent implements OnInit {
     protected toggleSidebar() {
         this.isSidebarOpen.update(value => !value);
     }
+
+    protected openSearch(): void {
+        this.isSearchModalOpen.set(true);
+    }
+
+    protected closeSearch(): void {
+        this.isSearchModalOpen.set(false);
+    }
+
+    protected closeNotebookCreate(): void {
+        this.isCreateNotebookModalOpen.set(false);
+    }
+
+    protected openNotebookCreate(): void {
+        this.isCreateNotebookModalOpen.set(true);
+    }
+
+
 }

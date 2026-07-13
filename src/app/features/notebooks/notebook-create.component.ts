@@ -10,17 +10,12 @@ import { ModalComponent } from "@shared/components";
 })
 export class NotebookCreateComponent {
     public readonly notebookAdded = output<string>();
-
-    protected readonly isOpen = signal<boolean>(false);
     protected readonly notebookName = signal<string>('');
-
-    protected onOpen(): void {
-        this.isOpen.set(true);
-    }
+    public readonly close = output<void>();
 
     protected onCancel(): void {
-        this.isOpen.set(false);
         this.notebookName.set('');
+        this.close.emit();
     }
 
     protected onNameChange(event: Event): void {
@@ -31,7 +26,7 @@ export class NotebookCreateComponent {
     protected async onConfirm(): Promise<void> {
         if (!this.notebookName()) return;
         this.notebookAdded.emit(this.notebookName());
-        this.isOpen.set(false);
         this.notebookName.set('');
+        this.close.emit();
     }
 }

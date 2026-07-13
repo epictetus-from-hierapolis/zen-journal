@@ -10,32 +10,27 @@ import { Note } from "@shared/models";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteSearchComponent {
-    public readonly displayMode = input<'full' | 'icon'>('full');
     public readonly notes = input<Note[]>([]);
     public readonly queryChanged = output<string>();
     public readonly noteSelected = output<Note>();
+    public readonly close = output<void>();
 
-
-    protected readonly isOpen = signal<boolean>(false);
     protected readonly query = signal<string>('');
     protected searchInputElement = viewChild<ElementRef<HTMLInputElement>>('searchInputElement');
 
     constructor() {
+        const input = this.searchInputElement();
         effect(() => {
-            if (this.isOpen()) {
+            if (input) {
                 this.searchInputElement()?.nativeElement.focus();
             }
         });
     }
 
-    protected onOpen(): void {
-        this.isOpen.set(true);
-    }
-
     protected onClose(): void {
-        this.isOpen.set(false);
         this.query.set('');
         this.queryChanged.emit('');
+        this.close.emit();
     }
 
     protected onClear() {
