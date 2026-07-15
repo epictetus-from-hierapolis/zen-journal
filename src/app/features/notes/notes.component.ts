@@ -4,6 +4,7 @@ import { AppSettingsService } from "@core/services";
 import { RouterLink } from "@angular/router";
 import { NotebookCreateComponent, NotebooksComponent } from '../notebooks';
 import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
+import { Notebook } from "@shared/models";
 
 
 @Component({
@@ -53,6 +54,11 @@ export class NotesComponent implements OnInit {
 
     protected openNotebookCreate(): void {
         this.isCreateNotebookModalOpen.set(true);
+    }
+
+    protected selectNotebook(notebook: Notebook | null): void {
+        this.workspaceFacadeService.selectNotebook(notebook);
+        this.isSidebarOpen.set(false);
     }
 
 
