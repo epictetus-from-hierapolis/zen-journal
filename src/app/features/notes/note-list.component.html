@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full">
+<div class="flex flex-col h-full min-h-0">
 
     <!-- Header -->
     <div class="flex justify-between items-center px-4 h-20 border-b border-gray-200 dark:border-gray-800">
@@ -63,7 +63,7 @@
 
     <!-- Lista de note -->
     @else {
-    <cdk-virtual-scroll-viewport itemSize="53" class="flex-1 overflow-x-hidden h-full">
+    <cdk-virtual-scroll-viewport itemSize="72" class="flex-1 min-h-0 overflow-x-hidden">
         <div *cdkVirtualFor="let note of notes  (); trackBy: trackNote"
             class="p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors dark:border-gray-800 dark:hover:bg-gray-800/50"
             (click)="noteSelected.emit(note)">
