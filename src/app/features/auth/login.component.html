@@ -1,8 +1,11 @@
 <div class="flex justify-center items-center h-screen  w-full bg-gray-50 dark:bg-gray-950">
-    <form class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-sm flex flex-col gap-4"
+    <form
+        class="md:bg-white md:dark:bg-gray-900 p-4 md:p-8 md:rounded-xl md:shadow-lg w-full max-w-sm flex flex-col gap-4"
         [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Zen Journal</h1>
+        <img src="/icon-192.png" alt="Zen Journal" class="dark:invert mx-auto h-16 w-16 object-contain" />
+
+        <h1 class="w-full text-center text-xl font-semibold text-gray-900 dark:text-white">Zen Journal</h1>
 
         <div class="flex flex-col gap-1">
             <input class="autofill:bg-gray-800 dark:autofill:bg-gray-800 w-full px-3 py-2 text-sm dark:text-white dark:bg-gray-800 border 
@@ -28,4 +31,4 @@
         }
 
     </form>
-</div>
+</div>x

@@ -1,0 +1,36 @@
+{
+    "name": "Zen Journal",
+    "short_name": "ZenJournal",
+    "start_url": "/login",
+    "id": "/",
+    "scope": "/",
+    "display": "standalone",
+    "theme_color": "#18181b",
+    "background_color": "#18181b",
+    "icons": [
+        {
+            "src": "favicon.png",
+            "sizes": "48x48",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "icon-192.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshot-wide.png",
+            "sizes": "1855x1049",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "screenshot-mobile.png",
+            "sizes": "399x688",
+            "type": "image/png"
+        }
+    ]
+}

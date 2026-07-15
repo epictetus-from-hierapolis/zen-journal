@@ -15,12 +15,17 @@ import {
 import { NotesService, NotebooksService, WorkspaceFacadeService, EncryptedNotesService, AppSettingsService } from '@core/services';
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { authInterceptor, errorInterceptor, dexieBackendInterceptor } from '@core/interceptors';
+import { isDevMode } from '@angular/core';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     NotesService,
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+    }),
     provideHttpClient(
       withXhr(),
       withInterceptors([authInterceptor, errorInterceptor, dexieBackendInterceptor]),
