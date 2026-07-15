@@ -1,0 +1,75 @@
+{
+  "configVersion": 1,
+  "timestamp": 1784118689421,
+  "index": "/zen-journal/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/zen-journal/chunk-BqTkI7UZ.js",
+        "/zen-journal/chunk-CAdmWfp1.js",
+        "/zen-journal/chunk-DtNqu1z1.js",
+        "/zen-journal/chunk-DzhMrRcC.js",
+        "/zen-journal/favicon.ico",
+        "/zen-journal/index.html",
+        "/zen-journal/main-X4GMD4I4.js",
+        "/zen-journal/styles-Y5YFVPPC.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/zen-journal/favicon.png",
+        "/zen-journal/icon-192.png",
+        "/zen-journal/screenshot-mobile.png",
+        "/zen-journal/screenshot-wide.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/zen-journal/chunk-BqTkI7UZ.js": "abb53fdd86d2daaec8fb7a479a0c0842bb9920a6",
+    "/zen-journal/chunk-CAdmWfp1.js": "0c693899492baaf32fa520092a5bc472ae9bba02",
+    "/zen-journal/chunk-DtNqu1z1.js": "d0bc9fb5256880cc16a1af8b55a0ed93121467a4",
+    "/zen-journal/chunk-DzhMrRcC.js": "8ea97c6fa40e9000dcf94cd5a3eb6b0502511546",
+    "/zen-journal/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/zen-journal/favicon.png": "c44eb1994a4365338c4e807c47d09a36554520b4",
+    "/zen-journal/icon-192.png": "2320c3fd791fc0e50101b0b49e0ec5f65770e060",
+    "/zen-journal/index.html": "b384bdc18a60937d89f0c9563efc92d85e54bad9",
+    "/zen-journal/main-X4GMD4I4.js": "97f4c3fe77c4ed681bcfc4362fe122c8cd1a6d30",
+    "/zen-journal/screenshot-mobile.png": "bc0a1a2733df5a0a90e41e421449aee02d3e9f11",
+    "/zen-journal/screenshot-wide.png": "b33bd11338c39b5b37ffc928d56f66ff8a277225",
+    "/zen-journal/styles-Y5YFVPPC.css": "ded09d09775fccee0ecb14db1d34b3bc1293f1ff"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
