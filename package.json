@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "dp:gh": "npm run build -- --base-href=/zen-journal/ && npx angular-cli-ghpages --dir=dist/zen-journal/browser",
     "watch": "ng build --watch --configuration development",
     "test": "jest"
   },
