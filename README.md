@@ -1,6 +1,6 @@
 # ZenJournal
 
-A minimalist, offline-first note-taking application built with Angular 22. Designed as a portfolio project to demonstrate modern Angular architecture patterns, reactive state management with Signals, production-grade code organization, and PWA support.
+A minimalist, offline-first note-taking application built with Angular 22. Designed as a portfolio project to demonstrate modern Angular architecture patterns, reactive state management with Signals, production-grade code organization, and PWA support. The app is available at https://epictetus-from-hierapolis.github.io/zen-journal/ and can be installed from there.
 
 ![Angular](https://img.shields.io/badge/Angular-22-DD0031?logo=angular)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)
