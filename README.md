@@ -1,13 +1,13 @@
 # ZenJournal
 
-A minimalist, offline-first note-taking application built with Angular 22. Designed as a portfolio project to demonstrate modern Angular architecture patterns, reactive state management with Signals, and production-grade code organization.
+A minimalist, offline-first note-taking application built with Angular 22. Designed as a portfolio project to demonstrate modern Angular architecture patterns, reactive state management with Signals, production-grade code organization, and PWA support.
 
 ![Angular](https://img.shields.io/badge/Angular-22-DD0031?logo=angular)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-38BDF8?logo=tailwindcss)
 ![Jest](https://img.shields.io/badge/Tested_with-Jest-C21325?logo=jest)
 
-![ZenJournal Showcase](public/home.png) 
+![ZenJournal Showcase](public/screenshot-github.png) 
 
 ---
 
@@ -21,6 +21,7 @@ A minimalist, offline-first note-taking application built with Angular 22. Desig
 - **Debounced autosave** — content saved as you type, configurable delay
 - **Real-time search** — full-text search across all notes with contextual snippet highlighting
 - **Dark mode** — persisted theme preference
+- **PWA-ready** — installable as a progressive web app
 - **Responsive** — mobile sidebar with adaptive layout
 
 ---
