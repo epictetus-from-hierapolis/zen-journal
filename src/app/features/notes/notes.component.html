@@ -109,7 +109,7 @@
   <main class="flex-1 flex h-full min-w-0">
 
     <!-- Note list -->
-    <div class="flex flex-col md:w-80 md:flex bg-white h-full overflow-hidden dark:bg-gray-900 pl-2"
+    <div class="flex flex-col md:w-80 md:flex bg-white h-full overflow-hidden dark:bg-gray-900"
       [class.w-full]="!workspaceFacadeService.selectedNote()" [class.w-0]="workspaceFacadeService.selectedNote()">
       <!-- Antet Mobil (Centrat) -->
 
@@ -143,11 +143,16 @@
         (notebookRemoved)="workspaceFacadeService.deleteNotebook($event)"
         [notesCount]="workspaceFacadeService.totalNotes()" [isLoading]="workspaceFacadeService.isLoading()"
         class=" h-full flex flex-col" />
+
+      @if(!workspaceFacadeService.selectedNote()){
       <button (click)="workspaceFacadeService.addNote()"
         class="fixed bottom-6 right-6 z-10 w-14 h-14 bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center justify-center md:hidden cursor-pointer">
         <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg></button>
+        </svg>
+      </button>
+      }
+
     </div>
     @if(workspaceFacadeService.selectedNote()){
     <!-- Editor area -->
