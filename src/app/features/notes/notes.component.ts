@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal, WritableSignal } from "@angular/core";
 import { NoteListComponent, NoteEditorComponent, NoteSearchComponent } from '.';
-import { AppSettingsService } from "@core/services";
+import { AuthService } from "@core/services";
 import { RouterLink } from "@angular/router";
 import { NotebookCreateComponent, NotebooksComponent } from '../notebooks';
 import { WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
@@ -17,7 +17,7 @@ import { Notebook } from "@shared/models";
 })
 export class NotesComponent implements OnInit {
     protected readonly workspaceFacadeService = inject(WORKSPACE_FACADE_SERVICE_TOKEN);
-    public readonly appSettingsService = inject(AppSettingsService);
+    protected readonly authSevice = inject(AuthService);
 
 
     protected isSidebarOpen: WritableSignal<boolean> = signal(false);

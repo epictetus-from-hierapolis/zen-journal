@@ -83,7 +83,11 @@
     </nav>
 
     <div class="p-3 flex justify-between items-center border-t border-gray-200 dark:border-gray-800">
-      <div>Welcome, {{appSettingsService.username()}}</div>
+      <div>
+        <span>Welcome, {{authSevice.currentUser()}}</span>
+        <button (click)="authSevice.logout()"
+          class="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white bg-transparent p-0 border-0 cursor-pointer">Logout</button>
+      </div>
 
       <!-- Settings button -->
       <button
@@ -98,6 +102,7 @@
 
       </button>
     </div>
+
   </aside>
 
   @if (isSidebarOpen()) {
