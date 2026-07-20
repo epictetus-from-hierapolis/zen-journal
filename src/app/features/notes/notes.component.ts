@@ -58,6 +58,7 @@ export class NotesComponent implements OnInit {
 
     protected selectNotebook(notebook: Notebook | null): void {
         this.workspaceFacadeService.selectNotebook(notebook);
+        this.workspaceFacadeService.selectNote(null);
         this.isSidebarOpen.set(false);
     }
 

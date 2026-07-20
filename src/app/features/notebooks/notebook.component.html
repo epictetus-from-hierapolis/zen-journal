@@ -1,6 +1,6 @@
 <div class="flex flex-col text-sm pl-2">
     <div (click)="notebookSelected.emit(null)" class="group flex items-center justify-between cursor-pointer 
-        hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg mb-1
+        hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg mb-1 ml-2
         px-3 py-2 transition-colors text-gray-700 dark:text-gray-300" [class.bg-gray-100]="selectedNotebook() === null"
         [class.dark:bg-gray-800]="selectedNotebook() === null" [class.text-gray-900]="selectedNotebook() === null"
         [class.font-medium]="selectedNotebook() === null">
@@ -15,7 +15,7 @@
 
     <div (click)="notebookSelected.emit(notebook)" class="group flex items-center justify-between cursor-pointer 
         hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg mb-1
-        px-3 py-2 transition-colors text-gray-700 dark:text-gray-300"
+        px-3 py-2 ml-2 transition-colors text-gray-700 dark:text-gray-300"
         [class.bg-gray-100]="selectedNotebook()?.id === notebook.id"
         [class.dark:bg-gray-800]="selectedNotebook()?.id === notebook.id"
         [class.text-gray-900]="selectedNotebook()?.id === notebook.id"
