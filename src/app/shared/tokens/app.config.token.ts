@@ -16,7 +16,7 @@ export const APP_CONFIG = new InjectionToken<AppConfig>('AppConfig', {
         autosaveDelay: 800,
         maxNotesPerNotebook: 100,// TODO: implement in app setings
         appName: 'Zen Journal',
-        themeAppearence: 'light',
+        themeAppearence: 'dark',
         apiUrl: '/api'
     })
 });

@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from "@angular/core";
+import { computed, inject, Injectable, signal } from "@angular/core";
 import { HandleError } from "@shared/decorators";
 import { EncryptionService } from "./encryption.service";
 import { SESSION_STORAGE, WORKSPACE_FACADE_SERVICE_TOKEN } from "@shared/tokens";
@@ -23,6 +23,7 @@ export class AuthService {
 
     public readonly isAuthenticated = this._isAuthenticated.asReadonly();
     public readonly currentUser = this._currentUser.asReadonly();
+    public readonly hasSavedUsername = computed(() => !!this.appSettingsService.username());
 
     @HandleError
     public async login(username: string, password: string): Promise<boolean> {

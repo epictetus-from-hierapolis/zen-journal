@@ -11,7 +11,7 @@ import { Router } from "@angular/router";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-    private readonly authService = inject(AuthService);
+    protected readonly authService = inject(AuthService);
     private readonly routerService = inject(Router);
     private readonly fb = inject(NonNullableFormBuilder)
 
