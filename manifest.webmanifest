@@ -2,7 +2,7 @@
     "name": "Zen Journal",
     "short_name": "ZenJournal",
     "start_url": "/zen-journal/",
-    "id": "/zen-journal/",
+    "id": "/",
     "scope": "/zen-journal/",
     "display": "standalone",
     "theme_color": "#18181b",
