@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1784569890769,
+  "timestamp": 1784570766011,
   "index": "/zen-journal/index.html",
   "assetGroups": [
     {
@@ -46,8 +46,8 @@
     "/zen-journal/chunk-D7i7LnNm.js": "d56acd9d71ef82b61ca72e3ab01fcad50bff5ee3",
     "/zen-journal/chunk-Di6_KQkL.js": "f6d845731bb8ca37f96c0f102cf8273b4eedd0d6",
     "/zen-journal/favicon.ico": "0c20d5dcf4ce5829c8bc3f9749aacf24422b9d6d",
-    "/zen-journal/favicon.png": "065d0d58491c7a420c7c24dd6b744a3794ebbc21",
-    "/zen-journal/icon-192.png": "6c0e22d1bdac24fec0866ebc48b7c47d87a4b9ea",
+    "/zen-journal/favicon.png": "a13ac5af7642ab4dcefe8418b512864367edd56e",
+    "/zen-journal/icon-192.png": "9470debfb0fb855e3de92bc09bfe64188dcea2f3",
     "/zen-journal/index.html": "8bc8c6fb791ae97dd1f8fd8bfd2b95d6ed5cc946",
     "/zen-journal/main-5EL6DBLC.js": "3b21f1427b8a05583a5cd4dbc72c637701715a78",
     "/zen-journal/screenshot-github.png": "e4f025f05f047f8a4ddc088517292db1d463aa71",
