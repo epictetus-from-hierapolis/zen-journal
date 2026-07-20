@@ -9,6 +9,12 @@ A minimalist, offline-first note-taking application built with Angular 22. Desig
 
 ![ZenJournal Showcase](public/screenshot-github.png) 
 
+## Live Demo
+
+[Open ZenJournal](https://epictetus-from-hierapolis.github.io/zen-journal/)
+
+You can open the app in the browser and install it as a PWA from there.
+
 ---
 
 ## Features
