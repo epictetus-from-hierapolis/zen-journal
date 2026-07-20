@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1784565428401,
+  "timestamp": 1784568843896,
   "index": "/zen-journal/index.html",
   "assetGroups": [
     {
@@ -11,13 +11,13 @@
         "ignoreVary": true
       },
       "urls": [
-        "/zen-journal/chunk-BKMGIadm.js",
-        "/zen-journal/chunk-C6i7_wi3.js",
-        "/zen-journal/chunk-LKjXeFxx.js",
-        "/zen-journal/chunk-unDwrR6k.js",
+        "/zen-journal/chunk-2wR491Mp.js",
+        "/zen-journal/chunk-BX9q5DJf.js",
+        "/zen-journal/chunk-D7i7LnNm.js",
+        "/zen-journal/chunk-Di6_KQkL.js",
         "/zen-journal/favicon.ico",
         "/zen-journal/index.html",
-        "/zen-journal/main-WSTFWLN7.js",
+        "/zen-journal/main-5EL6DBLC.js",
         "/zen-journal/styles-S53HMKSU.css"
       ],
       "patterns": []
@@ -32,6 +32,7 @@
       "urls": [
         "/zen-journal/favicon.png",
         "/zen-journal/icon-192.png",
+        "/zen-journal/screenshot-github.png",
         "/zen-journal/screenshot-mobile.png",
         "/zen-journal/screenshot-wide.png"
       ],
@@ -40,15 +41,16 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/zen-journal/chunk-BKMGIadm.js": "8e3ae17dff900480e0e1857605b77b4b3531ac93",
-    "/zen-journal/chunk-C6i7_wi3.js": "6e791f243a2de50f9518b7ac7f5b6b03f44e8658",
-    "/zen-journal/chunk-LKjXeFxx.js": "f141129fe574fc9b11e705351793961431e4d88c",
-    "/zen-journal/chunk-unDwrR6k.js": "d2161f04952d91cf07837d9e32f70360cdc21c52",
-    "/zen-journal/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
-    "/zen-journal/favicon.png": "c44eb1994a4365338c4e807c47d09a36554520b4",
-    "/zen-journal/icon-192.png": "2320c3fd791fc0e50101b0b49e0ec5f65770e060",
-    "/zen-journal/index.html": "e3b087128bfdacfb1f4304f042d82287a8d70590",
-    "/zen-journal/main-WSTFWLN7.js": "3f3730808f1cac86556ee97a5405ab5581ee191e",
+    "/zen-journal/chunk-2wR491Mp.js": "9dba9457c1cecff0b31329a0d3d6b0cab477c932",
+    "/zen-journal/chunk-BX9q5DJf.js": "cae9f81e65326b9e3a6a81d66c6441b7af36e18a",
+    "/zen-journal/chunk-D7i7LnNm.js": "d56acd9d71ef82b61ca72e3ab01fcad50bff5ee3",
+    "/zen-journal/chunk-Di6_KQkL.js": "f6d845731bb8ca37f96c0f102cf8273b4eedd0d6",
+    "/zen-journal/favicon.ico": "0c20d5dcf4ce5829c8bc3f9749aacf24422b9d6d",
+    "/zen-journal/favicon.png": "065d0d58491c7a420c7c24dd6b744a3794ebbc21",
+    "/zen-journal/icon-192.png": "6c0e22d1bdac24fec0866ebc48b7c47d87a4b9ea",
+    "/zen-journal/index.html": "8bc8c6fb791ae97dd1f8fd8bfd2b95d6ed5cc946",
+    "/zen-journal/main-5EL6DBLC.js": "3b21f1427b8a05583a5cd4dbc72c637701715a78",
+    "/zen-journal/screenshot-github.png": "fade5e8e26d24d651b72b48f281f4e7e62143486",
     "/zen-journal/screenshot-mobile.png": "bc0a1a2733df5a0a90e41e421449aee02d3e9f11",
     "/zen-journal/screenshot-wide.png": "b33bd11338c39b5b37ffc928d56f66ff8a277225",
     "/zen-journal/styles-S53HMKSU.css": "f53122ff8741dd90e057f73f28191bb4e2fb8046"
