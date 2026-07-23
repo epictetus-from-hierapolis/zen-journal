@@ -1,136 +1,434 @@
+<div align="center">
+
 # ZenJournal
 
-A minimalist, offline-first note-taking application built with Angular 22. Designed as a portfolio project to demonstrate modern Angular architecture patterns, reactive state management with Signals, production-grade code organization, and PWA support. The app is available at https://epictetus-from-hierapolis.github.io/zen-journal/ and can be installed from there.
+### A privacy-first, offline journal built with modern Angular architecture
 
-![Angular](https://img.shields.io/badge/Angular-22-DD0031?logo=angular)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)
-![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-38BDF8?logo=tailwindcss)
-![Jest](https://img.shields.io/badge/Tested_with-Jest-C21325?logo=jest)
+A responsive, installable note-taking workspace that keeps journal data in the browser, encrypts protected content before persistence, and demonstrates production-oriented frontend design patterns.
 
-![ZenJournal Showcase](public/screenshot-github.png) 
+[Live Demo](https://epictetus-from-hierapolis.github.io/zen-journal/) · [Source Code](https://github.com/epictetus-from-hierapolis/zen-journal)
 
-## Live Demo
+![Angular](https://img.shields.io/badge/Angular-22.0-DD0031?logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-06B6D4?logo=tailwindcss&logoColor=white)
+![Dexie](https://img.shields.io/badge/Dexie-4.4-8A2BE2)
+![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?logo=pwa&logoColor=white)
+![Tests](https://img.shields.io/badge/tested_with-Jest-C21325?logo=jest&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-[Open ZenJournal](https://epictetus-from-hierapolis.github.io/zen-journal/)
+</div>
 
-You can open the app in the browser and install it as a PWA from there.
+![ZenJournal application showcase](public/screenshot-github.png)
 
 ---
 
-## Features
+## Overview
 
-- **Offline-first** — all data stored locally via [Dexie.js](https://dexie.org/) (IndexedDB), zero backend dependency
-- **Zero-knowledge security & Multi-Device Ready** — local, transparent encryption using AES-256-GCM and PBKDF2 (Web Crypto API). Encryption metadata (salt, canary) and user settings are stored directly in the database, making the application fully ready for multi-device cloud synchronization.
-- **Rich text editing** — [TipTap](https://tiptap.dev/) integration with an advanced formatting toolbar supporting headings, bullet/numbered lists, custom interactive checklists (task lists), text alignment, block indentation, font family & size selectors, underline, strikethrough, text colors, and highlights (text backgrounds)
-- **Notebook management** — create, rename, delete notebooks with cascade delete at database transaction level
-- **Optimistic UI** — instant state updates with automatic rollback on failure
-- **Debounced autosave** — content saved as you type, configurable delay
-- **Real-time search** — full-text search across all notes with contextual snippet highlighting
-- **Dark mode** — persisted theme preference
-- **PWA-ready** — installable as a progressive web app
-- **Responsive** — mobile sidebar with adaptive layout
+ZenJournal is a minimalist, offline-first journal application built as a frontend engineering portfolio project.
+
+The application combines a focused writing experience with a deliberately decoupled architecture:
+
+- journal data is stored locally in IndexedDB through Dexie;
+- protected note titles and content are encrypted with the Web Crypto API;
+- Angular Signals provide explicit, read-only application state;
+- a facade coordinates feature operations and optimistic updates;
+- storage is accessed through a virtual HTTP boundary rather than directly from UI code;
+- standalone, lazy-loaded features keep the application modular;
+- the production build can be installed as a Progressive Web App.
+
+The project demonstrates more than CRUD functionality. It explores how security, state management, dependency inversion, offline persistence, rich-text editing, and replaceable infrastructure can coexist in a maintainable Angular application.
+
+## Live Demo
+
+**Application:** [Open ZenJournal](https://epictetus-from-hierapolis.github.io/zen-journal/)
+
+The hosted version runs entirely in the browser and can be installed as a PWA from supported browsers.
+
+> Journal data belongs to the browser profile and device on which it is created. Clearing the site's browser storage removes the local database.
+
+---
+
+## Core Features
+
+### Writing experience
+
+- Rich-text editing powered by TipTap
+- Headings, ordered and unordered lists
+- Interactive task lists
+- Text alignment and indentation
+- Font family and font size controls
+- Underline and strikethrough
+- Text color and highlighting
+- Debounced, configurable autosave
+
+### Organization and discovery
+
+- Create, rename, and delete notebooks
+- Transactional cascade deletion for notebook contents
+- Create, edit, move, and delete notes
+- Full-text search across notes
+- Contextual result snippets with matched-text highlighting
+- Relative timestamps and word-count presentation
+
+### User experience
+
+- Responsive desktop and mobile layouts
+- Adaptive mobile navigation
+- Persistent light and dark themes
+- Optimistic updates with rollback on persistence failure
+- Offline-first behavior
+- Installable PWA production build
+
+### Privacy and local security
+
+- AES-256-GCM content encryption
+- PBKDF2-SHA-256 password-based key derivation
+- Random salt and initialization vectors generated by Web Crypto
+- Non-exportable browser `CryptoKey`
+- Verification canary for password validation
+- Derived key retained only in application memory
+- Explicit lock and state-reset flow on logout
+- Active authentication state scoped to the current browser tab
 
 ---
 
 ## Architecture
 
-### Folder Structure
+ZenJournal follows a feature-oriented Angular architecture with explicit boundaries between presentation, application state, contracts, and infrastructure.
 
+```mermaid
+flowchart LR
+    UI["Feature Components"] --> Facade["Workspace Facade"]
+    Facade --> Contracts["Service Contracts<br/>Injection Tokens"]
+    Contracts --> Encrypted["Encrypted Notes Service"]
+    Encrypted --> Notes["Notes Service"]
+    Notes --> HTTP["Angular HttpClient<br/>virtual /api"]
+    HTTP --> Interceptors["Auth · Error · Dexie Interceptors"]
+    Interceptors --> Dexie["Dexie Database Adapter"]
+    Dexie --> IndexedDB[("IndexedDB")]
+
+    Encrypted --> Crypto["Encryption Service"]
+    Crypto --> WebCrypto["Web Crypto API"]
 ```
+
+### Main data flow
+
+```mermaid
+sequenceDiagram
+    participant UI as Feature component
+    participant F as Workspace facade
+    participant E as Encrypted notes service
+    participant H as HttpClient
+    participant I as Dexie interceptor
+    participant DB as IndexedDB
+
+    UI->>F: Emit user action
+    F->>F: Apply optimistic signal update
+    F->>E: Execute operation
+    E->>E: Encrypt protected fields
+    E->>H: Request virtual /api resource
+    H->>I: Intercept request
+    I->>DB: Persist through Dexie
+    DB-->>I: Result
+    I-->>H: HTTP response
+    H-->>E: Operation result
+    E-->>F: Success or failure
+    F-->>UI: Keep update or roll back
+```
+
+### Application structure
+
+```text
 src/app/
-  ├── core/                        # Singleton infrastructure (bootstrapped once)
-  │   ├── guards/                  # Route protection (auth guard)
-  │   ├── interceptors/            # HTTP middleware (auth, error handling, Dexie backend)
-  │   └── services/                # App-wide singletons: Auth, Database, Settings, Facade, Encryption
-  │
-  ├── features/                    # Feature modules (lazy-loaded)
-  │   ├── auth/                    # Login flow and database unlocking (UnlockComponent)
-  │   ├── notebooks/               # Notebook sidebar and creation
-  │   ├── notes/                   # Note list, editor, search
-  │   └── settings/                # App configuration
-  │
-  └── shared/                      # Reusable, stateless building blocks
-    ├── components/              # Reusable dumb UI components (ModalComponent)
-    ├── constants/               # App-wide constants (Storage keys)
-    ├── decorators/              # Cross-cutting concerns (@HandleError)
-    ├── editor/                  # Rich text editor configuration and presets
-    ├── interfaces/              # Service contracts (INotesService, IWorkspaceFacadeService)
-    ├── models/                  # Domain types (Note, Notebook, AppSettings)
-    ├── pipes/                   # Pure transforms (relativeTime, wordCount, snippet)
-    ├── tokens/                  # Injection tokens (decoupled DI)
-    └── validators/              # Reactive form validators
+├── core/
+│   ├── guards/                 # Application access rules
+│   ├── interceptors/           # Auth, errors and virtual Dexie backend
+│   └── services/               # Database, encryption, settings and facade
+│
+├── features/
+│   ├── auth/                   # Password setup and database unlocking
+│   ├── notebooks/              # Notebook navigation and management
+│   ├── notes/                  # List, editor and search experience
+│   └── settings/               # Theme and autosave preferences
+│
+├── shared/
+│   ├── components/             # Reusable stateless UI
+│   ├── constants/              # Stable application constants
+│   ├── decorators/             # Cross-cutting behavior
+│   ├── editor/                 # TipTap configuration
+│   ├── interfaces/             # Service contracts
+│   ├── models/                 # Application models
+│   ├── pipes/                  # Pure presentation transforms
+│   ├── tokens/                 # Dependency injection tokens
+│   └── validators/             # Form validation
+│
+├── app.config.ts               # Composition root
+├── app.routes.ts               # Lazy route configuration
+└── app.ts                      # Root gatekeeper component
 ```
-
-### Key Architectural Decisions
-
-**Workspace Facade Pattern**
-`WorkspaceFacadeService` acts as the single source of truth for application state, orchestrating async operations across `NotesService` and `NotebooksService`. UI components are kept stateless — they read from signals and emit actions, never touching the database directly.
-
-**Token-based Dependency Injection**
-Services are provided via `InjectionToken` against interface contracts, not concrete classes. This enables full testability (swap any implementation at the token level) and was a deliberate choice over `providedIn: 'root'` to keep DI explicit.
-
-**Dexie HTTP Interceptor**
-All data operations go through Angular's `HttpClient` against a virtual `/api` endpoint. A custom `dexieBackendInterceptor` intercepts these requests and routes them to IndexedDB — meaning the entire data layer can be replaced with a real backend by removing one interceptor, with zero changes to services or components.
-
-**Encapsulated Signal State**
-State is held in private `WritableSignal` properties exposed as read-only `Signal` via `.asReadonly()`. External code can read signals but can never mutate state directly — all mutations go through facade methods with built-in optimistic update and rollback logic.
-
-**Smart/Dumb Component Pattern**
-Feature components (`NoteListComponent`, `NoteEditorComponent`, `NoteSearchComponent`, `NotebooksComponent`, `NotebookCreateComponent`) are fully dumb — they receive data exclusively via `input()` signals and communicate upward via `output()` events. `NotesComponent` acts as the single smart orchestrator: it injects the facade, passes data down, and handles all output events. This enforces a strict unidirectional data flow and makes every dumb component independently testable without any service dependencies.
-
-**Zoneless Change Detection**
-Uses `provideZonelessChangeDetection()` with `ChangeDetectionStrategy.OnPush` throughout, eliminating Zone.js overhead and making change detection fully explicit and predictable.
-
-**Decorator Pattern for Encryption**
-`EncryptedNotesService` wraps the base `NotesService` to intercept data operations transparently. It encrypts payloads before storage and decrypts them upon retrieval using the Web Crypto API (AES-GCM), all while strictly adhering to the `INotesService` contract. This keeps the database/interceptor layer completely unaware of cryptography, perfectly respecting the Single Responsibility Principle (SRP).
-
-**Gatekeeper Pattern for Route Interception**
-The root `App` component acts as the gatekeeper of the application, conditionally rendering either `<app-unlock>` or `<router-outlet />` based on the user's authentication and database unlock states. This centralized route interception guarantees that no feature components (such as notes or notebooks) are instantiated in the DOM before the local database is successfully decrypted, completely avoiding complex route guards or race conditions.
-
-**Session Privacy & Memory Security**
-Wiping local storage keys alone is insufficient for zero-knowledge privacy. On logout, the application explicitly triggers a "clean slate" sequence: navigating away to destroy active components, clearing the derived `CryptoKey` from memory via `lock()`, and purging all active notebooks/notes signals in `WorkspaceFacadeService` via `reset()`. This prevents any data recovery or visual leaks from RAM if another user accesses the browser session.
-
-**IndexedDB Settings & Metadata Storage (Multi-Device Sync Preparation)**
-To prepare the application for cloud synchronization, all user preferences (theme, autosave delay) and encryption metadata (salt, verification canary) were migrated from `localStorage` into a dedicated `settings` table inside IndexedDB. Following the project's core architecture, these operations are routed via `HttpClient` (under `/api/settings`) and intercepted by the `dexieBackendInterceptor`, keeping the settings service completely decoupled from the underlying database wrapper.
-
-**Session-Only Active Auth State**
-To enhance local security, the active session state (`AUTH`) was migrated to `sessionStorage` via a custom `SESSION_STORAGE` InjectionToken. This ensures that the user session is strictly bound to the active browser tab, automatically logging out the user when the tab is closed, preventing unauthorized local access.
 
 ---
 
-## Tech Stack
+## Key Engineering Decisions
 
-| Layer | Technology |
+### 1. Workspace Facade as the state boundary
+
+`WorkspaceFacadeService` is the single orchestration point for notebook and note state.
+
+It:
+
+- owns private writable signals;
+- exposes read-only signals to consumers;
+- coordinates notes and notebooks services;
+- derives filtered and selected state;
+- applies optimistic changes;
+- restores previous state when persistence fails;
+- centralizes reset behavior during logout.
+
+This keeps feature components focused on presentation and user interaction.
+
+### 2. Smart orchestrator and stateless feature components
+
+The notes workspace acts as the smart feature boundary. Child components receive state through signal inputs and communicate through outputs.
+
+This creates a predictable, unidirectional flow:
+
+```text
+read-only state → component rendering → user event → facade action → updated state
+```
+
+Components can therefore be tested without database or service dependencies.
+
+### 3. Dependency inversion through Angular tokens
+
+Application services are registered against `InjectionToken` contracts in `app.config.ts`.
+
+```text
+component/facade
+      ↓
+interface contract + injection token
+      ↓
+selected implementation
+```
+
+The composition root currently maps the notes contract to `EncryptedNotesService`. An implementation can be replaced without changing its consumers.
+
+### 4. Decorator-based encryption
+
+`EncryptedNotesService` implements the same contract as the base notes service and wraps persistence operations with encryption and decryption.
+
+This keeps cryptographic concerns outside:
+
+- UI components;
+- the workspace facade;
+- the base data service;
+- the Dexie interceptor;
+- the database wrapper.
+
+The design follows the Open/Closed Principle and Single Responsibility Principle while preserving a stable service interface.
+
+### 5. Replaceable persistence through a virtual API
+
+Features do not communicate with Dexie directly. Data services issue requests through Angular `HttpClient` to virtual `/api` resources.
+
+`dexieBackendInterceptor` translates those requests into IndexedDB operations.
+
+```text
+feature → service → HttpClient → interceptor → Dexie → IndexedDB
+```
+
+This creates a backend-shaped boundary inside an offline application. A future remote API adapter can replace the local interceptor without requiring feature components to understand the persistence mechanism.
+
+### 6. Encapsulated Signal state
+
+Mutable state remains private and is exposed through `.asReadonly()` or derived `computed()` signals.
+
+External consumers can observe state but cannot modify it directly. All mutations pass through facade operations, where validation, persistence, optimistic updates, and rollback can be handled consistently.
+
+### 7. Zoneless and OnPush rendering
+
+The application uses `provideZonelessChangeDetection()` and explicit reactive state rather than relying on Zone.js.
+
+This results in:
+
+- predictable state-driven rendering;
+- reduced implicit change-detection work;
+- clearer ownership of asynchronous updates;
+- architecture aligned with modern Angular patterns.
+
+### 8. Root gatekeeper for protected rendering
+
+The root application component renders either the unlock experience or the routed workspace according to authentication and encryption state.
+
+Protected features are not instantiated before the database is unlocked. This centralizes the transition between locked and active application states and avoids feature-level race conditions.
+
+---
+
+## Security Model
+
+```mermaid
+flowchart TD
+    Password["User password"] --> PBKDF2["PBKDF2-SHA-256"]
+    Salt["Random salt"] --> PBKDF2
+    PBKDF2 --> Key["Non-exportable AES-256 key<br/>held in memory"]
+    Key --> Encrypt["AES-GCM encryption"]
+    IV["Random IV per operation"] --> Encrypt
+    Plaintext["Note title and content"] --> Encrypt
+    Encrypt --> Stored["Ciphertext + IV<br/>stored in IndexedDB"]
+
+    Logout["Lock / logout"] --> ClearKey["Clear key from memory"]
+    Logout --> ResetState["Reset active note and notebook signals"]
+```
+
+### Implemented protections
+
+- Password-derived encryption key
+- Authenticated AES-GCM encryption
+- Random per-installation salt
+- Random IV for each encryption operation
+- Non-exportable key material
+- Password verification through an encrypted canary
+- No persistent storage of the derived encryption key
+- Session authentication stored in `sessionStorage`
+- Explicit in-memory state clearing during logout
+
+### Security boundaries
+
+ZenJournal protects locally persisted journal content, but a browser application cannot defend against a compromised operating system, malicious browser extensions, active developer tools, or code running in the same trusted origin.
+
+The application is a portfolio implementation, not a substitute for an independently audited security product.
+
+---
+
+## Offline and PWA Design
+
+The production build enables Angular's service worker and prefetches the application shell and static assets.
+
+Combined with IndexedDB persistence, this allows the application to:
+
+- load its installed application shell without a backend;
+- read and update journal data locally;
+- remain functional without network connectivity;
+- be installed from the hosted web application.
+
+No backend is required for the current feature set.
+
+---
+
+## Technology Stack
+
+| Area | Technology |
 |---|---|
-| Framework | Angular 22 (standalone, zoneless) |
-| Language | TypeScript 5.9 (strict mode) |
-| Reactivity | Angular Signals + RxJS 7 |
-| Rich Text | TipTap 3.27 |
-| Styling | Tailwind CSS 4 |
-| Local Database | Dexie.js 4 (IndexedDB) |
-| Testing | Jest + jsdom |
+| Framework | Angular 22.0 |
+| Architecture | Standalone components, lazy routes, zoneless change detection |
+| Language | TypeScript 6.0 in strict mode |
+| State | Angular Signals and RxJS 7 |
+| Rich-text editor | TipTap 3.27 |
+| Styling | Tailwind CSS 4.1 |
+| Local persistence | Dexie 4.4 over IndexedDB |
+| Encryption | Web Crypto API, AES-256-GCM, PBKDF2-SHA-256 |
+| HTTP abstraction | Angular HttpClient and functional interceptors |
+| PWA | Angular Service Worker |
+| Testing | Jest, jest-preset-angular and jsdom |
+| Deployment | GitHub Pages |
 
 ---
 
 ## Getting Started
 
+### Prerequisites
+
+- Node.js compatible with Angular 22
+- npm 10.x
+
+### Installation
+
 ```bash
-# Install dependencies
-npm install
+git clone https://github.com/epictetus-from-hierapolis/zen-journal.git
+cd zen-journal
+npm ci
+```
 
-# Start development server
+### Development server
+
+```bash
 npm start
-# → http://localhost:4200
+```
 
-# Run tests
+The development configuration uses HTTPS:
+
+```text
+https://localhost:4200
+```
+
+A browser warning may be displayed for the local development certificate.
+
+### Tests
+
+```bash
 npm test
+```
 
-# Production build
+### Production build
+
+```bash
 npm run build
 ```
+
+Build output is generated under:
+
+```text
+dist/zen-journal/browser
+```
+
+### GitHub Pages deployment
+
+```bash
+npm run dp:gh
+```
+
+The deployment script builds the application with the `/zen-journal/` base path and publishes the browser output through `angular-cli-ghpages`.
+
+---
+
+## Portfolio Highlights
+
+The project demonstrates practical experience with:
+
+- Angular standalone architecture
+- zoneless change detection
+- signal-based state encapsulation
+- RxJS-driven debouncing
+- facade-based orchestration
+- dependency inversion and token-based DI
+- smart/dumb component boundaries
+- optimistic updates and rollback
+- custom functional HTTP interceptors
+- IndexedDB and transactional browser persistence
+- client-side authenticated encryption
+- rich-text editor integration
+- responsive design and theming
+- PWA configuration and GitHub Pages deployment
+- strict TypeScript and unit testing
+
+---
+
+## Architectural Extension Path
+
+The current application is intentionally local-first and has no remote backend.
+
+The virtual API boundary and encrypted service contract were designed so that future synchronization could be introduced without coupling feature components to a specific transport or storage technology.
+
+Potential future work, not currently implemented:
+
+- encrypted multi-device synchronization;
+- conflict detection and resolution;
+- encrypted export and import;
+- accessibility auditing and automated checks;
+- continuous integration for tests and production builds.
 
 ---
 
 ## License
 
-MIT
+Distributed under the MIT License.
